@@ -40,17 +40,17 @@ contract Faculty {
     }
 
     modifier onlyAdmin {
-        require (msg.sender == admin);
+        require (msg.sender == admin, "You are not Admin.");
         _;
     }
 
     modifier onlyProfessor {
-        require (professors[msg.sender].exist == true, "aaa");
+        require (professors[msg.sender].exist == true, "You are not Professor.");
         _;
     }
 
     modifier onlyStudent {
-        require (students[msg.sender].exist == true);
+        require (students[msg.sender].exist == true, "You are not Student.");
         _;
     }
 
@@ -74,6 +74,7 @@ contract Faculty {
     }
 
     function addProfessor(address id, string calldata name) external onlyAdmin {
+        require(professors[id].exist == false, "Professor with that address already exists.");
         professorCount += 1;
         professorCountToAddress[professorCount] = id;
 
@@ -82,6 +83,7 @@ contract Faculty {
     }
 
     function addStudent(address id, string calldata name) external onlyAdmin {
+        require(students[id].exist == false, "Student with that address already exists.");
         studentCount += 1;
         studentCountToAddress[studentCount] = id;
 
@@ -101,8 +103,8 @@ contract Faculty {
     }
 
     function enrollSubject(uint id) external onlyStudent {
-        require(subjects[id].exist == true);
-        require(students[msg.sender].subjectGrades[id] == 0);
+        require(subjects[id].exist == true, "Subject not found.");
+        require(students[msg.sender].subjectGrades[id] == 0, "Already enrolled.");
 
         students[msg.sender].subjectGrades[id] = 5;
     }
@@ -118,13 +120,13 @@ contract Faculty {
     }
 
     function gradeStudent(uint subject, address student, uint grade) external onlyProfessor {
-        require(subjects[subject].exist == true);
-        require(students[student].exist == true, "");
+        require(subjects[subject].exist == true, "Subject not found.");
+        require(students[student].exist == true, "Student not found.");
 
-        require(valueExistsInArray(professors[msg.sender].subjects, subject) == true);
-        require(students[student].subjectGrades[subject] > 0);
+        require(valueExistsInArray(professors[msg.sender].subjects, subject) == true, "Professor is not owner of this subject.");
+        require(students[student].subjectGrades[subject] > 0, "Already graded");
         
-        require(grade >= 5 && grade <= 10);
+        require(grade >= 5 && grade <= 10, "Grade not in range 5-10");
 
         students[student].subjectGrades[subject] = grade;
     }
@@ -155,5 +157,5 @@ contract Faculty {
         return studentsArray;
     }
 
-
+    
 }
