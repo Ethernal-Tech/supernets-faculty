@@ -32,6 +32,7 @@ contract Faculty {
     struct ProfessorView {
         address id;
         string name;
+        uint[] subjects;
     }
 
     struct StudentView {
@@ -124,7 +125,8 @@ contract Faculty {
         require(students[student].exist == true, "Student not found.");
 
         require(valueExistsInArray(professors[msg.sender].subjects, subject) == true, "Professor is not owner of this subject.");
-        require(students[student].subjectGrades[subject] > 0, "Already graded");
+        require(students[student].subjectGrades[subject] >= 5, "Student is not enrolled in the subject.");
+        require(students[student].subjectGrades[subject] == 5, "Already graded");
         
         require(grade >= 5 && grade <= 10, "Grade not in range 5-10");
 
@@ -137,7 +139,8 @@ contract Faculty {
         for (uint i = 0; i < professorCount; i++) {
             professorsArray[i] = ProfessorView({
                 id: professorCountToAddress[i+1],
-                name: professors[professorCountToAddress[i+1]].name
+                name: professors[professorCountToAddress[i+1]].name,
+                subjects: professors[professorCountToAddress[i+1]].subjects
             }); 
         }
 
@@ -157,5 +160,13 @@ contract Faculty {
         return studentsArray;
     }
 
+    function getGrade(uint subject) public onlyStudent view returns(uint) {
+        require(subjects[subject].exist == true, "Subject not found.");
+        require(students[msg.sender].subjectGrades[subject] >= 5, "You are not enrolled in the subject.");
+        return students[msg.sender].subjectGrades[subject];
+    }
     
+    function getMySubject() public onlyProfessor view returns(uint[] memory subjectsIds) {
+        subjectsIds = professors[msg.sender].subjects;
+    }
 }
