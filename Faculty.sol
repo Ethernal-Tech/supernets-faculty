@@ -37,6 +37,7 @@ contract Faculty {
         string name;
         bool exist;
         address professor;
+        address[] students;
     }
 
     struct Professor {
@@ -57,6 +58,7 @@ contract Faculty {
         string name;
         address professorAddress;
         string professorName;
+        address[] students;
     }
 
     struct ProfessorView {
@@ -86,7 +88,7 @@ contract Faculty {
         _;
     }
 
-    address admin;
+    address public admin;
     uint subjectCount;
     uint professorCount;
     uint studentCount;
@@ -125,11 +127,10 @@ contract Faculty {
 
     function addSubject(string calldata name) external onlyProfessor {
         subjectCount += 1;
-        subjects[subjectCount] = Subject({
-            name: name,
-            exist: true,
-            professor : msg.sender
-        });
+
+        subjects[subjectCount].name = name;
+        subjects[subjectCount].exist = true;
+        subjects[subjectCount].professor = msg.sender;
 
         professors[msg.sender].subjects.push(subjectCount);
     }
@@ -153,6 +154,7 @@ contract Faculty {
 
         students[msg.sender].subjectGrades[id] = 5;
         students[msg.sender].subjectCount += 1;
+        subjects[id].students.push(msg.sender);
     }
 
     function getAllProfessors() public view returns(ProfessorView[] memory) {      
@@ -182,6 +184,24 @@ contract Faculty {
 
         return studentsArray;
     }
+
+    function getSubjectById(uint subject) public view returns(SubjectView memory) {
+        require(subjects[subject].exist == true, "Subject not found.");
+
+        return SubjectView({
+            id: subject,
+            name: subjects[subject].name,
+            professorAddress: subjects[subject].professor,
+            professorName: professors[subjects[subject].professor].name,
+            students: subjects[subject].students
+        });
+    }
+
+    function getMyGrade(uint subject) public onlyStudent view returns(uint) {
+        require(subjects[subject].exist == true, "Subject not found.");
+        require(students[msg.sender].subjectGrades[subject] >= 5, "You are not enrolled in the subject.");
+        return students[msg.sender].subjectGrades[subject];
+    }
     
     function getProfessorSubjects(address professor) public view returns(uint[] memory subjectsIds) {
         require(professors[professor].exist == true, "Professor not found.");
@@ -204,38 +224,32 @@ contract Faculty {
         return subjectIds;
     }
 
-    function getNumberOfPassedSubjects() external onlyStudent view returns(uint256) {
+    function getNumberOfPassedSubjects(address student) external view returns(uint256) {
         uint256 passedSubjCount;
 
         for (uint i = 1; i <= subjectCount; i++) {
-            if (students[msg.sender].subjectGrades[i] > 5) {
+            if (students[student].subjectGrades[i] > 5) {
                 passedSubjCount += 1;
             }
         }
 
-        require(passedSubjCount > 0, "You don't have any grades.");
+        require(passedSubjCount > 0, "You did not pass any subject.");
 
         return passedSubjCount;
     }
 
-    function getMyGrade(uint subject) public onlyStudent view returns(uint) {
-        require(subjects[subject].exist == true, "Subject not found.");
-        require(students[msg.sender].subjectGrades[subject] >= 5, "You are not enrolled in the subject.");
-        return students[msg.sender].subjectGrades[subject];
-    }
-
-    function getMyAverageGrade() external onlyStudent view returns(string memory averageGrade) {
+    function getAverageGrade(address student) external view returns(string memory averageGrade) {
         uint256 sum;
         uint256 passedSubjCount;
 
         for (uint i = 1; i <= subjectCount; i++) {
-            if (students[msg.sender].subjectGrades[i] > 5) {
-                sum += students[msg.sender].subjectGrades[i];
+            if (students[student].subjectGrades[i] > 5) {
+                sum += students[student].subjectGrades[i];
                 passedSubjCount += 1;
             }
         }
 
-        require(passedSubjCount > 0, "You don't have any grades.");
+        require(passedSubjCount > 0, "You did not pass any subject.");
 
         averageGrade = MyMath.division(2, sum, passedSubjCount);
     }
