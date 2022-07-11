@@ -49,6 +49,7 @@ contract Faculty {
         string name;
         bool exist;
         mapping(uint => uint) subjectGrades;
+        uint subjectCount;
     }
 
     struct SubjectView {
@@ -67,6 +68,7 @@ contract Faculty {
     struct StudentView {
         address id;
         string name;
+        uint[] subjects;
     }
 
     modifier onlyAdmin {
@@ -132,23 +134,6 @@ contract Faculty {
         professors[msg.sender].subjects.push(subjectCount);
     }
 
-    function enrollSubject(uint id) external onlyStudent {
-        require(subjects[id].exist == true, "Subject not found.");
-        require(students[msg.sender].subjectGrades[id] == 0, "Already enrolled.");
-
-        students[msg.sender].subjectGrades[id] = 5;
-    }
-
-    function valueExistsInArray(uint[] memory array, uint value) private pure returns(bool) {
-        for (uint i = 0; i < array.length; i++) {
-            if (array[i] == value) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     function gradeStudent(uint subject, address student, uint grade) external onlyProfessor {
         require(subjects[subject].exist == true, "Subject not found.");
         require(students[student].exist == true, "Student not found.");
@@ -160,6 +145,14 @@ contract Faculty {
         require(grade >= 5 && grade <= 10, "Grade not in range 5-10");
 
         students[student].subjectGrades[subject] = grade;
+    }
+
+    function enrollSubject(uint id) external onlyStudent {
+        require(subjects[id].exist == true, "Subject not found.");
+        require(students[msg.sender].subjectGrades[id] == 0, "Already enrolled.");
+
+        students[msg.sender].subjectGrades[id] = 5;
+        students[msg.sender].subjectCount += 1;
     }
 
     function getAllProfessors() public view returns(ProfessorView[] memory) {      
@@ -182,21 +175,53 @@ contract Faculty {
         for (uint i = 0; i < studentCount; i++) {
             studentsArray[i] = StudentView({
                 id: studentCountToAddress[i+1],
-                name: students[studentCountToAddress[i+1]].name
+                name: students[studentCountToAddress[i+1]].name,
+                subjects: getStudentSubjects(studentCountToAddress[i+1])
             });
         }
 
         return studentsArray;
     }
+    
+    function getProfessorSubjects(address professor) public view returns(uint[] memory subjectsIds) {
+        require(professors[professor].exist == true, "Professor not found.");
+        subjectsIds = professors[professor].subjects;
+    }
+    
+    function getStudentSubjects(address student) public view returns(uint[] memory) {
+        require(students[student].exist == true, "Student not found.");
 
-    function getGrade(uint subject) public onlyStudent view returns(uint) {
+        uint[] memory subjectIds = new uint[](students[student].subjectCount);
+        uint count = 0;
+
+        for (uint i = 1; i <= subjectCount; i++) {
+            if (students[student].subjectGrades[i] > 0) {
+                subjectIds[count] = i;
+                count += 1;
+            }
+        }
+
+        return subjectIds;
+    }
+
+    function getNumberOfPassedSubjects() external onlyStudent view returns(uint256) {
+        uint256 passedSubjCount;
+
+        for (uint i = 1; i <= subjectCount; i++) {
+            if (students[msg.sender].subjectGrades[i] > 5) {
+                passedSubjCount += 1;
+            }
+        }
+
+        require(passedSubjCount > 0, "You don't have any grades.");
+
+        return passedSubjCount;
+    }
+
+    function getMyGrade(uint subject) public onlyStudent view returns(uint) {
         require(subjects[subject].exist == true, "Subject not found.");
         require(students[msg.sender].subjectGrades[subject] >= 5, "You are not enrolled in the subject.");
         return students[msg.sender].subjectGrades[subject];
-    }
-    
-    function getMySubjects() public onlyProfessor view returns(uint[] memory subjectsIds) {
-        subjectsIds = professors[msg.sender].subjects;
     }
 
     function getMyAverageGrade() external onlyStudent view returns(string memory averageGrade) {
@@ -213,6 +238,16 @@ contract Faculty {
         require(passedSubjCount > 0, "You don't have any grades.");
 
         averageGrade = MyMath.division(2, sum, passedSubjCount);
+    }
+
+    function valueExistsInArray(uint[] memory array, uint value) private pure returns(bool) {
+        for (uint i = 0; i < array.length; i++) {
+            if (array[i] == value) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     
