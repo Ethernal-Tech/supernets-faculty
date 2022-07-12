@@ -53,14 +53,6 @@ contract Faculty {
         uint subjectCount;
     }
 
-    struct SubjectView {
-        uint id;
-        string name;
-        address professorAddress;
-        string professorName;
-        address[] students;
-    }
-
     struct ProfessorView {
         address id;
         string name;
@@ -71,6 +63,19 @@ contract Faculty {
         address id;
         string name;
         uint[] subjects;
+    }
+
+    struct SubjectView {
+        uint id;
+        string name;
+        address professorAddress;
+        string professorName;
+        address[] students;
+    }
+
+    struct GradeView {
+        uint id;
+        uint grade;
     }
 
     modifier onlyAdmin {
@@ -185,24 +190,37 @@ contract Faculty {
         return studentsArray;
     }
 
-    function getSubjectById(uint subject) public view returns(SubjectView memory) {
-        require(subjects[subject].exist == true, "Subject not found.");
+    function getAllSubjects() public view returns(SubjectView[] memory) {
+        SubjectView[] memory subjectsArray = new SubjectView[](subjectCount);
 
-        return SubjectView({
-            id: subject,
-            name: subjects[subject].name,
-            professorAddress: subjects[subject].professor,
-            professorName: professors[subjects[subject].professor].name,
-            students: subjects[subject].students
-        });
+        for (uint i = 1; i <= studentCount; i++) {
+            subjectsArray[i] = SubjectView({
+                id: i,
+                name: subjects[i].name,
+                professorAddress: subjects[i].professor,
+                professorName: professors[subjects[i].professor].name,
+                students: subjects[i].students
+            });
+        }
+
+        return subjectsArray;
     }
 
-    function getMyGrade(uint subject) public onlyStudent view returns(uint) {
-        require(subjects[subject].exist == true, "Subject not found.");
-        require(students[msg.sender].subjectGrades[subject] >= 5, "You are not enrolled in the subject.");
-        return students[msg.sender].subjectGrades[subject];
+    function getStudentGrades(address student) public view returns(GradeView[] memory) {
+        GradeView[] memory grades = new GradeView[](students[student].subjectCount);
+        
+        for (uint i = 1; i <= subjectCount; i++) {
+            if (students[student].subjectGrades[i] > 0) {
+                grades.push(GradeView({
+                    id: i,
+                    grade: students[student].subjectGrades[i]
+                }));
+            }
+        }
+
+        return grades;
     }
-    
+
     function getProfessorSubjects(address professor) public view returns(uint[] memory subjectsIds) {
         require(professors[professor].exist == true, "Professor not found.");
         subjectsIds = professors[professor].subjects;
