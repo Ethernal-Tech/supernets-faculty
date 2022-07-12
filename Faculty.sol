@@ -193,7 +193,7 @@ contract Faculty {
     function getAllSubjects() public view returns(SubjectView[] memory) {
         SubjectView[] memory subjectsArray = new SubjectView[](subjectCount);
 
-        for (uint i = 1; i <= studentCount; i++) {
+        for (uint i = 1; i <= subjectCount; i++) {
             subjectsArray[i-1] = SubjectView({
                 id: i,
                 name: subjects[i].name,
