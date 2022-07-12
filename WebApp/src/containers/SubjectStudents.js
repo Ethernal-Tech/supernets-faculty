@@ -84,7 +84,7 @@ class SubjectStudents extends React.Component {
                                 <Col>{student.id}</Col>
                                 <Col xs={'auto'}>
                                     {
-                                        userRole !== USER_ROLES.PROFESSOR
+                                        userRole !== USER_ROLES.PROFESSOR || parseInt(gradesByStudent[student.id] || '5') > 5
                                             ? (gradesByStudent[student.id] || '')
                                             : (
                                                 <Form onSubmit={evt => this.onStudentGradeChangeSubmit(student.id, evt)}>

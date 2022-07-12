@@ -36,9 +36,9 @@ class Navbar extends React.Component {
                 <nav className="navbar navbar-expand-lg navbar-dark bg-dark" style={{ padding: '0.5rem' }}>
                     <div style={{ display: 'flex', flex: 1, justifyContent: 'flex-start', alignItems: 'center' }}>
                         <Link to={'/'}>
-                            <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="logo" style={{ margin: '2px 20px'}} />
+                            <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="logo" style={{ margin: '2px 20px', height: '40px' }} />
                         </Link>
-                        <Link to={'/'} className="navbar-brand">Faculty</Link>
+                        <Link to={'/'} className="navbar-brand">Faculty of blockchain</Link>
                         {/* <ul className="navbar-nav">
                             <li className="nav-item">
                                 <Link to={'/'} className="nav-link">Home</Link>
