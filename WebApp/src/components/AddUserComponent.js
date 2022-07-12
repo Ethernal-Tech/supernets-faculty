@@ -4,6 +4,7 @@ import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
+import LoadingSpinner from './LoadingSpinner'
 
 class AddUserComponent extends React.Component {
     state = {
@@ -26,6 +27,7 @@ class AddUserComponent extends React.Component {
     onAddrChange = evt => this.setState({ addr: evt.target.value })
 
     render() {
+        const buttonStyle = { width: '140px' }
         return (
             <Container style={{ paddingTop: 20 }}>
                 <Form onSubmit={this.onSubmit}>
@@ -37,9 +39,12 @@ class AddUserComponent extends React.Component {
                             <Form.Control id="address" type="text" placeholder="Enter address" value={this.state.addr} onChange={this.onAddrChange} />
                         </Col>
                         <Col xs={'auto'}>
-                        <Button variant="primary" type="submit" disabled={this.state.isWorking}>
-                            Add
-                        </Button>
+                        {
+                            this.state.isWorking ?
+                            <Button variant="primary" type="submit" style={buttonStyle} disabled><LoadingSpinner /></Button>
+                            :
+                            <Button variant="primary" type="submit" style={buttonStyle}>Add</Button>
+                        }
                         </Col>
                     </Row>
                 </Form>
