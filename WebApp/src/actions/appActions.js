@@ -3,9 +3,12 @@ import web3 from '../web3'
 import EventListenerService from "../utils/eventListenerService"
 
 export const initializeEthAction = async (location, navigate, dispatch) => {
-    window.ethereum.on('accountsChanged', (accounts) => {
+    window.ethereum.on('accountsChanged', async _ => {
         // Handle the new accounts, or lack thereof.
         // "accounts" will always be an array, but it can be empty.
+
+        // accounts param returns all lowercase, so we fetch like this
+        const accounts = await web3.eth.getAccounts();
         if (location && location.pathname !== '/' && location.pathname !== '') {
             navigate('/')
         }
