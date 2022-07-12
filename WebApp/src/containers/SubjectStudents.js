@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import Form from 'react-bootstrap/Form'
 
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
@@ -8,9 +9,56 @@ import Col from 'react-bootstrap/Col'
 import { listStyles } from '../styles'
 import EnrollStudentToSubjectComponent from '../components/EnrollStudentToSubjectComponent'
 import { USER_ROLES } from '../utils/constants'
-import { enrollStudentToSubjectAction } from '../actions/subjectActions'
+import EventListenerService from "../utils/eventListenerService"
+import { enrollStudentToSubjectAction, gradeStudentAction } from '../actions/subjectActions'
+import { isStringValueAnInt } from '../utils/utils'
+import LoadingSpinner from '../components/LoadingSpinner'
 
 class SubjectStudents extends React.Component {
+    state = {
+        updatedGradesByStudent: {}
+    }
+
+    onStudentGradeChange = (studentId, evt) => this.setState({
+        updatedGradesByStudent: { ...this.state.updatedGradesByStudent, [studentId]: evt.target.value }
+    })
+
+    onStudentGradeChangeKeyDown = (studentId, evt) => {
+        if (evt.key === 'Escape') {
+            this.setState({
+                updatedGradesByStudent: { ...this.state.updatedGradesByStudent, [studentId]: undefined }
+            }, () => evt.target.blur())
+            
+        } 
+    }
+
+    onStudentGradeChangeSubmit = async (studentId, evt) => {
+        evt.preventDefault()
+
+        const oldGrade = this.props.gradesByStudent[studentId]
+        const updatedGrade = this.state.updatedGradesByStudent[studentId]
+        if (updatedGrade === oldGrade) {
+            return
+        }
+
+        if (!updatedGrade) {
+            EventListenerService.notify("error", 'fields not populated!')
+            return
+        } else if (!isStringValueAnInt(updatedGrade)) {
+            EventListenerService.notify("error", 'invalid value!')
+            return
+        }
+
+        const value = parseInt(updatedGrade)
+        if (value < 5 || value > 10) {
+            EventListenerService.notify("error", 'invalid value!')
+            return
+        }
+
+        this.setState({ isWorking: true })
+        await this.props.gradeStudent(this.props.subject.id, studentId, updatedGrade, this.props.selectedAccount)
+        this.setState({ updatedGradesByStudent: {}, isWorking: false })
+    }
 
     onEnroll = async studentAddr => this.props.enrollStudentToSubject(this.props.subject.id, studentAddr, this.props.selectedAccount)
 
@@ -34,7 +82,29 @@ class SubjectStudents extends React.Component {
                                     <Link  to={`/student?stud=${studentIdToInd[student.id]}`}>{student.name}</Link>
                                 </Col>
                                 <Col>{student.id}</Col>
-                                <Col xs={'auto'}>{gradesByStudent[student.id] || ''}</Col>
+                                <Col xs={'auto'}>
+                                    {
+                                        userRole !== USER_ROLES.PROFESSOR
+                                            ? (gradesByStudent[student.id] || '')
+                                            : (
+                                                <Form onSubmit={evt => this.onStudentGradeChangeSubmit(student.id, evt)}>
+                                                    {
+                                                        this.state.isWorking
+                                                            ?
+                                                            <LoadingSpinner />
+                                                            :
+                                                            <Form.Control
+                                                                style={{ maxWidth: '70px', textAlign: 'right', height: '26px' }}
+                                                                type="text"
+                                                                value={this.state.updatedGradesByStudent[student.id] !== undefined ? this.state.updatedGradesByStudent[student.id] : gradesByStudent[student.id] || ''}
+                                                                onChange={evt => this.onStudentGradeChange(student.id, evt)}
+                                                                onKeyDown={evt => this.onStudentGradeChangeKeyDown(student.id, evt)}
+                                                            />
+                                                    }
+                                                </Form>
+                                            )
+                                    }
+                                </Col>
                             </Row>
                         ))
                     }
@@ -66,6 +136,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({
     enrollStudentToSubject: (subjectId, studentAddr, selectedAccount) => enrollStudentToSubjectAction(subjectId, studentAddr, selectedAccount, dispatch),
+    gradeStudent: (subjectId, studentAddr, grade, selectedAccount) => gradeStudentAction(subjectId, studentAddr, grade, selectedAccount, dispatch),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SubjectStudents)

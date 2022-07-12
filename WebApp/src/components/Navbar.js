@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Alert from 'react-bootstrap/Alert';
 import EventListenerService from "../utils/eventListenerService"
+import { USER_ROLES } from '../utils/constants'
+import { getUserRole } from '../utils/userUtils'
 
 class Navbar extends React.Component {
     constructor(props) {
@@ -32,18 +34,23 @@ class Navbar extends React.Component {
         return (
             <>
                 <nav className="navbar navbar-expand-lg navbar-dark bg-dark" style={{ padding: '0.5rem' }}>
-                    <div style={{ display: 'flex', flex: 1, justifyContent: 'flex-start' }}>
+                    <div style={{ display: 'flex', flex: 1, justifyContent: 'flex-start', alignItems: 'center' }}>
+                        <Link to={'/'}>
+                            <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="logo" style={{ margin: '2px 20px'}} />
+                        </Link>
                         <Link to={'/'} className="navbar-brand">Faculty</Link>
-                        <ul className="navbar-nav">
+                        {/* <ul className="navbar-nav">
                             <li className="nav-item">
                                 <Link to={'/'} className="nav-link">Home</Link>
                             </li>
-                        </ul>
+                        </ul> */}
                     </div>
                     {
                         !!this.props.selectedAccount &&
                         <div style={{ color: 'white', fontSize: 12 }}>
                             {this.props.selectedAccount}
+                            <br />
+                            {this.props.userName}
                         </div>
                     }
                 </nav>
@@ -60,8 +67,20 @@ class Navbar extends React.Component {
     }
 }
 
-const mapStateToProps = state => ({
-    selectedAccount: state.eth.selectedAccount,
-})
+const mapStateToProps = state => {
+    const userRole = getUserRole(state.users.professors || [], state.users.students || [], state.eth.selectedAccount)
+    let userName = null
+    if (userRole === USER_ROLES.PROFESSOR) {
+        userName = state.users.professors?.find(x => x.id === state.eth.selectedAccount)?.name
+    } else if (userRole === USER_ROLES.STUDENT) {
+        userName = state.users.students?.find(x => x.id === state.eth.selectedAccount)?.name
+    } else if (userRole === USER_ROLES.ADMIN) {
+        userName = 'admin'
+    }
+    return {
+        selectedAccount: state.eth.selectedAccount,
+        userName,
+    }
+}
 
 export default connect(mapStateToProps)(Navbar)

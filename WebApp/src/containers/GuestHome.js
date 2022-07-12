@@ -4,7 +4,7 @@ class GuestHome extends React.Component {
     render() {
         return (
             <div style={{ padding: '1rem' }}>
-                <p>GuestHome</p>
+                <p>Please connect your wallet</p>
             </div>
         )
     }

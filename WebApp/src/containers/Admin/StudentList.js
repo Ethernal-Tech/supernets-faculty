@@ -28,7 +28,7 @@ class StudentList extends React.Component {
                     {
                         students.map((student, ind) => (                           
                             <Row key={`stud_${student.id}`} style={ind === students.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }}>
-                                <Col> <Link to={`/student?stud=${ind}`}>{student.name}</Link></Col>
+                                <Col><Link to={`/student?stud=${ind}`}>{student.name}</Link></Col>
                                 <Col>{student.id}</Col>
                             </Row>
                         ))

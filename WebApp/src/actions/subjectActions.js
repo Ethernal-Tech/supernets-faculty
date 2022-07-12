@@ -47,3 +47,14 @@ export const enrollStudentToSubjectAction = async (subjectId, studentAddr, selec
     await loadStudentsAction(dispatch)
     await loadAllSubjectsAction(dispatch)
 }
+
+export const gradeStudentAction = async (subjectId, studentAddr, grade, selectedAccount, dispatch) => {
+    try {
+        await faculty.methods.gradeStudent(subjectId, studentAddr, grade).send({ from: selectedAccount });
+    }
+    catch (ex) {
+        EventListenerService.notify("error", ex)
+    }
+
+    await loadStudentsAction(dispatch)
+}
