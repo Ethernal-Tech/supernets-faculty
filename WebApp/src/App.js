@@ -1,126 +1,35 @@
-import React from "react";
-import web3 from "./web3";
-import faculty from "./faculty.js";
+import React, { useCallback, useEffect } from 'react'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import { useDispatch } from 'react-redux'
+import { useLocation, useNavigate } from 'react-router-dom'
 
-class App extends React.Component {
-  state = {
-    AllProfessors: [],
-    AllStudents: [],
-    accounts: [],
-    profName: "",
-    profAddress: ""
-  };
-  async componentDidMount() {
+import Navbar from './components/Navbar'
+import AppRoutes from './routes/AppRoutes'
+import { initializeEthAction } from './actions/appActions'
+import { loadUsersAction } from './actions/userActions'
 
-    const AllProfessors = await faculty.methods.getAllProfessors().call();
-    const AllStudents = await faculty.methods.getAllStudents().call();
-    const accounts = await web3.eth.getAccounts();
+function App() {
+    const dispatch = useDispatch()
+    const location = useLocation()
+    const navigate = useNavigate()
 
+    const initCallback = useCallback(async () => {
+        await initializeEthAction(location, navigate, dispatch)
+        await loadUsersAction(dispatch)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
-    this.setState({ AllProfessors, AllStudents, accounts });
-  }
+    useEffect(() => {
+        initCallback()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
-  onSubmit = async (event) => {
-    event.preventDefault();
-
-    const accounts = await web3.eth.getAccounts();
-
-    this.setState({ message: "Waiting on transaction success..." });
-    try {
-      await faculty.methods.addProfessor(this.state.profAddress, this.state.profName).send({
-        from: accounts[0]
-      });
-
-      this.setState({ message: "Professor added!" });
-    }
-    catch (err) {
-      this.setState({ message: err.message });
-    }
-  };
-
-  onSubmitStudent = async (event) => {
-    event.preventDefault();
-
-    const accounts = await web3.eth.getAccounts();
-
-    this.setState({ message: "Waiting on transaction success..." });
-    try {
-      await faculty.methods.addStudent(this.state.studAddress, this.state.studName).send({
-        from: accounts[0]
-      });
-
-      this.setState({ message: "Student added!" });
-    }
-    catch (err) {
-      this.setState({ message: err.message });
-    }
-
-  };
-  
-  render() {
-    const profs = this.state.AllProfessors.map((d) => <li key={d.name}>{d.name}</li>);
-    const studs = this.state.AllStudents.map((d) => <li key={d.name}>{d.name}</li>);
     return (
-      <div>
-        Current user: <br></br><span>{this.state.accounts[0]}</span>
-        <hr></hr>
-        <h3>Professors</h3>
-        <ul>
-          {profs}
-        </ul>
-        <form onSubmit={this.onSubmit}>
-          <h4>Add professor</h4>
-          <div>
-            <label>Name: </label>
-            <input
-              value={this.state.profName}
-              onChange={(event) => this.setState({ profName: event.target.value })}
-            /><br></br>
-            <br></br>
-            <label>Address: </label>
-            <input
-              value={this.state.profAddress}
-              onChange={(event) => this.setState({ profAddress: event.target.value })}
-            />
-            <br></br>
-            <br></br>
-          </div>
-          <button>Add</button>
-        </form>
-        <hr></hr>
-        <h3>Students</h3>
-        <ul>
-          {studs}
-        </ul>
-       
-        <form onSubmit={this.onSubmitStudent}>
-          <h4>Add student</h4>
-          <div>
-            <label>Name: </label>
-            <input
-              value={this.state.studName}
-              onChange={(event) => this.setState({ studName: event.target.value })}
-            /><br></br>
-            <br></br>
-            <label>Address: </label>
-            <input
-              value={this.state.studAddress}
-              onChange={(event) => this.setState({ studAddress: event.target.value })}
-            />
-            <br></br>
-            <br></br>
-          </div>
-          <button>Add</button>
-        </form>
-
-        <hr />
-
-
-        <hr />
-
-        <h1>{this.state.message}</h1>
-      </div>
-    );
-  }
+        <>
+            <Navbar />
+            <AppRoutes/>
+        </>
+    )
 }
-export default App;
+
+export default App
