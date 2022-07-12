@@ -15,7 +15,7 @@ class SubjectStudents extends React.Component {
     onEnroll = async studentAddr => this.props.enrollStudentToSubject(this.props.subject.id, studentAddr, this.props.selectedAccount)
 
     render() {
-        const { userRole, subject, subjectStudents, studentIdToInd, studentsToEnroll } = this.props
+        const { userRole, subject, subjectStudents, studentIdToInd, studentsToEnroll, gradesByStudent } = this.props
         return (
             <div style={{ padding: '1rem' }}>
                 <h4>{subject.name}</h4>
@@ -24,18 +24,18 @@ class SubjectStudents extends React.Component {
                     <Row style={listStyles.borderBottom}>
                         <Col>Student</Col>
                         <Col>Student address</Col>
-                        {/* <Col xs={'auto'}>Grade</Col> */}
+                        <Col xs={'auto'}>Grade</Col>
                     </Row>
 
                     {
                         subjectStudents.map((student, ind) => (
-                            <Link key={`stud_${ind}`} to={`/student?stud=${studentIdToInd[student.id]}`}>
-                                <Row style={ind === subjectStudents.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }}>
-                                    <Col>{student.name}</Col>
-                                    <Col>{student.id}</Col>
-                                    {/* <Col xs={'auto'}>asd</Col> */}
-                                </Row>
-                            </Link>
+                            <Row key={`stud_${student.id}`} style={ind === subjectStudents.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }}>
+                                <Col>
+                                    <Link  to={`/student?stud=${studentIdToInd[student.id]}`}>{student.name}</Link>
+                                </Col>
+                                <Col>{student.id}</Col>
+                                <Col xs={'auto'}>{gradesByStudent[student.id] || ''}</Col>
+                            </Row>
                         ))
                     }
                 </Container>
@@ -52,6 +52,7 @@ const mapStateToProps = (state, ownProps) => {
     const allStudents = (state.users.students || [])
     const subjectStudents = ownProps.subject.students.map(x => allStudents.find(y => y.id === x))
     const studentsToEnroll = allStudents.filter(x => !ownProps.subject.students.some(y => y === x.id))
+    const gradesByStudent = (state.subjects.gradesByStudentBySubject || {})[ownProps.subject.id] || {}
     return {
         subjectStudents,
         studentsToEnroll,
@@ -59,6 +60,7 @@ const mapStateToProps = (state, ownProps) => {
             acc[cv.id] = ind
             return acc
         }, {}),
+        gradesByStudent,
     }
 }
 

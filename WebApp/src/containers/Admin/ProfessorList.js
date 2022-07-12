@@ -27,13 +27,12 @@ class ProfessorList extends React.Component {
                         <Col>Address</Col>
                     </Row>
                     {
-                        professors.map((professor, ind) => (
-                            <Link key={`prof_${ind}`} to={`/professor?prof=${ind}`}>
-                                <Row style={ind === professors.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }}>
-                                    <Col>{professor.name}</Col>
-                                    <Col>{professor.id}</Col>
-                                </Row>
-                            </Link>
+                        professors.map((professor, ind) => (                            
+                            <Row key={`prof_${professor.id}`} 
+                                style={ind === professors.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }}>
+                                <Col><Link to={`/professor?prof=${ind}`}>{professor.name}</Link></Col>
+                                <Col>{professor.id}</Col>
+                            </Row>                           
                         ))
                     }
                 </Container>

@@ -33,12 +33,10 @@ class ProfessorSubjects extends React.Component {
 
                     {
                         subjects.map((subject, ind) => (
-                            <Link key={`sub_${ind}`} to={`/subject?subjId=${subject.id}`}>
-                                <Row style={ind === subjects.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }}>
-                                    <Col>{subject.name}</Col>
-                                    <Col>{subject.students.length}</Col>
-                                </Row>
-                            </Link>
+                            <Row key={`sub_${subject.id}`} style={ind === subjects.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }}>
+                                <Col><Link to={`/subject?subjId=${subject.id}`}>{subject.name}</Link></Col>
+                                <Col>{subject.students.length}</Col>
+                            </Row>
                         ))
                     }
                 </Container>

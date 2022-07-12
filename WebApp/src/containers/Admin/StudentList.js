@@ -26,13 +26,11 @@ class StudentList extends React.Component {
                         <Col>Address</Col>
                     </Row>
                     {
-                        students.map((student, ind) => (
-                            <Link key={`stud_${ind}`} to={`/student?stud=${ind}`}>
-                                <Row style={ind === students.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }}>
-                                    <Col>{student.name} </Col>
-                                    <Col>{student.id}</Col>
-                                </Row>
-                            </Link>
+                        students.map((student, ind) => (                           
+                            <Row key={`stud_${student.id}`} style={ind === students.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }}>
+                                <Col> <Link to={`/student?stud=${ind}`}>{student.name}</Link></Col>
+                                <Col>{student.id}</Col>
+                            </Row>
                         ))
                     }
                 </Container>
