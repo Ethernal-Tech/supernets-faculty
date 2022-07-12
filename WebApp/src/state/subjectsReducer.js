@@ -7,6 +7,7 @@ export const subjectsReducer = createSlice({
         subjectsByProfessorAddr: {},
         gradesByStudentBySubject: {},
         gradesBySubjectByStudent: {},
+        studentSubjects: {},
     },
     reducers: {
         setAllSubjects: (state, action) => {
@@ -23,10 +24,16 @@ export const subjectsReducer = createSlice({
             state.gradesByStudentBySubject = gradesByStudentBySubject
             state.gradesBySubjectByStudent = gradesBySubjectByStudent
         },
+        setStudentSubjects: (state, action) => {
+            state.studentSubjects = {
+                ...state.studentSubjects,
+                [action.payload.studentId]: action.payload.subjects
+            }
+        },
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { setAllSubjects, setSubjectsForProfessorAddr, setStudentGrades } = subjectsReducer.actions
+export const { setAllSubjects, setSubjectsForProfessorAddr, setStudentGrades, setStudentSubjects } = subjectsReducer.actions
 
 export default subjectsReducer.reducer

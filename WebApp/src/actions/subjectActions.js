@@ -1,5 +1,5 @@
 import faculty from '../faculty'
-import { setAllSubjects, setSubjectsForProfessorAddr } from '../state/subjectsReducer'
+import { setAllSubjects, setStudentSubjects, setSubjectsForProfessorAddr } from '../state/subjectsReducer'
 import EventListenerService from "../utils/eventListenerService"
 import { loadProfessorsAction, loadStudentsAction } from './userActions';
 
@@ -34,6 +34,16 @@ export const addSubjectAction = async (subjectName, professorAddr, selectedAccou
     await loadProfessorsAction(dispatch)
     await loadAllSubjectsAction(dispatch)
     await loadProfessorSubjectsAction(professorAddr, dispatch)
+}
+
+export const loadStudentSubjectsAction = async (accountAddress, dispatch) => {
+    try {
+        const subjects = await faculty.methods.getStudentSubjects(accountAddress).call();
+        dispatch(setStudentSubjects({ studentId: accountAddress, subjects }))
+    }
+    catch (ex) {
+        EventListenerService.notify("error", ex)
+    }
 }
 
 export const enrollStudentToSubjectAction = async (subjectId, studentAddr, selectedAccount, dispatch) => {
