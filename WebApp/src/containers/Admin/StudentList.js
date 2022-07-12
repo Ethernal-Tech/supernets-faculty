@@ -1,5 +1,7 @@
 import React from 'react'
+import '../../listStyles.css'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
@@ -7,6 +9,7 @@ import Col from 'react-bootstrap/Col'
 import { USER_ROLES } from '../../utils/constants'
 import AddUserComponent from '../../components/AddUserComponent'
 import { addStudentAction } from '../../actions/userActions'
+import { listStyles } from '../../styles'
 
 class StudentList extends React.Component {
     onSubmit = async (name, addr) => this.props.addStudent(name, addr, this.props.selectedAccount)
@@ -18,18 +21,18 @@ class StudentList extends React.Component {
                 <h4>Students</h4>
                 
                 <Container>
-                    <Row style={styles.borderBottom}>
+                    <Row style={listStyles.borderBottom}>
                         <Col>Name</Col>
                         <Col>Address</Col>
                     </Row>
                     {
                         students.map((student, ind) => (
-                            <Row
-                                key={`stud_${ind}`}
-                                style={ind === students.length - 1 ? styles.paddingVertical : { ...styles.paddingVertical, ...styles.borderBottomThin }}>
-                                <Col>{student.name} </Col>
-                                <Col>{student.id}</Col>
-                            </Row>
+                            <Link key={`stud_${ind}`} to={`/student?stud=${ind}`}>
+                                <Row style={ind === students.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }}>
+                                    <Col>{student.name} </Col>
+                                    <Col>{student.id}</Col>
+                                </Row>
+                            </Link>
                         ))
                     }
                 </Container>
@@ -52,16 +55,3 @@ const mapDispatchToProps = dispatch => ({
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(StudentList)
-
-const styles = {
-    borderBottomThin: {
-        borderBottom: '1px solid black'
-    },
-    borderBottom: {
-        borderBottom: '2px solid black'
-    },
-    paddingVertical: {
-        paddingTop: 5,
-        paddingBottom: 5,
-    }
-}
