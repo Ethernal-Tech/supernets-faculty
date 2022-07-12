@@ -130,14 +130,14 @@ contract Faculty {
         students[id].exist = true;
     }
 
-    function addSubject(string calldata name) external onlyProfessor {
+    function addSubject(string calldata name, address professor) external onlyAdmin {
         subjectCount += 1;
 
         subjects[subjectCount].name = name;
         subjects[subjectCount].exist = true;
-        subjects[subjectCount].professor = msg.sender;
+        subjects[subjectCount].professor = professor;
 
-        professors[msg.sender].subjects.push(subjectCount);
+        professors[professor].subjects.push(subjectCount);
     }
 
     function gradeStudent(uint subject, address student, uint grade) external onlyProfessor {
@@ -153,13 +153,13 @@ contract Faculty {
         students[student].subjectGrades[subject] = grade;
     }
 
-    function enrollSubject(uint id) external onlyStudent {
+    function enrollSubject(uint id, address student) external onlyAdmin {
         require(subjects[id].exist == true, "Subject not found.");
-        require(students[msg.sender].subjectGrades[id] == 0, "Already enrolled.");
+        require(students[student].subjectGrades[id] == 0, "Already enrolled.");
 
-        students[msg.sender].subjectGrades[id] = 5;
-        students[msg.sender].subjectCount += 1;
-        subjects[id].students.push(msg.sender);
+        students[student].subjectGrades[id] = 5;
+        students[student].subjectCount += 1;
+        subjects[id].students.push(student);
     }
 
     function getAllProfessors() public view returns(ProfessorView[] memory) {      
@@ -194,7 +194,7 @@ contract Faculty {
         SubjectView[] memory subjectsArray = new SubjectView[](subjectCount);
 
         for (uint i = 1; i <= studentCount; i++) {
-            subjectsArray[i] = SubjectView({
+            subjectsArray[i-1] = SubjectView({
                 id: i,
                 name: subjects[i].name,
                 professorAddress: subjects[i].professor,
@@ -208,13 +208,15 @@ contract Faculty {
 
     function getStudentGrades(address student) public view returns(GradeView[] memory) {
         GradeView[] memory grades = new GradeView[](students[student].subjectCount);
+        uint count = 0;
         
         for (uint i = 1; i <= subjectCount; i++) {
             if (students[student].subjectGrades[i] > 0) {
-                grades.push(GradeView({
+                grades[count] = GradeView({
                     id: i,
                     grade: students[student].subjectGrades[i]
-                }));
+                });
+                count += 1;
             }
         }
 
