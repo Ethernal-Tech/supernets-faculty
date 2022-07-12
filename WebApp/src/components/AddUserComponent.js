@@ -5,6 +5,7 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
 import LoadingSpinner from './LoadingSpinner'
+import EventListenerService from "../utils/eventListenerService"
 
 class AddUserComponent extends React.Component {
     state = {
@@ -19,6 +20,8 @@ class AddUserComponent extends React.Component {
             this.setState({ isWorking: true })
             this.props.onSubmit && await this.props.onSubmit(this.state.name, this.state.addr)
             this.setState({ name: '', addr: '', isWorking: false })
+        } else {
+            EventListenerService.notify("error", 'fields not populated!')
         }
     }
 
