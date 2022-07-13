@@ -2,6 +2,7 @@ import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 
 import HomePage from '../pages/HomePage'
+import LandingPage from '../pages/LandingPage'
 import ProfessorDetailsPage from '../pages/ProfessorDetailsPage'
 import StudentDetailsPage from '../pages/StudentDetailsPage'
 import SubjectDetailsPage from '../pages/SubjectDetailsPage'
@@ -16,7 +17,8 @@ class AppRoutes extends React.Component {
                 <Route path="subject" element={<SubjectDetailsPage />} />
 
                 {/* if page unsupported, go to home */}
-                <Route path="*" element={<HomePage />}/>
+                <Route path="*" element={<LandingPage />}/>
+                <Route path="home" element={<HomePage />}/>
             </Routes>
         )
     }
