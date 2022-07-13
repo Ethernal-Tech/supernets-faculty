@@ -1,6 +1,7 @@
 import faculty from '../faculty'
 import { setStudentGrades } from '../state/subjectsReducer'
 import { setProfessors, setStudents, setUsers } from '../state/usersReducer'
+import { setAdminAccount } from '../state/ethReducer'
 import EventListenerService from "../utils/eventListenerService"
 
 const loadStudentGrades = async (students, dispatch) => {
@@ -71,6 +72,15 @@ export const addStudentAction = async (name, addr, account, dispatch) => {
     try {
         await faculty.methods.addStudent(addr, name).send({ from: account });
         await loadStudentsAction(dispatch)
+    } catch (ex) {
+        EventListenerService.notify("error", ex)
+    }
+}
+
+export const loadAdminAccountAction = async (dispatch) => {
+    try {
+        const adminAccount = await faculty.methods.admin().call();
+        dispatch(setAdminAccount(adminAccount))
     } catch (ex) {
         EventListenerService.notify("error", ex)
     }

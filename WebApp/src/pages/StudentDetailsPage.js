@@ -20,7 +20,7 @@ class StudentDetailsPage extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    const userRole = getUserRole(state.users.professors || [], state.users.students || [], state.eth.selectedAccount)
+    const userRole = getUserRole(state)
     const students = state.users.students || []
     let student
     if (ownProps.stud) {

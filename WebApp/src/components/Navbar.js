@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Alert from 'react-bootstrap/Alert';
 import EventListenerService from "../utils/eventListenerService"
-import { USER_ROLES } from '../utils/constants'
-import { getUserRole } from '../utils/userUtils'
+import { getUserName } from '../utils/userUtils'
 
 class Navbar extends React.Component {
     constructor(props) {
@@ -68,15 +67,7 @@ class Navbar extends React.Component {
 }
 
 const mapStateToProps = state => {
-    const userRole = getUserRole(state.users.professors || [], state.users.students || [], state.eth.selectedAccount)
-    let userName = null
-    if (userRole === USER_ROLES.PROFESSOR) {
-        userName = state.users.professors?.find(x => x.id === state.eth.selectedAccount)?.name
-    } else if (userRole === USER_ROLES.STUDENT) {
-        userName = state.users.students?.find(x => x.id === state.eth.selectedAccount)?.name
-    } else if (userRole === USER_ROLES.ADMIN) {
-        userName = 'admin'
-    }
+    const userName = getUserName(state)
     return {
         selectedAccount: state.eth.selectedAccount,
         userName,

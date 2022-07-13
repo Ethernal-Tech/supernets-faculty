@@ -37,7 +37,7 @@ class HomePage extends React.Component {
 
 
 const mapStateToProps = state => {
-    const userRole = getUserRole(state.users.professors || [], state.users.students || [], state.eth.selectedAccount)
+    const userRole = getUserRole(state)
     return {
         userRole,
     }

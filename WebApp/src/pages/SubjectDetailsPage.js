@@ -18,7 +18,7 @@ class SubjectDetailsPage extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    const userRole = getUserRole(state.users.professors || [], state.users.students || [], state.eth.selectedAccount)
+    const userRole = getUserRole(state)
     const subjects = state.subjects.allSubjects || []
     const subject = ownProps.subjId ? subjects.find(x => x.id === ownProps.subjId) : undefined
     return {

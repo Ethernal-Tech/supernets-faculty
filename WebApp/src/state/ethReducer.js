@@ -5,6 +5,7 @@ export const ethReducer = createSlice({
     initialState: {
         selectedAccount: undefined,
         gasPrice: undefined,
+        adminAccount: '',
     },
     reducers: {
         setSelectedAccount: (state, action) => {
@@ -16,11 +17,15 @@ export const ethReducer = createSlice({
         },
         setGasPrice: (state, action) => {
             state.gasPrice = action.payload
-        }
+        },
+        setAdminAccount: (state, action) => {
+            console.log(action.payload, 'kuuur')
+            state.adminAccount = action.payload
+        },
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { setSelectedAccount, setGasPrice } = ethReducer.actions
+export const { setSelectedAccount, setGasPrice, setAdminAccount } = ethReducer.actions
 
 export default ethReducer.reducer
