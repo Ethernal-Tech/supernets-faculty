@@ -1,27 +1,28 @@
 import React from 'react'
 import { Button, Container } from 'react-bootstrap'
-import { connect } from 'react-redux';
-import { useNavigate } from "react-router-dom";
-import { USER_ROLES } from '../utils/constants';
-import { getUserRole } from '../utils/userUtils';
+import { connect } from 'react-redux'
+import { Link } from "react-router-dom"
+
+import { USER_ROLES } from '../utils/constants'
+import { getUserRole } from '../utils/userUtils'
 
 const LandingPage = ({ userRole }) => {
-    let navigate = useNavigate()
 
     return (
         <Container style={styles.container}>
             <h2>Welcome to Faculty of Blockchain</h2>
             <div style={styles.homeText}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                This is a show case platform tailored made for the purpose of Lugano PlanB Summer School. 
+                It represents a demo of the first phase of entire school-students management platform development.
             </div>
+
             {
                 userRole !== USER_ROLES.GUEST &&
-                <Button style={styles.enterButton} onClick={() => navigate('/home')}>
-                    ENTER
-                </Button>
+                <Link style={styles.enterButtonContainer} to={'/home'}>
+                    <Button style={styles.enterButton}>
+                        ENTER
+                    </Button>
+                </Link>
             }
         </Container>
     )
@@ -46,8 +47,10 @@ const styles = {
     homeText: {
         paddingTop: 60,
     },
-    enterButton: {
+    enterButtonContainer: {
         marginTop: 60,
+    },
+    enterButton: {
         width: 200,
         height: 60
     }

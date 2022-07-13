@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import Alert from 'react-bootstrap/Alert';
 import EventListenerService from "../utils/eventListenerService"
 import { getUserName } from '../utils/userUtils'
+import withRouter from '../utils/withRouter';
 
 class Navbar extends React.Component {
     constructor(props) {
@@ -30,6 +31,11 @@ class Navbar extends React.Component {
     }
 
     render() {
+        const { location } = this.props
+        if (location.pathname === '/certificate') {
+            return null
+        }
+
         return (
             <>
                 <nav className="navbar navbar-expand-lg navbar-dark bg-dark" style={{ padding: '0.5rem' }}>
@@ -74,4 +80,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps)(Navbar)
+export default withRouter(connect(mapStateToProps)(Navbar))

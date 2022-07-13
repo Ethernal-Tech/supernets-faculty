@@ -1,5 +1,6 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
+import CertificatePage from '../pages/CertificatePage'
 
 import HomePage from '../pages/HomePage'
 import LandingPage from '../pages/LandingPage'
@@ -11,8 +12,8 @@ class AppRoutes extends React.Component {
     render() {
         return (
             <Routes>
+                <Route path="certificate" element={<CertificatePage />} />
                 <Route path="professor" element={<ProfessorDetailsPage />} />
-
                 <Route path="student" element={<StudentDetailsPage />} />
                 <Route path="subject" element={<SubjectDetailsPage />} />
 

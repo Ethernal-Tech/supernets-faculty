@@ -1,41 +1,39 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
 
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import Button from 'react-bootstrap/Button'
 
 import { loadStudentSubjectsAction } from '../../actions/subjectActions'
 import { listStyles } from '../../styles'
-import { USER_ROLES } from '../../utils/constants'
+import { formatDate } from '../../utils/utils'
 
-class SubjectList extends React.Component {
+class StudentCertificate extends React.Component {
+    constructor(props) {
+        super(props)
+        const now = new Date()
+        this.dateNow = formatDate(now)
+    }
+
     componentDidMount() {
         this.props.loadStudentSubjects(this.props.student.id)
     }
 
     render() {
-        const { student, studentSubjects, userRole, studParam } = this.props
+        const { student, studentSubjects } = this.props
         return (
             <div style={{ padding: '1rem' }}>
-                <h4>{student.name}</h4>
+                <h4>Official certificated made in blockchain</h4>
 
                 <Container>
-                    {
-                        userRole === USER_ROLES.ADMIN &&
-                        <Row style={{ padding: '1rem 0' }}>
-                            <Col>
-                                <Link to={`/certificate${studParam ? ('?stud=' + studParam) : ''}`} target="_blank">
-                                    <Button variant="primary" type="button">
-                                        Produce certificate
-                                    </Button>
-                                </Link>
-                            </Col>
-                        </Row>
-                    }
-                    <Row style={listStyles.borderBottom}>
+                    <Row style={listStyles.paddingTop10}>Issued to: {student.name}</Row>
+                    <Row>Issued by: Faculty of Blockchain</Row>
+                    <Row>Event type: PlanB Summer school</Row>
+                    <Row>Location: Lugano</Row>
+                    <Row>Date: {this.dateNow}</Row>
+
+                    <Row style={{ ...listStyles.borderBottom, ...listStyles.paddingTop10 }}>
                         <Col>Subject Name</Col>
                         <Col>Professor's Name</Col>
                         <Col>Grade</Col>
@@ -57,6 +55,7 @@ class SubjectList extends React.Component {
     }
 }
 
+
 const mapStateToProps = (state, ownProps) => {
     const allSubjects = state.subjects.allSubjects || []
     const gradesBySubject = (state.subjects.gradesBySubjectByStudent || {})[ownProps.student.id] || {}
@@ -67,7 +66,7 @@ const mapStateToProps = (state, ownProps) => {
             ...subject,
             grade
         }
-    })
+    }).filter(x => parseInt(x.grade) > 5)
     return {
         studentSubjects,
     }
@@ -77,4 +76,4 @@ const mapDispatchToProps = dispatch => ({
     loadStudentSubjects: (accountAddress) => loadStudentSubjectsAction(accountAddress, dispatch)
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(SubjectList)
+export default connect(mapStateToProps, mapDispatchToProps)(StudentCertificate)

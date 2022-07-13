@@ -6,6 +6,7 @@ import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
 import LoadingSpinner from './LoadingSpinner'
 import EventListenerService from "../utils/eventListenerService"
+import { generalStyles } from '../styles'
 
 class AddUserComponent extends React.Component {
     state = {
@@ -30,7 +31,6 @@ class AddUserComponent extends React.Component {
     onAddrChange = evt => this.setState({ addr: evt.target.value })
 
     render() {
-        const buttonStyle = { width: '140px' }
         return (
             <Container style={{ paddingTop: 20 }}>
                 <Form onSubmit={this.onSubmit}>
@@ -44,9 +44,9 @@ class AddUserComponent extends React.Component {
                         <Col xs={'auto'}>
                         {
                             this.state.isWorking ?
-                            <Button variant="primary" type="submit" style={buttonStyle} disabled><LoadingSpinner /></Button>
+                            <Button variant="primary" type="submit" style={generalStyles.button} disabled><LoadingSpinner /></Button>
                             :
-                            <Button variant="primary" type="submit" style={buttonStyle}>Add</Button>
+                            <Button variant="primary" type="submit" style={generalStyles.button}>Add</Button>
                         }
                         </Col>
                     </Row>

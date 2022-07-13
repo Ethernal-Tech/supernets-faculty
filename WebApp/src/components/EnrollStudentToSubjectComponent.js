@@ -6,6 +6,7 @@ import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
 import LoadingSpinner from './LoadingSpinner'
 import EventListenerService from "../utils/eventListenerService"
+import { generalStyles } from '../styles'
 
 class EnrollStudentToSubjectComponent extends React.Component {
     state = {
@@ -28,7 +29,6 @@ class EnrollStudentToSubjectComponent extends React.Component {
 
     render() {
         const { studentsToEnroll } = this.props
-        const buttonStyle = { width: '140px' }
         return (
             <Container style={{ paddingTop: 20 }}>
                 <Form onSubmit={this.onSubmit}>
@@ -46,9 +46,9 @@ class EnrollStudentToSubjectComponent extends React.Component {
                         <Col xs={'auto'}>
                         {
                             this.state.isWorking ?
-                            <Button variant="primary" type="submit" style={buttonStyle} disabled><LoadingSpinner /></Button>
+                            <Button variant="primary" type="submit" style={generalStyles.button} disabled><LoadingSpinner /></Button>
                             :
-                            <Button variant="primary" type="submit" style={buttonStyle} disabled={!this.state.studentAddr}>Enroll</Button>
+                            <Button variant="primary" type="submit" style={generalStyles.button} disabled={!this.state.studentAddr}>Enroll</Button>
                         }
                         </Col>
                     </Row>

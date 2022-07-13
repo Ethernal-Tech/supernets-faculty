@@ -1,21 +1,19 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import SubjectList from '../containers/Student/SubjectList'
+import StudentCertificate from '../containers/Student/StudentCertificate'
 import { USER_ROLES } from '../utils/constants'
 import { getUserRole } from '../utils/userUtils'
 import withRouter from '../utils/withRouter'
 
-class StudentDetailsPage extends React.Component {
+class CertificatePage extends React.Component {
     render() {
-        const { student, stud, userRole } = this.props
+        const { student } = this.props
         if (!student) {
-            return null
+            return null;
         }
 
         return (
-            <div style={{ padding: '1rem' }}>
-                <SubjectList student={student} userRole={userRole} studParam={stud}/>
-            </div>
+            <StudentCertificate student={student}/>
         )
     }
 }
@@ -38,4 +36,4 @@ const mapStateToProps = (state, ownProps) => {
     }
 }
 
-export default withRouter(connect(mapStateToProps)(StudentDetailsPage))
+export default withRouter(connect(mapStateToProps)(CertificatePage))

@@ -19,7 +19,6 @@ export const ethReducer = createSlice({
             state.gasPrice = action.payload
         },
         setAdminAccount: (state, action) => {
-            console.log(action.payload, 'kuuur')
             state.adminAccount = action.payload
         },
     },
