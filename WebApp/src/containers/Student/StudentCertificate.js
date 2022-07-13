@@ -25,11 +25,13 @@ class StudentCertificate extends React.Component {
         return (
             <div style={{ padding: '1rem' }}>
                 <h4>Official certificated made in blockchain</h4>
-
+                <div style={{position: 'fixed', bottom: '20px', left: '20px', zIndex: '20'}}>
+                    <img src={`${process.env.PUBLIC_URL}/logoplan.png`}  alt="logoplan" />
+                </div>
                 <Container>
                     <Row style={listStyles.paddingTop10}>Issued to: {student.name}</Row>
                     <Row>Issued by: Faculty of Blockchain</Row>
-                    <Row>Event type: PlanB Summer school</Row>
+                    <Row>Event type: PlanB Summer School</Row>
                     <Row>Location: Lugano</Row>
                     <Row>Date: {this.dateNow}</Row>
 

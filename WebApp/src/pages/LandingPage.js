@@ -12,7 +12,7 @@ const LandingPage = ({ userRole }) => {
         <Container style={styles.container}>
             <h2>Welcome to Faculty of Blockchain</h2>
             <div style={styles.homeText}>
-                This is a show case platform tailored made for the purpose of Lugano PlanB Summer School. 
+                This is a show case platform tailored made for the purpose of Lugano PlanB Summer School. <br />
                 It represents a demo of the first phase of entire school-students management platform development.
             </div>
 
@@ -46,6 +46,7 @@ const styles = {
     },
     homeText: {
         paddingTop: 60,
+        textAlign: 'center',
     },
     enterButtonContainer: {
         marginTop: 60,

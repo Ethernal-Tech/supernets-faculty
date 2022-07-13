@@ -7,13 +7,22 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
 
-import { loadStudentSubjectsAction } from '../../actions/subjectActions'
+import { loadProfessorSubjectsAction, loadStudentSubjectsAction } from '../../actions/subjectActions'
 import { listStyles } from '../../styles'
 import { USER_ROLES } from '../../utils/constants'
 
 class SubjectList extends React.Component {
     componentDidMount() {
-        this.props.loadStudentSubjects(this.props.student.id)
+        this.load()
+    }
+
+    load = async () => {
+        const { userRole, student, loadStudentSubjects, loadProfessorSubjects, selectedAccount } = this.props
+        if (userRole === USER_ROLES.PROFESSOR) {
+            await loadProfessorSubjects(selectedAccount)
+        }
+
+        await loadStudentSubjects(student.id)
     }
 
     render() {
@@ -47,7 +56,7 @@ class SubjectList extends React.Component {
                                 style={ind === studentSubjects.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }}>
                                 <Col>{subject.name}</Col>
                                 <Col>{subject.professorName}</Col>
-                                <Col>{subject.grade}</Col>
+                                <Col>{subject.grade !== undefined ? subject.grade : '*'}</Col>
                             </Row>
                         ))
                     }
@@ -60,7 +69,7 @@ class SubjectList extends React.Component {
 const mapStateToProps = (state, ownProps) => {
     const allSubjects = state.subjects.allSubjects || []
     const gradesBySubject = (state.subjects.gradesBySubjectByStudent || {})[ownProps.student.id] || {}
-    const studentSubjects = ((state.subjects.studentSubjects || {})[ownProps.student.id] || []).map(x => {
+    let studentSubjects = ((state.subjects.studentSubjects || {})[ownProps.student.id] || []).map(x => {
         const subject = allSubjects.find(y => y.id === x)
         const grade = gradesBySubject[x]
         return {
@@ -68,13 +77,27 @@ const mapStateToProps = (state, ownProps) => {
             grade
         }
     })
+
+    const selectedAccount = state.eth.selectedAccount
+    if (ownProps.userRole === USER_ROLES.STUDENT) {
+        if (selectedAccount !== ownProps.student.id) {
+            studentSubjects = studentSubjects.map(x => ({ ...x, grade: undefined }))
+        }
+    }
+    else if (ownProps.userRole === USER_ROLES.PROFESSOR) {
+        const professorSubjectsSet = new Set((state.subjects.subjectsByProfessorAddr || {})[selectedAccount] || [])
+        studentSubjects = studentSubjects.map(x => ({ ...x, grade: professorSubjectsSet.has(x.id) ? x.grade : undefined }))
+    }
+
     return {
+        selectedAccount,
         studentSubjects,
     }
 }
 
 const mapDispatchToProps = dispatch => ({
-    loadStudentSubjects: (accountAddress) => loadStudentSubjectsAction(accountAddress, dispatch)
+    loadStudentSubjects: accountAddress => loadStudentSubjectsAction(accountAddress, dispatch),
+    loadProfessorSubjects: professorAddr => loadProfessorSubjectsAction(professorAddr, dispatch),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SubjectList)
