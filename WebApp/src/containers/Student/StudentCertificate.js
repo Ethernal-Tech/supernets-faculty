@@ -23,10 +23,10 @@ class StudentCertificate extends React.Component {
     render() {
         const { student, studentSubjects } = this.props
         return (
-            <div style={{ padding: '1rem' }}>
+            <div style={{ padding: '20px' }}>
                 <h4>Official certificated made in blockchain</h4>
-                <div style={{position: 'fixed', bottom: '20px', left: '20px', zIndex: '20'}}>
-                    <img src={`${process.env.PUBLIC_URL}/logoplan.png`}  alt="logoplan" />
+                <div style={{position: 'fixed', bottom: '10px', left: '20px', zIndex: '20'}}>
+                    <img src={`${process.env.PUBLIC_URL}/logoplan.png`} height={45} alt="logoplan" />
                 </div>
                 <Container>
                     <Row style={listStyles.paddingTop10}>Issued to: {student.name}</Row>
