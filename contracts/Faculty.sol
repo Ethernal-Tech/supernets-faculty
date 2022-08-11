@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.7;
 
-import "./Certificate.sol";
+import "./PlanBCertificate.sol";
 
 library MyMath {
     using Strings for uint256;
@@ -284,7 +284,13 @@ contract Faculty is PlanBCertificate{
         return false;
     }
 
-    function generateCertificate(address to, string memory uri) public onlyAdmin {
-        safeMint(to, uri);
+    function generateCertificate(address student, string memory uri) public onlyAdmin {
+        for (uint i = 1; i <= subjectCount; i++) {
+            bool isEnrolled = students[student].subjectGrades[i] != 0;
+            bool hasGrade = students[student].subjectGrades[i] > 5;
+            require(!isEnrolled || (isEnrolled && hasGrade), "Student did not pass all subjects!");
+        }
+
+        safeMint(student, uri);
     }
 }
