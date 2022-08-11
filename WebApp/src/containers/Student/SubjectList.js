@@ -1,15 +1,16 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
 
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
 
-import { loadProfessorSubjectsAction, loadStudentSubjectsAction } from '../../actions/subjectActions'
+import { loadProfessorSubjectsAction, loadStudentSubjectsAction, generateCertificateAction } from '../../actions/subjectActions'
 import { listStyles } from '../../styles'
 import { USER_ROLES } from '../../utils/constants'
+import { createMetadata, uploadMetadata } from '../../utils/nftUtils'
+import { address } from '../../faculty'
 
 class SubjectList extends React.Component {
     componentDidMount() {
@@ -25,8 +26,16 @@ class SubjectList extends React.Component {
         await loadStudentSubjects(student.id)
     }
 
+    onGenerateCertificate = async evt => {
+        const metadata = createMetadata(this.props.student, this.props.studentSubjects)
+        const ipfsUri = await uploadMetadata(metadata);         
+
+        console.log(ipfsUri)
+        await this.props.generateCertificate(this.props.student.id, this.props.selectedAccount, ipfsUri)
+    }
+
     render() {
-        const { student, studentSubjects, userRole, studParam } = this.props
+        const { student, studentSubjects, userRole } = this.props
         return (
             <div style={{ padding: '1rem' }}>
                 <h4>{student.name}</h4>
@@ -36,11 +45,12 @@ class SubjectList extends React.Component {
                         userRole === USER_ROLES.ADMIN &&
                         <Row style={{ padding: '1rem 0' }}>
                             <Col>
-                                <Link to={`/certificate${studParam ? ('?stud=' + studParam) : ''}`} target="_blank">
-                                    <Button variant="primary" type="button">
+                                <Button variant="primary" type="button" onClick={this.onGenerateCertificate}>
                                         Produce certificate
-                                    </Button>
-                                </Link>
+                                </Button>
+                            </Col>
+                            <Col>
+                                <a href={"https://testnets.opensea.io/assets/rinkeby/"+address+"/0"}>Link</a>
                             </Col>
                         </Row>
                     }
@@ -98,6 +108,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => ({
     loadStudentSubjects: accountAddress => loadStudentSubjectsAction(accountAddress, dispatch),
     loadProfessorSubjects: professorAddr => loadProfessorSubjectsAction(professorAddr, dispatch),
+    generateCertificate: (studentAddr, selectedAccount, ipfsURI) => generateCertificateAction(studentAddr, selectedAccount, ipfsURI)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SubjectList)

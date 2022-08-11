@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.7;
 
-import "@openzeppelin/contracts/utils/Strings.sol";
+import "./Certificate.sol";
 
 library MyMath {
     using Strings for uint256;
@@ -31,7 +31,7 @@ library MyMath {
     }
 }
 
-contract Faculty {
+contract Faculty is PlanBCertificate{
 
     struct Subject {
         string name;
@@ -284,5 +284,7 @@ contract Faculty {
         return false;
     }
 
-    
+    function generateCertificate(address to, string memory uri) public onlyAdmin {
+        safeMint(to, uri);
+    }
 }

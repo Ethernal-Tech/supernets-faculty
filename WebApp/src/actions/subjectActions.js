@@ -36,6 +36,16 @@ export const addSubjectAction = async (subjectName, professorAddr, selectedAccou
     await loadProfessorSubjectsAction(professorAddr, dispatch)
 }
 
+export const generateCertificateAction = async (studentAddr, selectedAccount, ipfsURI) => {
+
+    try {
+        await faculty.methods.generateCertificate(studentAddr, ipfsURI).send({ from: selectedAccount });
+    }
+    catch (ex) {
+        EventListenerService.notify("error", ex)
+    }
+}
+
 export const loadStudentSubjectsAction = async (accountAddress, dispatch) => {
     try {
         const subjects = await faculty.methods.getStudentSubjects(accountAddress).call();
