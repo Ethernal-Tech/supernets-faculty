@@ -36,24 +36,24 @@ class SubjectList extends React.Component {
 
     render() {
         const { student, studentSubjects, userRole } = this.props
+        const certificateId = 1 // get from props
         return (
             <div style={{ padding: '1rem' }}>
                 <h4>{student.name}</h4>
 
                 <Container>
-                    {
-                        userRole === USER_ROLES.ADMIN &&
-                        <Row style={{ padding: '1rem 0' }}>
-                            <Col>
-                                <Button variant="primary" type="button" onClick={this.onGenerateCertificate}>
-                                        Produce certificate
-                                </Button>
-                            </Col>
-                            <Col>
-                                <a href={"https://testnets.opensea.io/assets/rinkeby/"+address+"/0"}>Link</a>
-                            </Col>
-                        </Row>
-                    }
+                    <Row style={{ padding: '1rem 0' }}>
+                        <Col>
+                            {
+                                certificateId > 0 
+                                ? userRole === USER_ROLES.ADMIN &&
+                                    <a href={`https://testnets.opensea.io/assets/rinkeby/${address}/${certificateId}`}>
+                                        <Button variant="primary" type="button">Certificate</Button>
+                                    </a>
+                                : <Button variant="primary" type="button" onClick={this.onGenerateCertificate}>Produce certificate</Button>
+                            }
+                        </Col>
+                    </Row>
                     <Row style={listStyles.borderBottom}>
                         <Col>Subject Name</Col>
                         <Col>Professor's Name</Col>

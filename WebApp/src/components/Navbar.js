@@ -41,7 +41,7 @@ class Navbar extends React.Component {
                 <nav className="navbar navbar-expand-lg navbar-dark bg-dark" style={{ padding: '0.5rem' }}>
                     <div style={{ display: 'flex', flex: 1, justifyContent: 'flex-start', alignItems: 'center' }}>
                         <Link to={'/'}>
-                            <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="logo" style={{ margin: '2px 20px', height: '40px' }} />
+                            <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="logo" style={{ margin: '2px 15px', height: '40px' }} />
                         </Link>
                         <Link to={'/'} className="navbar-brand">Faculty of blockchain</Link>
                         {/* <ul className="navbar-nav">
@@ -52,10 +52,10 @@ class Navbar extends React.Component {
                     </div>
                     {
                         !!this.props.selectedAccount &&
-                        <div style={{ color: 'white', fontSize: 12 }}>
-                            {this.props.selectedAccount}
-                            <br />
+                        <div style={{ color: 'white', fontSize: 14 }}>
                             {this.props.userName}
+                            <br />
+                            {this.props.selectedAccount}
                         </div>
                     }
                 </nav>
