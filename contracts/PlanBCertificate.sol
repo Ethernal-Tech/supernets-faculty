@@ -11,13 +11,18 @@ contract PlanBCertificate is ERC721, ERC721URIStorage {
 
     Counters.Counter private _tokenIdCounter;
 
+    // Mapping from owner address to token ID
+    mapping(address => uint256) private _ownerToToken;
+
     constructor() ERC721("PlanB Certificate", "PLANB") {}
 
     function safeMint(address to, string memory uri) internal virtual {
-        uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
+        uint256 tokenId = _tokenIdCounter.current();
+        
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
+        _ownerToToken[to] = tokenId;
     }
 
     function _transfer(address,
@@ -39,5 +44,10 @@ contract PlanBCertificate is ERC721, ERC721URIStorage {
         returns (string memory)
     {
         return super.tokenURI(tokenId);
+    }
+
+    function getTokenForOwner(address owner) internal view returns (uint256) {
+        require(owner != address(0), "Address zero is not a valid owner");
+        return _ownerToToken[owner];
     }
 }

@@ -2,80 +2,94 @@
 
 pragma solidity ^0.8.7;
 
-import "./PlanBCertificate.sol";
-
-library MyMath {
-    using Strings for uint256;
-
-    function division(uint256 decimalPlaces, uint256 numerator, uint256 denominator) public pure returns(string memory result) {
-        require(denominator != 0, "Denominator must not be 0!");
-        
-        uint256 factor = 10**decimalPlaces;
-        uint256 quotient  = numerator / denominator;
-        bool rounding = 2 * ((numerator * factor) % denominator) >= denominator;
-        uint256 remainder = (numerator * factor / denominator) % factor;
-        if (rounding) {
-            remainder += 1;
-        }
-        result = string(abi.encodePacked(quotient.toString(), '.', numToFixedLengthStr(decimalPlaces, remainder)));
-    }
-
-    function numToFixedLengthStr(uint256 decimalPlaces, uint256 num) pure internal returns(string memory result) {
-        bytes memory byteString;
-        for (uint256 i = 0; i < decimalPlaces; i++) {
-            uint256 remainder = num % 10;
-            byteString = abi.encodePacked(remainder.toString(), byteString);
-            num = num/10;
-        }
-        result = string(byteString);
-    }
-}
+import "./Certificate.sol";
 
 contract Faculty is PlanBCertificate{
 
-    struct Subject {
-        string name;
-        bool exist;
+    enum CourseAttendance{ NOT_ENROLLED, ENROLLED, PASSED, FAILED }
+
+    struct Event {
+        string title;
+        string location;
+        string venue;
+        uint256 time;
+        string description;
+
+        address[] professorsAddresses;
+        mapping(address => Professor) professors;
+
+        address[] studentsAddresses;
+        mapping(address => Student) students;
+
+        uint[] courses;
+
+        bool exist; 
+    }
+
+    struct Course {
+        string title;
+        string description;      
+        uint256 startTime;
+        uint256 endTime;
+        string venue;
+
+        uint eventId;
         address professor;
         address[] students;
+
+        bool exist;     
     }
 
     struct Professor {
         string name;
+        uint[] eventCourses;
         bool exist;
-        uint[] subjects;
     }
 
     struct Student {
         string name;
+        mapping(uint => CourseAttendance) coursesAttendance;
+        uint[] eventCourses;   
         bool exist;
-        mapping(uint => uint) subjectGrades;
-        uint subjectCount;
     }
 
-    struct ProfessorView {
-        address id;
-        string name;
-        uint[] subjects;
+    struct EventView {
+        uint eventId;
+        string title;
+        string location;
+        string venue;
+        uint256 time;
+        string description;
     }
 
-    struct StudentView {
-        address id;
-        string name;
-        uint[] subjects;
-    }
-
-    struct SubjectView {
+    struct CourseView {
         uint id;
-        string name;
+        string title;
+        string description;      
+        uint256 startTime;
+        uint256 endTime;
+        string venue;
+
         address professorAddress;
         string professorName;
         address[] students;
     }
 
+    struct ProfessorView {
+        address id;
+        string name;
+        uint[] courses;
+    }
+
+    struct StudentView {
+        address id;
+        string name;
+        uint[] courses;
+    }
+
     struct GradeView {
-        uint id;
-        uint grade;
+        uint courseId;
+        CourseAttendance courseAttendance;
     }
 
     modifier onlyAdmin {
@@ -83,195 +97,209 @@ contract Faculty is PlanBCertificate{
         _;
     }
 
-    modifier onlyProfessor {
-        require (professors[msg.sender].exist == true, "You are not Professor.");
-        _;
-    }
-
-    modifier onlyStudent {
-        require (students[msg.sender].exist == true, "You are not Student.");
-        _;
-    }
-
     address public admin;
-    uint subjectCount;
-    uint professorCount;
-    uint studentCount;
+    
+    uint maxEventId;
+    uint maxCourseId;
+    //uint professorCount;
+    //uint studentCount;
 
-    mapping(uint => address) professorCountToAddress;
-    mapping(uint => address) studentCountToAddress;
+    //mapping(uint => address) professorCountToAddress;
+    //mapping(uint => address) studentCountToAddress;
 
-    mapping(address => Professor) public professors; 
-    mapping(address => Student) public students; 
-    mapping(uint => Subject) public subjects;
+    mapping(uint => Event) events;
+    mapping(uint => Course) courses; 
+
 
     constructor() {
         admin = msg.sender;
-        subjectCount = 0;
-        professorCount = 0;
-        studentCount = 0;
+        maxEventId = 0;
+        maxCourseId = 0;
+        //professorCount = 0;
+        //studentCount = 0;       
     }
 
-    function addProfessor(address id, string calldata name) external onlyAdmin {
-        require(professors[id].exist == false, "Professor with that address already exists.");
-        professorCount += 1;
-        professorCountToAddress[professorCount] = id;
+    function addEvent(string calldata title, string calldata location, string calldata venue, uint256 time, string calldata description) external onlyAdmin {
+        maxEventId += 1;
 
-        professors[id].name = name;
-        professors[id].exist = true;
+        events[maxEventId].title = title;
+        events[maxEventId].location = location;
+        events[maxEventId].venue = venue;
+        events[maxEventId].time = time;
+        events[maxEventId].description = description;
+
+        events[maxEventId].exist = true;
     }
 
-    function addStudent(address id, string calldata name) external onlyAdmin {
-        require(students[id].exist == false, "Student with that address already exists.");
-        studentCount += 1;
-        studentCountToAddress[studentCount] = id;
+    function addCourse(string calldata title, string calldata description, uint256 startTime, uint256 endTime, string calldata venue, address professor, uint eventId) external onlyAdmin {
+        require(events[eventId].exist == true, "Event doesn't exist");
 
-        students[id].name = name;
-        students[id].exist = true;
-    }
+        maxCourseId += 1;
 
-    function addSubject(string calldata name, address professor) external onlyAdmin {
-        subjectCount += 1;
+        courses[maxCourseId].title = title;
+        courses[maxCourseId].description = description;
+        courses[maxCourseId].startTime = startTime;
+        courses[maxCourseId].endTime = endTime;
+        courses[maxCourseId].venue = venue;
 
-        subjects[subjectCount].name = name;
-        subjects[subjectCount].exist = true;
-        subjects[subjectCount].professor = professor;
-
-        professors[professor].subjects.push(subjectCount);
-    }
-
-    function gradeStudent(uint subject, address student, uint grade) external onlyProfessor {
-        require(subjects[subject].exist == true, "Subject not found.");
-        require(students[student].exist == true, "Student not found.");
-
-        require(valueExistsInArray(professors[msg.sender].subjects, subject) == true, "Professor is not owner of this subject.");
-        require(students[student].subjectGrades[subject] >= 5, "Student is not enrolled in the subject.");
-        require(students[student].subjectGrades[subject] == 5, "Already graded");
+        courses[maxCourseId].professor = professor;
+        courses[maxCourseId].eventId = eventId;
+        courses[maxCourseId].exist = true;
         
-        require(grade >= 5 && grade <= 10, "Grade not in range 5-10");
-
-        students[student].subjectGrades[subject] = grade;
+        events[eventId].professors[professor].eventCourses.push(maxCourseId);
+        events[eventId].courses.push(maxCourseId);
     }
 
-    function enrollSubject(uint id, address student) external onlyAdmin {
-        require(subjects[id].exist == true, "Subject not found.");
-        require(students[student].subjectGrades[id] == 0, "Already enrolled.");
+    function addProfessor(address profAddress, string calldata name, uint eventId) external onlyAdmin {
+        require(events[eventId].exist == true, "Event doesn't exist");
+        require(events[eventId].professors[profAddress].exist == false, "Professor with that address already exists.");
 
-        students[student].subjectGrades[id] = 5;
-        students[student].subjectCount += 1;
-        subjects[id].students.push(student);
+        events[eventId].professors[profAddress].name = name;
+        events[eventId].professors[profAddress].exist = true;
+
+        events[eventId].professorsAddresses.push(profAddress);
     }
 
-    function getAllProfessors() public view returns(ProfessorView[] memory) {      
-        ProfessorView[] memory professorsArray = new ProfessorView[](professorCount);
+    function addStudent(address studAddress, string calldata name, uint eventId) external onlyAdmin {
+        require(events[eventId].exist == true, "Event doesn't exist");
+        require(events[eventId].students[studAddress].exist == false, "Student with that address already exists.");
 
-        for (uint i = 0; i < professorCount; i++) {
+        events[eventId].students[studAddress].name = name;
+        events[eventId].students[studAddress].exist = true;
+
+        events[eventId].studentsAddresses.push(studAddress);
+    }
+
+    function enrollCourse(uint courseId, address studAddress) external onlyAdmin {
+        require(courses[courseId].exist == true, "Course not found.");
+
+        uint eventId = courses[courseId].eventId;
+        require(addressExistsInArray(events[eventId].studentsAddresses, studAddress), "Student doesn't attend in this event");
+        require(events[eventId].students[studAddress].coursesAttendance[courseId] == CourseAttendance.NOT_ENROLLED, "Already enrolled.");
+
+        events[eventId].students[studAddress].coursesAttendance[courseId] = CourseAttendance.ENROLLED;
+        events[eventId].students[studAddress].eventCourses.push(courseId);
+        courses[courseId].students.push(studAddress);
+    }
+
+    function gradeStudent(uint courseId, address studAddress, bool passed) external {
+        require(courses[courseId].exist == true, "Subject not found.");
+
+        uint eventId = courses[courseId].eventId;
+        require(events[eventId].students[studAddress].exist == true, "Student not found.");
+
+        require(courses[courseId].professor == msg.sender, "You are not owner of this subject.");
+        require(events[eventId].students[studAddress].coursesAttendance[courseId] != CourseAttendance.NOT_ENROLLED, "Student is not enrolled in the subject.");
+        require (events[eventId].professors[msg.sender].exist == true, "You are not Professor.");
+
+        events[eventId].students[studAddress].coursesAttendance[courseId] = passed ? CourseAttendance.PASSED : CourseAttendance.FAILED;
+    }
+
+    function getAllEvents() public view returns(EventView[] memory) {
+        EventView[] memory eventsArray = new EventView[](maxEventId);
+
+        for (uint i = 1; i <= maxEventId; i++) {
+            eventsArray[i-1] = EventView({
+                eventId: i,
+                title: events[i].title,
+                location: events[i].location,
+                venue: events[i].venue,
+                time: events[i].time,
+                description: events[i].description
+            });
+        }
+
+        return eventsArray;
+    }
+
+    function getAllCourses(uint eventId) public view returns(CourseView[] memory) {
+        require(events[eventId].exist == true, "Event doesn't exist.");
+
+        CourseView[] memory coursesArray = new CourseView[](events[eventId].courses.length);
+
+        for (uint i = 0; i < events[eventId].courses.length; i++) {
+            uint id = events[eventId].courses[i];
+
+            coursesArray[i] = CourseView({
+                id: id,
+                title: courses[id].title,
+                description: courses[id].description,
+                startTime: courses[id].startTime,
+                endTime: courses[id].endTime,
+                venue: courses[id].venue,
+                professorAddress: courses[id].professor,
+                professorName: events[eventId].professors[courses[id].professor].name,
+                students: courses[id].students
+            });
+        }
+
+        return coursesArray;
+    }
+
+    function getAllProfessors(uint eventId) public view returns(ProfessorView[] memory) {   
+        require(events[eventId].exist == true, "Event doesn't exist.");
+   
+        ProfessorView[] memory professorsArray = new ProfessorView[](events[eventId].professorsAddresses.length);
+
+        for (uint i = 0; i < events[eventId].professorsAddresses.length; i++) {
+            address profAddress = events[eventId].professorsAddresses[i];
+
             professorsArray[i] = ProfessorView({
-                id: professorCountToAddress[i+1],
-                name: professors[professorCountToAddress[i+1]].name,
-                subjects: professors[professorCountToAddress[i+1]].subjects
+                id: profAddress,
+                name: events[eventId].professors[profAddress].name,
+                courses: events[eventId].professors[profAddress].eventCourses
             }); 
         }
 
         return professorsArray;
     }
 
-    function getAllStudents() public view returns(StudentView[] memory) {      
-        StudentView[] memory studentsArray = new StudentView[](studentCount);
+    function getAllStudents(uint eventId) public view returns(StudentView[] memory) {      
+        require(events[eventId].exist == true, "Event doesn't exist.");
 
-        for (uint i = 0; i < studentCount; i++) {
+        StudentView[] memory studentsArray = new StudentView[](events[eventId].studentsAddresses.length);
+
+        for (uint i = 0; i < events[eventId].studentsAddresses.length; i++) {
+            address studAddress = events[eventId].studentsAddresses[i];
+
             studentsArray[i] = StudentView({
-                id: studentCountToAddress[i+1],
-                name: students[studentCountToAddress[i+1]].name,
-                subjects: getStudentSubjects(studentCountToAddress[i+1])
+                id: studAddress,
+                name: events[eventId].students[studAddress].name,
+                courses: events[eventId].students[studAddress].eventCourses
             });
         }
 
         return studentsArray;
     }
 
-    function getAllSubjects() public view returns(SubjectView[] memory) {
-        SubjectView[] memory subjectsArray = new SubjectView[](subjectCount);
+    function getStudentGrades(address studAddress, uint eventId) public view returns(GradeView[] memory) {
+        require(events[eventId].exist == true, "Event doesn't exist.");
+        require(events[eventId].students[studAddress].exist == true, "Student not found.");
 
-        for (uint i = 1; i <= subjectCount; i++) {
-            subjectsArray[i-1] = SubjectView({
-                id: i,
-                name: subjects[i].name,
-                professorAddress: subjects[i].professor,
-                professorName: professors[subjects[i].professor].name,
-                students: subjects[i].students
-            });
-        }
-
-        return subjectsArray;
-    }
-
-    function getStudentGrades(address student) public view returns(GradeView[] memory) {
-        GradeView[] memory grades = new GradeView[](students[student].subjectCount);
-        uint count = 0;
+        GradeView[] memory grades = new GradeView[](events[eventId].students[studAddress].eventCourses.length);
         
-        for (uint i = 1; i <= subjectCount; i++) {
-            if (students[student].subjectGrades[i] > 0) {
-                grades[count] = GradeView({
-                    id: i,
-                    grade: students[student].subjectGrades[i]
-                });
-                count += 1;
-            }
+        for (uint i = 0; i < events[eventId].students[studAddress].eventCourses.length; i++) {
+            uint courseId = events[eventId].students[studAddress].eventCourses[i];
+            grades[i] = GradeView({
+                courseId: courseId,
+                courseAttendance: events[eventId].students[studAddress].coursesAttendance[courseId]
+            });       
         }
 
         return grades;
     }
 
-    function getProfessorSubjects(address professor) public view returns(uint[] memory subjectsIds) {
-        require(professors[professor].exist == true, "Professor not found.");
-        subjectsIds = professors[professor].subjects;
+    function getProfessorSubjects(address professor, uint eventId) public view returns(uint[] memory coursesIds) {
+        require(events[eventId].exist == true, "Event doesn't exist.");
+        require(events[eventId].professors[professor].exist == true, "Professor not found.");
+        coursesIds = events[eventId].professors[professor].eventCourses;
     }
     
-    function getStudentSubjects(address student) public view returns(uint[] memory) {
-        require(students[student].exist == true, "Student not found.");
+    function getStudentCourses(address studentAddress, uint eventId) public view returns(uint[] memory coursesIds) {
+        require(events[eventId].exist == true, "Event doesn't exist.");
+        require(events[eventId].students[studentAddress].exist == true, "Student not found.");
 
-        uint[] memory subjectIds = new uint[](students[student].subjectCount);
-        uint count = 0;
-
-        for (uint i = 1; i <= subjectCount; i++) {
-            if (students[student].subjectGrades[i] > 0) {
-                subjectIds[count] = i;
-                count += 1;
-            }
-        }
-
-        return subjectIds;
-    }
-
-    function getNumberOfPassedSubjects(address student) external view returns(uint256) {
-        uint256 passedSubjCount;
-
-        for (uint i = 1; i <= subjectCount; i++) {
-            if (students[student].subjectGrades[i] > 5) {
-                passedSubjCount += 1;
-            }
-        }
-
-        require(passedSubjCount > 0, "You did not pass any subject.");
-
-        return passedSubjCount;
-    }
-
-    function getAverageGrade(address student) external view returns(string memory averageGrade) {
-        uint256 sum;
-        uint256 passedSubjCount;
-
-        for (uint i = 1; i <= subjectCount; i++) {
-            if (students[student].subjectGrades[i] > 5) {
-                sum += students[student].subjectGrades[i];
-                passedSubjCount += 1;
-            }
-        }
-
-        require(passedSubjCount > 0, "You did not pass any subject.");
-
-        averageGrade = MyMath.division(2, sum, passedSubjCount);
+        coursesIds = events[eventId].students[studentAddress].eventCourses;
     }
 
     function valueExistsInArray(uint[] memory array, uint value) private pure returns(bool) {
@@ -284,13 +312,22 @@ contract Faculty is PlanBCertificate{
         return false;
     }
 
-    function generateCertificate(address student, string memory uri) public onlyAdmin {
-        for (uint i = 1; i <= subjectCount; i++) {
-            bool isEnrolled = students[student].subjectGrades[i] != 0;
-            bool hasGrade = students[student].subjectGrades[i] > 5;
-            require(!isEnrolled || (isEnrolled && hasGrade), "Student did not pass all subjects!");
+    function addressExistsInArray(address[] memory array, address addrValue) private pure returns(bool) {
+        for (uint i = 0; i < array.length; i++) {
+            if (array[i] == addrValue) {
+                return true;
+            }
         }
 
-        safeMint(student, uri);
+        return false;
+    }
+
+    function generateCertificate(address to, string memory uri) public onlyAdmin {
+        safeMint(to, uri);
+    }
+
+    function getCertificateId(address student) public view returns (uint256) {
+        //sta ako vrati 0?
+        return getTokenForOwner(student);
     }
 }
