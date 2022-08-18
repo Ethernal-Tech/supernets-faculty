@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.7;
 
-import "./Certificate.sol";
+import "./PlanBCertificate.sol";
 
 contract Faculty is PlanBCertificate{
 
@@ -101,22 +101,14 @@ contract Faculty is PlanBCertificate{
     
     uint maxEventId;
     uint maxCourseId;
-    //uint professorCount;
-    //uint studentCount;
-
-    //mapping(uint => address) professorCountToAddress;
-    //mapping(uint => address) studentCountToAddress;
 
     mapping(uint => Event) events;
     mapping(uint => Course) courses; 
 
-
     constructor() {
         admin = msg.sender;
         maxEventId = 0;
-        maxCourseId = 0;
-        //professorCount = 0;
-        //studentCount = 0;       
+        maxCourseId = 0;   
     }
 
     function addEvent(string calldata title, string calldata location, string calldata venue, uint256 time, string calldata description) external onlyAdmin {
@@ -133,6 +125,7 @@ contract Faculty is PlanBCertificate{
 
     function addCourse(string calldata title, string calldata description, uint256 startTime, uint256 endTime, string calldata venue, address professor, uint eventId) external onlyAdmin {
         require(events[eventId].exist == true, "Event doesn't exist");
+        require(events[eventId].professors[professor].exist == true, "Professor doesn't attend in this event");
 
         maxCourseId += 1;
 
@@ -174,7 +167,7 @@ contract Faculty is PlanBCertificate{
         require(courses[courseId].exist == true, "Course not found.");
 
         uint eventId = courses[courseId].eventId;
-        require(addressExistsInArray(events[eventId].studentsAddresses, studAddress), "Student doesn't attend in this event");
+        require(events[eventId].students[studAddress].exist == true, "Student doesn't attend in this event");
         require(events[eventId].students[studAddress].coursesAttendance[courseId] == CourseAttendance.NOT_ENROLLED, "Already enrolled.");
 
         events[eventId].students[studAddress].coursesAttendance[courseId] = CourseAttendance.ENROLLED;
@@ -300,26 +293,6 @@ contract Faculty is PlanBCertificate{
         require(events[eventId].students[studentAddress].exist == true, "Student not found.");
 
         coursesIds = events[eventId].students[studentAddress].eventCourses;
-    }
-
-    function valueExistsInArray(uint[] memory array, uint value) private pure returns(bool) {
-        for (uint i = 0; i < array.length; i++) {
-            if (array[i] == value) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    function addressExistsInArray(address[] memory array, address addrValue) private pure returns(bool) {
-        for (uint i = 0; i < array.length; i++) {
-            if (array[i] == addrValue) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     function generateCertificate(address to, string memory uri) public onlyAdmin {
