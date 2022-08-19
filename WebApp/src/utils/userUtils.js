@@ -1,5 +1,9 @@
 import { USER_ROLES } from './constants'
 
+export const isUserAdmin = state => {
+    return state.eth.selectedAccount === state.eth.adminAccount
+}
+
 export const getUserRole = state => {
     const { selectedAccount, adminAccount } = state.eth
     const professors = state.users.professors || []

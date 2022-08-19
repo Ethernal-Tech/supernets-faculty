@@ -8,7 +8,7 @@ import LoadingSpinner from './LoadingSpinner'
 import EventListenerService from "../utils/eventListenerService"
 import { generalStyles } from '../styles'
 
-class AddSubjectComponent extends React.Component {
+class AddCourseComponent extends React.Component {
     state = {
         isWorking: false,
         name: '',
@@ -50,4 +50,4 @@ class AddSubjectComponent extends React.Component {
     }
 }
 
-export default AddSubjectComponent
+export default AddCourseComponent

@@ -1,98 +1,110 @@
 import web3 from './web3';
 
-export const address = '0xf662Ff05607e531124aF35893C0245b6B36d494b';
+export const address = '0xb7036e1F70DDbC0c87EaCAD56d1A2C8d9c377aFB';
 const abi = [
 	{
-		"inputs": [],
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "certificateAddress",
+				"type": "address"
+			}
+		],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
 	},
 	{
-		"anonymous": false,
 		"inputs": [
 			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
+				"internalType": "string",
+				"name": "title",
+				"type": "string"
 			},
 			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "approved",
-				"type": "address"
+				"internalType": "string",
+				"name": "description",
+				"type": "string"
 			},
 			{
-				"indexed": true,
 				"internalType": "uint256",
-				"name": "tokenId",
+				"name": "startTime",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "endTime",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "venue",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "professor",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "eventId",
 				"type": "uint256"
 			}
 		],
-		"name": "Approval",
-		"type": "event"
+		"name": "addCourse",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
-		"anonymous": false,
 		"inputs": [
 			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
+				"internalType": "string",
+				"name": "title",
+				"type": "string"
 			},
 			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "operator",
-				"type": "address"
+				"internalType": "string",
+				"name": "location",
+				"type": "string"
 			},
 			{
-				"indexed": false,
-				"internalType": "bool",
-				"name": "approved",
-				"type": "bool"
-			}
-		],
-		"name": "ApprovalForAll",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
+				"internalType": "string",
+				"name": "venue",
+				"type": "string"
 			},
 			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"indexed": true,
 				"internalType": "uint256",
-				"name": "tokenId",
+				"name": "time",
 				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "description",
+				"type": "string"
 			}
 		],
-		"name": "Transfer",
-		"type": "event"
+		"name": "addEvent",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "id",
+				"name": "profAddress",
 				"type": "address"
 			},
 			{
 				"internalType": "string",
 				"name": "name",
 				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "eventId",
+				"type": "uint256"
 			}
 		],
 		"name": "addProfessor",
@@ -104,34 +116,21 @@ const abi = [
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "id",
+				"name": "studAddress",
 				"type": "address"
 			},
 			{
 				"internalType": "string",
 				"name": "name",
 				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "eventId",
+				"type": "uint256"
 			}
 		],
 		"name": "addStudent",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "name",
-				"type": "string"
-			},
-			{
-				"internalType": "address",
-				"name": "professor",
-				"type": "address"
-			}
-		],
-		"name": "addSubject",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -152,54 +151,17 @@ const abi = [
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
 				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "approve",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			}
-		],
-		"name": "balanceOf",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "id",
+				"name": "courseId",
 				"type": "uint256"
 			},
 			{
 				"internalType": "address",
-				"name": "student",
+				"name": "studAddress",
 				"type": "address"
 			}
 		],
-		"name": "enrollSubject",
+		"name": "enrollCourse",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -223,68 +185,14 @@ const abi = [
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "getAllProfessors",
-		"outputs": [
+		"inputs": [
 			{
-				"components": [
-					{
-						"internalType": "address",
-						"name": "id",
-						"type": "address"
-					},
-					{
-						"internalType": "string",
-						"name": "name",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256[]",
-						"name": "subjects",
-						"type": "uint256[]"
-					}
-				],
-				"internalType": "struct Faculty.ProfessorView[]",
-				"name": "",
-				"type": "tuple[]"
+				"internalType": "uint256",
+				"name": "eventId",
+				"type": "uint256"
 			}
 		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getAllStudents",
-		"outputs": [
-			{
-				"components": [
-					{
-						"internalType": "address",
-						"name": "id",
-						"type": "address"
-					},
-					{
-						"internalType": "string",
-						"name": "name",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256[]",
-						"name": "subjects",
-						"type": "uint256[]"
-					}
-				],
-				"internalType": "struct Faculty.StudentView[]",
-				"name": "",
-				"type": "tuple[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getAllSubjects",
+		"name": "getAllCourses",
 		"outputs": [
 			{
 				"components": [
@@ -295,7 +203,27 @@ const abi = [
 					},
 					{
 						"internalType": "string",
-						"name": "name",
+						"name": "title",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "startTime",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "endTime",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "venue",
 						"type": "string"
 					},
 					{
@@ -314,7 +242,52 @@ const abi = [
 						"type": "address[]"
 					}
 				],
-				"internalType": "struct Faculty.SubjectView[]",
+				"internalType": "struct Faculty.CourseView[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getAllEvents",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "eventId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "title",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "location",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "venue",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "time",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					}
+				],
+				"internalType": "struct Faculty.EventView[]",
 				"name": "",
 				"type": "tuple[]"
 			}
@@ -326,16 +299,33 @@ const abi = [
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "tokenId",
+				"name": "eventId",
 				"type": "uint256"
 			}
 		],
-		"name": "getApproved",
+		"name": "getAllProfessors",
 		"outputs": [
 			{
-				"internalType": "address",
+				"components": [
+					{
+						"internalType": "address",
+						"name": "id",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "courses",
+						"type": "uint256[]"
+					}
+				],
+				"internalType": "struct Faculty.ProfessorView[]",
 				"name": "",
-				"type": "address"
+				"type": "tuple[]"
 			}
 		],
 		"stateMutability": "view",
@@ -344,17 +334,34 @@ const abi = [
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "student",
-				"type": "address"
+				"internalType": "uint256",
+				"name": "eventId",
+				"type": "uint256"
 			}
 		],
-		"name": "getAverageGrade",
+		"name": "getAllStudents",
 		"outputs": [
 			{
-				"internalType": "string",
-				"name": "averageGrade",
-				"type": "string"
+				"components": [
+					{
+						"internalType": "address",
+						"name": "id",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "courses",
+						"type": "uint256[]"
+					}
+				],
+				"internalType": "struct Faculty.StudentView[]",
+				"name": "",
+				"type": "tuple[]"
 			}
 		],
 		"stateMutability": "view",
@@ -368,7 +375,7 @@ const abi = [
 				"type": "address"
 			}
 		],
-		"name": "getNumberOfPassedSubjects",
+		"name": "getCertificateId",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -385,13 +392,18 @@ const abi = [
 				"internalType": "address",
 				"name": "professor",
 				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "eventId",
+				"type": "uint256"
 			}
 		],
 		"name": "getProfessorSubjects",
 		"outputs": [
 			{
 				"internalType": "uint256[]",
-				"name": "subjectsIds",
+				"name": "coursesIds",
 				"type": "uint256[]"
 			}
 		],
@@ -402,8 +414,37 @@ const abi = [
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "student",
+				"name": "studentAddress",
 				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "eventId",
+				"type": "uint256"
+			}
+		],
+		"name": "getStudentCourses",
+		"outputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "coursesIds",
+				"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "studAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "eventId",
+				"type": "uint256"
 			}
 		],
 		"name": "getStudentGrades",
@@ -412,13 +453,13 @@ const abi = [
 				"components": [
 					{
 						"internalType": "uint256",
-						"name": "id",
+						"name": "courseId",
 						"type": "uint256"
 					},
 					{
-						"internalType": "uint256",
-						"name": "grade",
-						"type": "uint256"
+						"internalType": "enum Faculty.CourseAttendance",
+						"name": "courseAttendance",
+						"type": "uint8"
 					}
 				],
 				"internalType": "struct Faculty.GradeView[]",
@@ -432,322 +473,22 @@ const abi = [
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "student",
-				"type": "address"
-			}
-		],
-		"name": "getStudentSubjects",
-		"outputs": [
-			{
-				"internalType": "uint256[]",
-				"name": "",
-				"type": "uint256[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
 				"internalType": "uint256",
-				"name": "subject",
+				"name": "courseId",
 				"type": "uint256"
 			},
 			{
 				"internalType": "address",
-				"name": "student",
+				"name": "studAddress",
 				"type": "address"
 			},
 			{
-				"internalType": "uint256",
-				"name": "grade",
-				"type": "uint256"
+				"internalType": "bool",
+				"name": "passed",
+				"type": "bool"
 			}
 		],
 		"name": "gradeStudent",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "operator",
-				"type": "address"
-			}
-		],
-		"name": "isApprovedForAll",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "name",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "ownerOf",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "professors",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "name",
-				"type": "string"
-			},
-			{
-				"internalType": "bool",
-				"name": "exist",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "safeTransferFrom",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bytes",
-				"name": "data",
-				"type": "bytes"
-			}
-		],
-		"name": "safeTransferFrom",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "operator",
-				"type": "address"
-			},
-			{
-				"internalType": "bool",
-				"name": "approved",
-				"type": "bool"
-			}
-		],
-		"name": "setApprovalForAll",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "students",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "name",
-				"type": "string"
-			},
-			{
-				"internalType": "bool",
-				"name": "exist",
-				"type": "bool"
-			},
-			{
-				"internalType": "uint256",
-				"name": "subjectCount",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "subjects",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "name",
-				"type": "string"
-			},
-			{
-				"internalType": "bool",
-				"name": "exist",
-				"type": "bool"
-			},
-			{
-				"internalType": "address",
-				"name": "professor",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes4",
-				"name": "interfaceId",
-				"type": "bytes4"
-			}
-		],
-		"name": "supportsInterface",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "symbol",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "tokenURI",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "transferFrom",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"

@@ -6,28 +6,28 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
 
-import { loadProfessorSubjectsAction, loadStudentSubjectsAction, generateCertificateAction } from '../../actions/subjectActions'
+import { loadProfessorCoursesAction, loadStudentCoursesAction, generateCertificateAction } from '../../actions/coursesActions'
 import { listStyles } from '../../styles'
 import { USER_ROLES } from '../../utils/constants'
 import { createMetadata, uploadMetadata } from '../../utils/nftUtils'
 import { address } from '../../faculty'
 
-class SubjectList extends React.Component {
+class CourseList extends React.Component {
     componentDidMount() {
         this.load()
     }
 
     load = async () => {
-        const { userRole, student, loadStudentSubjects, loadProfessorSubjects, selectedAccount } = this.props
+        const { userRole, student, loadStudentCourses, loadProfessorCourses, selectedAccount } = this.props
         if (userRole === USER_ROLES.PROFESSOR) {
-            await loadProfessorSubjects(selectedAccount)
+            await loadProfessorCourses(selectedAccount)
         }
 
-        await loadStudentSubjects(student.id)
+        await loadStudentCourses(student.id, this.props.selectedEvent.eventId)
     }
 
     onGenerateCertificate = async evt => {
-        const metadata = createMetadata(this.props.student, this.props.studentSubjects)
+        const metadata = createMetadata(this.props.student, this.props.studentCourses)
         const ipfsUri = await uploadMetadata(metadata);         
 
         console.log(ipfsUri)
@@ -35,14 +35,14 @@ class SubjectList extends React.Component {
     }
 
     render() {
-        const { student, studentSubjects, userRole } = this.props
+        const { student, studentCourses, userRole } = this.props
         const certificateId = 1 // get from props
         return (
             <div style={{ padding: '1rem' }}>
                 <h4>{student.name}</h4>
 
                 <Container>
-                    <Row style={{ padding: '1rem 0' }}>
+                    {/* <Row style={{ padding: '1rem 0' }}>
                         <Col>
                             {
                                 certificateId > 0 
@@ -53,20 +53,20 @@ class SubjectList extends React.Component {
                                 : <Button variant="primary" type="button" onClick={this.onGenerateCertificate}>Produce certificate</Button>
                             }
                         </Col>
-                    </Row>
+                    </Row> */}
                     <Row style={listStyles.borderBottom}>
-                        <Col>Subject Name</Col>
+                        <Col>Course Name</Col>
                         <Col>Professor's Name</Col>
-                        <Col>Grade</Col>
+                        <Col>Something??</Col>
                     </Row>
                     {
-                        studentSubjects.map((subject, ind) => (
+                        studentCourses.map((course, ind) => (
                             <Row
-                                key={`subj_${ind}`}
-                                style={ind === studentSubjects.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }}>
-                                <Col>{subject.name}</Col>
-                                <Col>{subject.professorName}</Col>
-                                <Col>{subject.grade !== undefined ? subject.grade : '*'}</Col>
+                                key={`course_${ind}`}
+                                style={ind === studentCourses.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }}>
+                                <Col>{course.title}</Col>
+                                <Col>{course.professorName}</Col>
+                                <Col>{course.grade}</Col>
                             </Row>
                         ))
                     }
@@ -77,13 +77,13 @@ class SubjectList extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    const allSubjects = state.subjects.allSubjects || []
-    const gradesBySubject = (state.subjects.gradesBySubjectByStudent || {})[ownProps.student.id] || {}
-    let studentSubjects = ((state.subjects.studentSubjects || {})[ownProps.student.id] || []).map(x => {
-        const subject = allSubjects.find(y => y.id === x)
-        const grade = gradesBySubject[x]
+    const allCourses = state.courses.allCourses || []
+    const gradesByCourse = (state.courses.gradesByCourseByStudent || {})[ownProps.student.id] || {}
+    let studentCourses = ((state.courses.studentCourses || {})[ownProps.student.id] || []).map(x => {
+        const course = allCourses.find(y => y.id === x)
+        const grade = gradesByCourse[x]
         return {
-            ...subject,
+            ...course,
             grade
         }
     })
@@ -91,24 +91,25 @@ const mapStateToProps = (state, ownProps) => {
     const selectedAccount = state.eth.selectedAccount
     if (ownProps.userRole === USER_ROLES.STUDENT) {
         if (selectedAccount !== ownProps.student.id) {
-            studentSubjects = studentSubjects.map(x => ({ ...x, grade: undefined }))
+            studentCourses = studentCourses.map(x => ({ ...x, grade: undefined }))
         }
     }
     else if (ownProps.userRole === USER_ROLES.PROFESSOR) {
-        const professorSubjectsSet = new Set((state.subjects.subjectsByProfessorAddr || {})[selectedAccount] || [])
-        studentSubjects = studentSubjects.map(x => ({ ...x, grade: professorSubjectsSet.has(x.id) ? x.grade : undefined }))
+        const professorCoursesSet = new Set((state.courses.coursesByProfessorAddr || {})[selectedAccount] || [])
+        studentCourses = studentCourses.map(x => ({ ...x, grade: professorCoursesSet.has(x.id) ? x.grade : undefined }))
     }
 
     return {
         selectedAccount,
-        studentSubjects,
+        studentCourses: studentCourses,
+        selectedEvent: state.event.selectedEvent,
     }
 }
 
 const mapDispatchToProps = dispatch => ({
-    loadStudentSubjects: accountAddress => loadStudentSubjectsAction(accountAddress, dispatch),
-    loadProfessorSubjects: professorAddr => loadProfessorSubjectsAction(professorAddr, dispatch),
+    loadStudentCourses: (accountAddress, eventId) => loadStudentCoursesAction(accountAddress, eventId, dispatch),
+    loadProfessorCourses: professorAddr => loadProfessorCoursesAction(professorAddr, dispatch),
     generateCertificate: (studentAddr, selectedAccount, ipfsURI) => generateCertificateAction(studentAddr, selectedAccount, ipfsURI)
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(SubjectList)
+export default connect(mapStateToProps, mapDispatchToProps)(CourseList)

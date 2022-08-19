@@ -15,14 +15,14 @@ export const uploadMetadata = async metadata => {
     }
 }
 
-export const createMetadata = (student, studentSubjects) => {
+export const createMetadata = (student, studentCourses) => {
     return {
         name: student.name + "'s PLanBCertificate",
         description: 'This is PLanBCertificate NFT',
-        attributes: studentSubjects.map(subj => {         
+        attributes: studentCourses.map(course => {         
             return { 
-                value: subj.grade,
-                trait_type: subj.name,
+                value: course.grade,
+                trait_type: course.name,
             }
         })
     }

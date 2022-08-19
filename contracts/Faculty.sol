@@ -102,7 +102,7 @@ contract Faculty {
     uint maxEventId;
     uint maxCourseId;
 
-    mapping(uint => Event) events;
+    mapping(uint => Event) public events;
     mapping(uint => Course) courses;
     PlanBCertificate planBCertificate;
 
@@ -179,14 +179,14 @@ contract Faculty {
     }
 
     function gradeStudent(uint courseId, address studAddress, bool passed) external {
-        require(courses[courseId].exist == true, "Subject not found.");
+        require(courses[courseId].exist == true, "Course not found.");
 
         uint eventId = courses[courseId].eventId;
         require(events[eventId].students[studAddress].exist == true, "Student not found.");
 
-        require(courses[courseId].professor == msg.sender, "You are not owner of this subject.");
-        require(events[eventId].students[studAddress].coursesAttendance[courseId] != CourseAttendance.NOT_ENROLLED, "Student is not enrolled in the subject.");
-        require (events[eventId].professors[msg.sender].exist == true, "You are not Professor.");
+        require(courses[courseId].professor == msg.sender, "You are not owner of this course.");
+        require(events[eventId].students[studAddress].coursesAttendance[courseId] != CourseAttendance.NOT_ENROLLED, "Student is not enrolled in the course.");
+        require(events[eventId].professors[msg.sender].exist == true, "You are not Professor.");
 
         events[eventId].students[studAddress].coursesAttendance[courseId] = passed ? CourseAttendance.PASSED : CourseAttendance.FAILED;
     }

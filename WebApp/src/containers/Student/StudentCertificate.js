@@ -5,7 +5,7 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
-import { loadStudentSubjectsAction } from '../../actions/subjectActions'
+import { loadStudentCoursesAction } from '../../actions/coursesActions'
 import { listStyles } from '../../styles'
 import { formatDate } from '../../utils/utils'
 
@@ -17,11 +17,11 @@ class StudentCertificate extends React.Component {
     }
 
     componentDidMount() {
-        this.props.loadStudentSubjects(this.props.student.id)
+        this.props.loadStudentCourses(this.props.student.id, this.props.selectedEvent.eventId)
     }
 
     render() {
-        const { student, studentSubjects } = this.props
+        const { student, studentCourses } = this.props
         return (
             <div style={{ padding: '20px' }}>
                 <h4>Official certificated made in blockchain</h4>
@@ -36,18 +36,18 @@ class StudentCertificate extends React.Component {
                     <Row>Date: {this.dateNow}</Row>
 
                     <Row style={{ ...listStyles.borderBottom, ...listStyles.paddingTop10 }}>
-                        <Col>Subject Name</Col>
+                        <Col>Course Name</Col>
                         <Col>Professor's Name</Col>
                         <Col>Grade</Col>
                     </Row>
                     {
-                        studentSubjects.map((subject, ind) => (
+                        studentCourses.map((course, ind) => (
                             <Row
-                                key={`subj_${ind}`}
-                                style={ind === studentSubjects.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }}>
-                                <Col>{subject.name}</Col>
-                                <Col>{subject.professorName}</Col>
-                                <Col>{subject.grade}</Col>
+                                key={`course_${ind}`}
+                                style={ind === studentCourses.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }}>
+                                <Col>{course.name}</Col>
+                                <Col>{course.professorName}</Col>
+                                <Col>{course.grade}</Col>
                             </Row>
                         ))
                     }
@@ -59,23 +59,24 @@ class StudentCertificate extends React.Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-    const allSubjects = state.subjects.allSubjects || []
-    const gradesBySubject = (state.subjects.gradesBySubjectByStudent || {})[ownProps.student.id] || {}
-    const studentSubjects = ((state.subjects.studentSubjects || {})[ownProps.student.id] || []).map(x => {
-        const subject = allSubjects.find(y => y.id === x)
-        const grade = gradesBySubject[x]
+    const allCourses = state.courses.allCourses || []
+    const gradesByCourse = (state.courses.gradesByCourseByStudent || {})[ownProps.student.id] || {}
+    const studentCourses = ((state.courses.studentCourses || {})[ownProps.student.id] || []).map(x => {
+        const course = allCourses.find(y => y.id === x)
+        const grade = gradesByCourse[x]
         return {
-            ...subject,
+            ...course,
             grade
         }
     }).filter(x => parseInt(x.grade) > 5)
     return {
-        studentSubjects,
+        studentCourses,
+        selectedEvent: state.event.selectedEvent,
     }
 }
 
 const mapDispatchToProps = dispatch => ({
-    loadStudentSubjects: (accountAddress) => loadStudentSubjectsAction(accountAddress, dispatch)
+    loadStudentCourses: (accountAddress, eventId) => loadStudentCoursesAction(accountAddress, eventId, dispatch)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(StudentCertificate)

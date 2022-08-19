@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import SubjectList from '../containers/Student/SubjectList'
+import CourseList from '../containers/Student/CourseList'
 import { USER_ROLES } from '../utils/constants'
 import { getUserRole } from '../utils/userUtils'
 import withRouter from '../utils/withRouter'
@@ -14,7 +14,7 @@ class StudentDetailsPage extends React.Component {
 
         return (
             <div style={{ padding: '1rem' }}>
-                <SubjectList student={student} userRole={userRole} studParam={stud}/>
+                <CourseList student={student} userRole={userRole} studParam={stud}/>
             </div>
         )
     }

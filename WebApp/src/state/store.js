@@ -1,12 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit'
 import ethReducer from './ethReducer'
-import subjectsReducer from './subjectsReducer'
+import eventReducer from './eventReducer'
+import coursesReducer from './coursesReducer'
 import usersReducer from './usersReducer'
 
 export default configureStore({
     reducer: {
         eth: ethReducer,
         users: usersReducer,
-        subjects: subjectsReducer,
+        courses: coursesReducer,
+        event: eventReducer,
     },
 })

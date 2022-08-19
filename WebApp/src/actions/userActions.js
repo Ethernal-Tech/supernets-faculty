@@ -1,59 +1,59 @@
 import faculty from '../faculty'
-import { setStudentGrades } from '../state/subjectsReducer'
+import { setStudentGrades } from '../state/coursesReducer'
 import { setProfessors, setStudents, setUsers } from '../state/usersReducer'
 import { setAdminAccount } from '../state/ethReducer'
 import EventListenerService from "../utils/eventListenerService"
 
-const loadStudentGrades = async (students, dispatch) => {
-    let gradesBySubjectByStudent = {}
-    let gradesByStudentBySubject = {}
-    for (let i = 0; i < students.length; ++i) {
-        const student = students[i]
-        const grades = await faculty.methods.getStudentGrades(student.id).call()
-
-        const gradesBySubject = {}
-        for (let j = 0; j < grades.length; ++j) {
-            const gradeObj = grades[j]
-            gradesBySubject[gradeObj.id] = gradeObj.grade
-            
-            gradesByStudentBySubject[gradeObj.id] = {
-                ...gradesByStudentBySubject[gradeObj.id],
-                [student.id]: gradeObj.grade
-            }
-        }
-
-        gradesBySubjectByStudent[student.id] = gradesBySubject
-    
-    }
-
-    dispatch(setStudentGrades({ gradesBySubjectByStudent, gradesByStudentBySubject }))
-}
-
-export const loadUsersAction = async dispatch => {
+export const loadProfessorsAction = async(eventId, dispatch) => {
     try {
-        const professors = await faculty.methods.getAllProfessors().call();
-        const students = await faculty.methods.getAllStudents().call();
-        dispatch(setUsers({ professors, students }))
-        await loadStudentGrades(students, dispatch)
-    } catch (ex) {
-        EventListenerService.notify("error", ex)
-    }
-}
-
-export const loadProfessorsAction = async dispatch => {
-    try {
-        const professors = await faculty.methods.getAllProfessors().call();
+        const professors = await faculty.methods.getAllProfessors(eventId).call();
         dispatch(setProfessors(professors))
     } catch (ex) {
         EventListenerService.notify("error", ex)
     }
 }
 
-export const loadStudentsAction = async dispatch => {
+const loadStudentGrades = async (students, eventId, dispatch) => {
+    let gradesByCourseByStudent = {}
+    let gradesByStudentByCourse = {}
+    for (let i = 0; i < students.length; ++i) {
+        const student = students[i]
+        const grades = await faculty.methods.getStudentGrades(student.id, eventId).call()
+
+        const gradesByCourse = {}
+        for (let j = 0; j < grades.length; ++j) {
+            const gradeObj = grades[j]
+            gradesByCourse[gradeObj.id] = gradeObj.grade
+            
+            gradesByStudentByCourse[gradeObj.id] = {
+                ...gradesByStudentByCourse[gradeObj.id],
+                [student.id]: gradeObj.grade
+            }
+        }
+
+        gradesByCourseByStudent[student.id] = gradesByCourse
+    
+    }
+
+    dispatch(setStudentGrades({ gradesByCourseByStudent, gradesByStudentByCourse }))
+}
+
+export const loadStudentsAction = async (eventId, dispatch) => {
     try {
-        const students = await faculty.methods.getAllStudents().call();
+        const students = await faculty.methods.getAllStudents(eventId).call();
         dispatch(setStudents(students))
-        await loadStudentGrades(students, dispatch)
+        await loadStudentGrades(students, eventId, dispatch)
+    } catch (ex) {
+        EventListenerService.notify("error", ex)
+    }
+}
+
+export const loadUsersAction = async (eventId, dispatch) => {
+    try {
+        const professors = await faculty.methods.getAllProfessors(eventId).call();
+        const students = await faculty.methods.getAllStudents(eventId).call();
+        dispatch(setUsers({ professors, students }))
+        await loadStudentGrades(students, eventId, dispatch)
     } catch (ex) {
         EventListenerService.notify("error", ex)
     }

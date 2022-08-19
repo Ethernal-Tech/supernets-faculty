@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import ProfessorSubjects from '../containers/ProfessorSubjects'
+import ProfessorCourses from '../containers/Professor/ProfessorCourses'
 import { USER_ROLES } from '../utils/constants'
 import { getUserRole } from '../utils/userUtils'
 import withRouter from '../utils/withRouter'
@@ -14,7 +14,7 @@ class ProfessorDetailsPage extends React.Component {
         }
 
         return (
-            <ProfessorSubjects professor={professor} userRole={userRole} selectedAccount={selectedAccount}/>
+            <ProfessorCourses professor={professor} userRole={userRole} selectedAccount={selectedAccount}/>
         )
     }
 }

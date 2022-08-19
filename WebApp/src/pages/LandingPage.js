@@ -1,12 +1,8 @@
 import React from 'react'
 import { Button, Container } from 'react-bootstrap'
-import { connect } from 'react-redux'
 import { Link } from "react-router-dom"
 
-import { USER_ROLES } from '../utils/constants'
-import { getUserRole } from '../utils/userUtils'
-
-const LandingPage = ({ userRole }) => {
+const LandingPage = () => {
 
     return (
         <Container style={styles.container}>
@@ -19,26 +15,16 @@ const LandingPage = ({ userRole }) => {
                 It represents a demo of the first phase of entire school-students management platform development.
             </div>
 
-            {
-                userRole !== USER_ROLES.GUEST &&
-                <Link style={styles.enterButtonContainer} to={'/home'}>
-                    <Button style={styles.enterButton}>
-                        ENTER
-                    </Button>
-                </Link>
-            }
+            <Link style={styles.enterButtonContainer} to={'/events'}>
+                <Button style={styles.enterButton}>
+                    ENTER
+                </Button>
+            </Link>
         </Container>
     )
 }
 
-const mapStateToProps = state => {
-    const userRole = getUserRole(state)
-    return {
-        userRole,
-    }
-}
-
-export default connect(mapStateToProps)(LandingPage)
+export default LandingPage
 
 const styles = {
     container: {

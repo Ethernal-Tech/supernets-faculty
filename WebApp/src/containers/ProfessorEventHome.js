@@ -1,12 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { USER_ROLES } from '../utils/constants'
-import { getUserRole } from '../utils/userUtils'
 import { Tabs, Tab } from 'react-bootstrap'
-import CourseList from './Student/CourseList'
+import ProfessorCourses from './Professor/ProfessorCourses'
 import EventDetails from './EventDetails'
 
-class StudentHome extends React.Component {
+class ProfessorEventHome extends React.Component {
 
     setSelectedTab = tab => this.setState({ selectedTab: tab })
 
@@ -15,8 +14,9 @@ class StudentHome extends React.Component {
     }
 
     render() {
-        const { student, userRole } = this.props
-        if (!student) {
+        const { professor, userRole, selectedAccount } = this.props
+
+        if (!professor) {
             return null
         }
 
@@ -26,7 +26,7 @@ class StudentHome extends React.Component {
                 onSelect={this.setSelectedTab}
                 className="mb-3">
                 <Tab eventKey="courses" title="My Courses">
-                    <CourseList student={student} userRole={userRole}/>
+                    <ProfessorCourses professor={professor} userRole={userRole} selectedAccount={selectedAccount}/>
                 </Tab>
                 <Tab eventKey="eventDetails" title="Event Details">
                     <EventDetails userRole={this.props.userRole} />
@@ -34,20 +34,20 @@ class StudentHome extends React.Component {
             </Tabs>
         )
     }
+    
 }
 
 const mapStateToProps = (state, ownProps) => {
-    const userRole = getUserRole(state)
-    const students = state.users.students || []
-    let student
-    if (ownProps.userRole === USER_ROLES.STUDENT) {
-        student = students.find(x => x.id === state.eth.selectedAccount)
+    const professors = state.users.professors || []
+    let professor
+    if (ownProps.userRole === USER_ROLES.PROFESSOR) {
+        professor = professors.find(x => x.id === state.eth.selectedAccount)
     }
 
     return {
-        userRole,
-        student,
+        professor,
+        selectedAccount: state.eth.selectedAccount,
     }
 }
 
-export default connect(mapStateToProps)(StudentHome)
+export default connect(mapStateToProps)(ProfessorEventHome)
