@@ -16,7 +16,7 @@ contract PlanBCertificate is ERC721, ERC721URIStorage {
 
     constructor() ERC721("PlanB Certificate", "PLANB") {}
 
-    function safeMint(address to, string memory uri) internal virtual {
+    function safeMint(address to, string memory uri) external virtual {
         _tokenIdCounter.increment();
         uint256 tokenId = _tokenIdCounter.current();
         
@@ -46,8 +46,9 @@ contract PlanBCertificate is ERC721, ERC721URIStorage {
         return super.tokenURI(tokenId);
     }
 
-    function getTokenForOwner(address owner) internal view returns (uint256) {
+    function getTokenForOwner(address owner) external view returns (uint256) {
         require(owner != address(0), "Address zero is not a valid owner");
         return _ownerToToken[owner];
     }
 }
+

@@ -4,7 +4,7 @@ pragma solidity ^0.8.7;
 
 import "./PlanBCertificate.sol";
 
-contract Faculty is PlanBCertificate{
+contract Faculty {
 
     enum CourseAttendance{ NOT_ENROLLED, ENROLLED, PASSED, FAILED }
 
@@ -103,12 +103,15 @@ contract Faculty is PlanBCertificate{
     uint maxCourseId;
 
     mapping(uint => Event) events;
-    mapping(uint => Course) courses; 
+    mapping(uint => Course) courses;
+    PlanBCertificate planBCertificate;
 
-    constructor() {
+    constructor(address certificateAddress) {
         admin = msg.sender;
         maxEventId = 0;
-        maxCourseId = 0;   
+        maxCourseId = 0;
+        
+        planBCertificate = PlanBCertificate(certificateAddress);   
     }
 
     function addEvent(string calldata title, string calldata location, string calldata venue, uint256 time, string calldata description) external onlyAdmin {
@@ -188,7 +191,7 @@ contract Faculty is PlanBCertificate{
         events[eventId].students[studAddress].coursesAttendance[courseId] = passed ? CourseAttendance.PASSED : CourseAttendance.FAILED;
     }
 
-    function getAllEvents() public view returns(EventView[] memory) {
+    function getAllEvents() external view returns(EventView[] memory) {
         EventView[] memory eventsArray = new EventView[](maxEventId);
 
         for (uint i = 1; i <= maxEventId; i++) {
@@ -205,7 +208,7 @@ contract Faculty is PlanBCertificate{
         return eventsArray;
     }
 
-    function getAllCourses(uint eventId) public view returns(CourseView[] memory) {
+    function getAllCourses(uint eventId) external view returns(CourseView[] memory) {
         require(events[eventId].exist == true, "Event doesn't exist.");
 
         CourseView[] memory coursesArray = new CourseView[](events[eventId].courses.length);
@@ -229,7 +232,7 @@ contract Faculty is PlanBCertificate{
         return coursesArray;
     }
 
-    function getAllProfessors(uint eventId) public view returns(ProfessorView[] memory) {   
+    function getAllProfessors(uint eventId) external view returns(ProfessorView[] memory) {   
         require(events[eventId].exist == true, "Event doesn't exist.");
    
         ProfessorView[] memory professorsArray = new ProfessorView[](events[eventId].professorsAddresses.length);
@@ -247,7 +250,7 @@ contract Faculty is PlanBCertificate{
         return professorsArray;
     }
 
-    function getAllStudents(uint eventId) public view returns(StudentView[] memory) {      
+    function getAllStudents(uint eventId) external view returns(StudentView[] memory) {      
         require(events[eventId].exist == true, "Event doesn't exist.");
 
         StudentView[] memory studentsArray = new StudentView[](events[eventId].studentsAddresses.length);
@@ -265,7 +268,7 @@ contract Faculty is PlanBCertificate{
         return studentsArray;
     }
 
-    function getStudentGrades(address studAddress, uint eventId) public view returns(GradeView[] memory) {
+    function getStudentGrades(address studAddress, uint eventId) external view returns(GradeView[] memory) {
         require(events[eventId].exist == true, "Event doesn't exist.");
         require(events[eventId].students[studAddress].exist == true, "Student not found.");
 
@@ -282,25 +285,25 @@ contract Faculty is PlanBCertificate{
         return grades;
     }
 
-    function getProfessorSubjects(address professor, uint eventId) public view returns(uint[] memory coursesIds) {
+    function getProfessorSubjects(address professor, uint eventId) external view returns(uint[] memory coursesIds) {
         require(events[eventId].exist == true, "Event doesn't exist.");
         require(events[eventId].professors[professor].exist == true, "Professor not found.");
         coursesIds = events[eventId].professors[professor].eventCourses;
     }
     
-    function getStudentCourses(address studentAddress, uint eventId) public view returns(uint[] memory coursesIds) {
+    function getStudentCourses(address studentAddress, uint eventId) external view returns(uint[] memory coursesIds) {
         require(events[eventId].exist == true, "Event doesn't exist.");
         require(events[eventId].students[studentAddress].exist == true, "Student not found.");
 
         coursesIds = events[eventId].students[studentAddress].eventCourses;
     }
 
-    function generateCertificate(address to, string memory uri) public onlyAdmin {
-        safeMint(to, uri);
+    function generateCertificate(address to, string memory uri) external onlyAdmin {
+        planBCertificate.safeMint(to, uri);
     }
 
-    function getCertificateId(address student) public view returns (uint256) {
+    function getCertificateId(address student) external view returns (uint256) {
         //sta ako vrati 0?
-        return getTokenForOwner(student);
+        return planBCertificate.getTokenForOwner(student);
     }
 }
