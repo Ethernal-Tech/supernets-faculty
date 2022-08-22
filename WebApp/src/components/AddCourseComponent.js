@@ -9,23 +9,37 @@ import EventListenerService from "../utils/eventListenerService"
 import { generalStyles } from '../styles'
 
 class AddCourseComponent extends React.Component {
-    state = {
-        isWorking: false,
-        name: '',
+
+    constructor(props) {
+        super(props)
+        this.onChange = this.onChange.bind(this)
     }
 
-    onSubmit = async evt => {
-        evt.preventDefault()
-        if (this.state.name) {
+    state = {
+        isWorking: false,
+        title: '',
+        description: '',
+        startTime: '',
+        endTime: '',
+        venue: ''
+    }
+
+    onSubmit = async event => {
+        event.preventDefault()
+        if (this.state.title && this.state.description && this.state.startTime && this.state.endTime && this.state.venue) {
             this.setState({ isWorking: true })
-            this.props.onSubmit && await this.props.onSubmit(this.state.name)
-            this.setState({ name: '', isWorking: false })
+            const startTimeMs = new Date(this.state.startTime).getTime()
+            const endTimeMs = new Date(this.state.endTime).getTime()
+            this.props.onSubmit && await this.props.onSubmit(this.state.title, this.state.description, startTimeMs, endTimeMs, this.state.venue)
+            this.setState({ title: '', description: '', startTime: '', endTime: '', venue: '', isWorking: false })
         } else {
             EventListenerService.notify("error", 'fields not populated!')
         }
     }
 
-    onNameChange = evt => this.setState({ name: evt.target.value })
+    onChange = ({target}) => {
+        this.setState({ [target.id]: target.value })
+    }
 
     render() {
         return (
@@ -33,8 +47,27 @@ class AddCourseComponent extends React.Component {
                 <Form onSubmit={this.onSubmit}>
                     <Row>
                         <Col>
-                            <Form.Control id="name" type="text" placeholder="Enter name" value={this.state.name} onChange={this.onNameChange} />
+                            <Form.Control id="title" type="text" placeholder="Enter course name" value={this.state.title} onChange={this.onChange}/>
                         </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Form.Control id="startTime" type="datetime-local"  onChange={this.onChange}/>
+                        </Col>                     
+                        <Col>
+                            <Form.Control id="endTime" type="datetime-local"  onChange={this.onChange}/>
+                        </Col>
+                        <Col>
+                            <Form.Control id="venue" type="text" placeholder="Enter course venue" value={this.state.venue} onChange={this.onChange}/>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Form.Control id="description" type="text" placeholder="Enter course description" value={this.state.description} onChange={this.onChange}/>
+                        </Col>
+                    </Row>
+
+                    <Row>
                         <Col xs={'auto'}>
                         {
                             this.state.isWorking ?

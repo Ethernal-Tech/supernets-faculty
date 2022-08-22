@@ -1,5 +1,4 @@
 import React from 'react'
-import { Button } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { addEventAction, loadAllEventsAction, setSelectedEventAction } from '../actions/eventActions'
@@ -19,7 +18,7 @@ class EventList extends React.Component {
     }
 
     onSubmit = async (title, location, venue, time, description) => {
-        this.props.addEvent(title, location, venue, time, description, this.props.selectedAccount)
+        await this.props.addEvent(title, location, venue, time, description, this.props.selectedAccount)
     }
 
     render() {

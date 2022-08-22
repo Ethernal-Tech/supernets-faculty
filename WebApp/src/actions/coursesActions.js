@@ -15,7 +15,6 @@ export const loadAllCoursesAction = async (eventId, dispatch) => {
 
 export const loadProfessorCoursesAction = async (professorAddr, eventId, dispatch) => {
     try {
-        debugger
         const courses = await faculty.methods.getProfessorSubjects(professorAddr, eventId).call(); //TODO: change name to courses
         dispatch(setCoursesForProfessorAddr({ professorAddr, courses }))
     }
@@ -24,17 +23,17 @@ export const loadProfessorCoursesAction = async (professorAddr, eventId, dispatc
     }
 }
 
-export const addCourseAction = async (courseName, professorAddr, selectedAccount, dispatch) => {
+export const addCourseAction = async (title, description, startTime, endTime, venue, professorAddr, eventId, selectedAccount, dispatch) => {
     try {
-        await faculty.methods.addCourse(courseName, professorAddr).send({ from: selectedAccount });
+        await faculty.methods.addCourse(title, description, startTime, endTime, venue, professorAddr, eventId).send({ from: selectedAccount });
     }
     catch (ex) {
         EventListenerService.notify("error", ex)
     }
 
-    await loadProfessorsAction(dispatch)
-    await loadAllCoursesAction(dispatch)
-    await loadProfessorCoursesAction(professorAddr, dispatch)
+    await loadProfessorsAction(eventId, dispatch)
+    await loadAllCoursesAction(eventId, dispatch)
+    await loadProfessorCoursesAction(professorAddr, eventId, dispatch)
 }
 
 export const generateCertificateAction = async (studentAddr, selectedAccount, ipfsURI) => {
