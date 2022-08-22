@@ -25,7 +25,6 @@ class AddEventComponent extends React.Component {
     }
 
     onSubmit = async event => {
-        debugger
         event.preventDefault()
         if (this.state.title && this.state.location && this.state.venue && this.state.description && this.state.time) {
             this.setState({ isWorking: true })
@@ -59,12 +58,12 @@ class AddEventComponent extends React.Component {
                             <Form.Control id="venue" type="text" placeholder="Enter event venue" value={this.state.venue} onChange={this.onChange}/>
                         </Col>
                         <Col>
-                            <Form.Control id="time" type="datetime-local"  onChange={this.onChange}/>
+                            <Form.Control id="time" type="datetime-local" onChange={this.onChange}/>
                         </Col>
                     </Row>
                     <Row>
                         <Col>
-                            <Form.Control id="description" type="text" placeholder="Enter event location" value={this.state.description} onChange={this.onChange}/>
+                            <Form.Control id="description" type="text" placeholder="Enter event description" value={this.state.description} onChange={this.onChange}/>
                         </Col>
                     </Row>
 

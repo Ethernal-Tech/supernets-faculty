@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom'
 import { addEventAction, loadAllEventsAction, setSelectedEventAction } from '../actions/eventActions'
 import EventComponent from '../components/EventComponent'
 import AddEventComponent from '../components/AddEventComponent'
-
 import { isUserAdmin } from '../utils/userUtils'
 
 
@@ -20,7 +19,6 @@ class EventList extends React.Component {
     }
 
     onSubmit = async (title, location, venue, time, description) => {
-        debugger
         this.props.addEvent(title, location, venue, time, description, this.props.selectedAccount)
     }
 

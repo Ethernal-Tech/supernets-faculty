@@ -59,19 +59,19 @@ export const loadUsersAction = async (eventId, dispatch) => {
     }
 }
 
-export const addProfessorAction = async (name, addr, account, dispatch) => {
+export const addProfessorAction = async (name, addr, eventId, account, dispatch) => {
     try {
-        await faculty.methods.addProfessor(addr, name).send({ from: account });
-        await loadProfessorsAction(dispatch)
+        await faculty.methods.addProfessor(addr, name, eventId).send({ from: account });
+        await loadProfessorsAction(eventId, dispatch)
     } catch (ex) {
         EventListenerService.notify("error", ex)
     }
 }
 
-export const addStudentAction = async (name, addr, account, dispatch) => {
+export const addStudentAction = async (name, addr, eventId, account, dispatch) => {
     try {
-        await faculty.methods.addStudent(addr, name).send({ from: account });
-        await loadStudentsAction(dispatch)
+        await faculty.methods.addStudent(addr, name, eventId).send({ from: account });
+        await loadStudentsAction(eventId, dispatch)
     } catch (ex) {
         EventListenerService.notify("error", ex)
     }

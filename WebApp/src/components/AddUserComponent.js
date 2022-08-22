@@ -9,6 +9,11 @@ import EventListenerService from "../utils/eventListenerService"
 import { generalStyles } from '../styles'
 
 class AddUserComponent extends React.Component {
+    constructor(props) {
+        super(props)
+        this.onChange = this.onChange.bind(this)
+    }
+
     state = {
         isWorking: false,
         name: '',
@@ -26,9 +31,9 @@ class AddUserComponent extends React.Component {
         }
     }
 
-    onNameChange = evt => this.setState({ name: evt.target.value })
-
-    onAddrChange = evt => this.setState({ addr: evt.target.value })
+    onChange = ({target}) => {
+        this.setState({ [target.id]: target.value })
+    }
 
     render() {
         return (
@@ -36,10 +41,10 @@ class AddUserComponent extends React.Component {
                 <Form onSubmit={this.onSubmit}>
                     <Row>
                         <Col>
-                            <Form.Control id="name" type="text" placeholder="Enter name" value={this.state.name} onChange={this.onNameChange} />
+                            <Form.Control id="name" type="text" placeholder="Enter name" value={this.state.name} onChange={this.onChange} />
                         </Col>
                         <Col>
-                            <Form.Control id="address" type="text" placeholder="Enter address" value={this.state.addr} onChange={this.onAddrChange} />
+                            <Form.Control id="addr" type="text" placeholder="Enter address" value={this.state.addr} onChange={this.onChange} />
                         </Col>
                         <Col xs={'auto'}>
                         {
