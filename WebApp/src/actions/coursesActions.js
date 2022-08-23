@@ -16,7 +16,7 @@ export const loadAllCoursesAction = async (eventId, dispatch) => {
 export const loadProfessorCoursesAction = async (professorAddr, eventId, dispatch) => {
     try {
         debugger
-        const courses = await faculty.methods.getProfessorSubjects(professorAddr, eventId).call(); //TODO: change name to courses
+        const courses = await faculty.methods.getProfessorCourses(professorAddr, eventId).call(); //TODO: change name to courses
         dispatch(setCoursesForProfessorAddr({ professorAddr, courses }))
     }
     catch (ex) {
