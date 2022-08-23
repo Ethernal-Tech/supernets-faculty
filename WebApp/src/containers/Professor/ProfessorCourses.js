@@ -17,7 +17,9 @@ class ProfessorCourses extends React.Component {
         loadProfessorCourses(professor.id, this.props.selectedEvent.eventId)
     }
 
-    onSubmit = async courseName => this.props.addCourse(courseName, this.props.professor.id, this.props.selectedAccount)
+    onSubmit = async (title, description, startTime, endTime, venue) => {
+        await this.props.addCourse(title, description, startTime, endTime, venue, this.props.professor.id, this.props.selectedEvent.eventId, this.props.selectedAccount)
+    }
 
     render() {
         const { professor, courses, userRole } = this.props
@@ -50,12 +52,11 @@ class ProfessorCourses extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    debugger
     const professorAddr = ownProps.professor?.id
     const allCourses = state.courses.allCourses || []
     const professorCoursesIds = (professorAddr ? state.courses.coursesByProfessorAddr[professorAddr] : undefined) || []
     const courses = allCourses.filter(x => professorCoursesIds.some(y => y === x.id))
-
+    
     return {
         courses,
         selectedEvent: state.event.selectedEvent,
@@ -64,7 +65,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({
     loadProfessorCourses: (professorAddr, eventId) => loadProfessorCoursesAction(professorAddr, eventId, dispatch),
-    addCourse: (courseName, professorAddr, selectedAccount) => addCourseAction(courseName, professorAddr, selectedAccount, dispatch),
+    addCourse: (title, description, startTime, endTime, venue, professorAddr, eventId, selectedAccount) => addCourseAction(title, description, startTime, endTime, venue, professorAddr, eventId, selectedAccount, dispatch),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfessorCourses)

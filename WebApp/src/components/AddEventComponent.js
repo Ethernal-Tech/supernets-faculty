@@ -4,7 +4,6 @@ import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
-// import debounce from 'lodash'
 import LoadingSpinner from './LoadingSpinner'
 import EventListenerService from "../utils/eventListenerService"
 import { generalStyles } from '../styles'
@@ -42,7 +41,6 @@ class AddEventComponent extends React.Component {
 
     render() {
         return (
-            // onChange={this.onChange.bind(this)}
             <Container style={{ paddingTop: 20 }}>
                 <Form onSubmit={this.onSubmit}>
                     <Row>
