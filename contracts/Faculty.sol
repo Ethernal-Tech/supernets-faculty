@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: None
 
-pragma solidity ^0.8.7;
+pragma solidity ^0.8.15;
 
 import "./PlanBCertificate.sol";
 
@@ -109,24 +109,24 @@ contract Faculty {
     }
 
     modifier onlyAdmin {
-        require (msg.sender == admin, "You are not Admin.");
+        require (msg.sender == admin);
         _;
     }
 
     modifier eventAdmin(uint eventId) {
-        require (isAdmin(eventId, msg.sender), "You are not Admin.");
+        require (isAdmin(eventId, msg.sender) == true);
         _;
     }
 
     modifier eventExists(uint eventId) {
-        require(events[eventId].exist == true, "Event not found.");
+        require(events[eventId].exist == true);
         _;
     }
 
     modifier canAddAddress(uint eventId, address addr) {
-        require(events[eventId].eventAdmins[addr] == false, "This address is already admin.");
-        require(events[eventId].professors[addr].exist == false, "This address is already professor.");
-        require(events[eventId].students[addr].exist == false, "This address is already student.");
+        require(events[eventId].eventAdmins[addr] == false);
+        require(events[eventId].professors[addr].exist == false);
+        require(events[eventId].students[addr].exist == false);
         _;
     }
 
@@ -160,7 +160,7 @@ contract Faculty {
     }
 
     function addCourse(string calldata title, string calldata description, uint256 startTime, uint256 endTime, string calldata venue, address professor, uint points, uint eventId) external eventAdmin(eventId) eventExists(eventId) {
-        require(events[eventId].professors[professor].exist == true, "Address is not professor.");
+        require(events[eventId].professors[professor].exist == true);
 
         maxCourseId += 1;
 
@@ -185,11 +185,10 @@ contract Faculty {
 
     function addProfessor(address profAddress, string calldata firstName, string calldata lastName, string calldata country, string calldata expertise, uint eventId) external eventAdmin(eventId) eventExists(eventId) canAddAddress(eventId, profAddress) {
         populateProfessor(profAddress, firstName, lastName, country, expertise, eventId);
-        events[eventId].professorsAddresses.push(profAddress);
     }
 
     function editProfessor(address profAddress, string calldata firstName, string calldata lastName, string calldata country, string calldata expertise, uint eventId) external eventAdmin(eventId) eventExists(eventId) {
-        require(events[eventId].professors[addr].exist == true, "Address is not professor.");
+        require(events[eventId].professors[profAddress].exist == true);
         populateProfessor(profAddress, firstName, lastName, country, expertise, eventId);
     }
 
@@ -199,42 +198,47 @@ contract Faculty {
     }
 
     function editStudent(address studAddress, string calldata firstName, string calldata lastName, string calldata country, uint eventId) external eventAdmin(eventId) eventExists(eventId) {
-        require(events[eventId].students[addr].exist == true, "Address is not student.");
+        require(events[eventId].students[studAddress].exist == true);
         populateStudent(studAddress, firstName, lastName, country, eventId);
     }
 
-    function enrollCourse(uint courseId, address studAddress) external eventAdmin(eventId) eventExists(eventId) {
+    function enrollCourse(uint courseId, address studAddress) external {
         uint eventId = courses[courseId].eventId;
+        require(events[eventId].exist == true);
+        require(isAdmin(eventId, msg.sender));
 
-        require(events[eventId].students[studAddress].exist == true, "Address is not student.");
-        require(events[eventId].students[studAddress].coursesAttendance[courseId] == CourseAttendance.NOT_ENROLLED, "Already enrolled.");
+        require(events[eventId].students[studAddress].exist == true);
+        require(events[eventId].students[studAddress].coursesAttendance[courseId] == CourseAttendance.NOT_ENROLLED);
 
         enrollStudentToCourse(eventId, courseId, studAddress);
     }
 
-    function enrollCourseMultiple(uint courseId, address[] calldata studAddresses) external eventAdmin(eventId) eventExists(eventId) {
+    function enrollCourseMultiple(uint courseId, address[] calldata studAddresses) external {
         uint eventId = courses[courseId].eventId;
+        require(events[eventId].exist == true);
+        require(isAdmin(eventId, msg.sender));
 
         for (uint i = 0; i < studAddresses.length; i++) {
-            require(events[eventId].students[studAddress].exist == true, "Address is not student.");
-            require(events[eventId].students[studAddress].coursesAttendance[courseId] == CourseAttendance.NOT_ENROLLED, "Already enrolled.");
+            address studAddress = studAddresses[i];
+            require(events[eventId].students[studAddress].exist == true);
+            require(events[eventId].students[studAddress].coursesAttendance[courseId] == CourseAttendance.NOT_ENROLLED);
 
             enrollStudentToCourse(eventId, courseId, studAddress);
         }
     }
 
     function gradeStudent(uint courseId, address studAddress, uint grade) external {
-        require(courses[courseId].exist == true, "Course not found.");
+        require(courses[courseId].exist == true);
 
         uint eventId = courses[courseId].eventId;
-        require(isAdmin(eventId, msg.sender), "You are not Admin.");
-        require(events[eventId].students[studAddress].exist == true, "Student not found.");
+        require(isAdmin(eventId, msg.sender));
+        require(events[eventId].students[studAddress].exist == true);
 
         CourseAttendance curentGrade = events[eventId].students[studAddress].coursesAttendance[courseId];
-        require(curentGrade == CourseAttendance.ENROLLED || curentGrade == CourseAttendance.FAILED, "Can not grade this student.");
+        require(curentGrade == CourseAttendance.ENROLLED || curentGrade == CourseAttendance.FAILED);
         require(grade >= 0 && grade <= 5);
 
-        events[eventId].students[studAddress].coursesAttendance[courseId] = grade;
+        events[eventId].students[studAddress].coursesAttendance[courseId] = getCourseAttendance(grade);
     }
 
     // Get functions
@@ -271,7 +275,7 @@ contract Faculty {
                 venue: courses[id].venue,
                 points: courses[id].points,
                 professorAddress: courses[id].professor,
-                professorName: events[eventId].professors[courses[id].professor].firstName + " " + events[eventId].professors[courses[id].professor].lastName,
+                professorName: string(abi.encodePacked(events[eventId].professors[courses[id].professor].firstName, " ", events[eventId].professors[courses[id].professor].lastName)),
                 students: courses[id].students
             });
         }
@@ -354,7 +358,7 @@ contract Faculty {
 
     // Private functions
 
-    function isAdmin(uint eventId, address addr) private {
+    function isAdmin(uint eventId, address addr) private view returns(bool) {
         return (events[eventId].eventAdmins[addr] || addr == admin);
     }
 
@@ -377,5 +381,21 @@ contract Faculty {
         events[eventId].students[studAddress].coursesAttendance[courseId] = CourseAttendance.ENROLLED;
         events[eventId].students[studAddress].eventCourses.push(courseId);
         courses[courseId].students.push(studAddress);
+    }
+
+    function getCourseAttendance(uint grade) private pure returns(CourseAttendance) {
+        if (grade == 1) {
+            return CourseAttendance.GRADE1;
+        } else if (grade == 2) {
+            return CourseAttendance.GRADE2;
+        } else if (grade == 3) {
+            return CourseAttendance.GRADE3;
+        } else if (grade == 4) {
+            return CourseAttendance.GRADE4;
+        } else if (grade == 5) {
+            return CourseAttendance.GRADE5;
+        } else {
+            return CourseAttendance.FAILED;
+        }
     }
 }
