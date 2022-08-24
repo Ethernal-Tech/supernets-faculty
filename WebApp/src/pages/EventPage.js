@@ -8,8 +8,7 @@ import StudentHome from '../containers/StudentHome'
 
 import { USER_ROLES } from '../utils/constants'
 import { getUserRole } from '../utils/userUtils'
-import { loadUsersAction, loadAdminAccountAction } from '../actions/userActions'
-import { initializeEthAction } from '../actions/appActions'
+import { loadUsersAction } from '../actions/userActions'
 import { loadAllCoursesAction } from '../actions/coursesActions'
 
 const EventPage = (props) => {

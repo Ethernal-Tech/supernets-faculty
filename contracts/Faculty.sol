@@ -6,7 +6,7 @@ import "./PlanBCertificate.sol";
 
 contract Faculty {
 
-    enum CourseAttendance{ FAILED, GRADE1, GRADE2, GRADE3, GRADE4, GRADE5, NOT_ENROLLED, ENROLLED }
+    enum CourseAttendance{ NOT_ENROLLED, GRADE1, GRADE2, GRADE3, GRADE4, GRADE5, FAILED, ENROLLED }
 
     struct Event {
         string title;
@@ -135,7 +135,7 @@ contract Faculty {
     uint maxEventId;
     uint maxCourseId;
 
-    mapping(uint => Event) public events;
+    mapping(uint => Event) events;
     mapping(uint => Course) courses;
     PlanBCertificate planBCertificate;
 
@@ -185,6 +185,7 @@ contract Faculty {
 
     function addProfessor(address profAddress, string calldata firstName, string calldata lastName, string calldata country, string calldata expertise, uint eventId) external eventAdmin(eventId) eventExists(eventId) canAddAddress(eventId, profAddress) {
         populateProfessor(profAddress, firstName, lastName, country, expertise, eventId);
+        events[eventId].professorsAddresses.push(profAddress);
     }
 
     function editProfessor(address profAddress, string calldata firstName, string calldata lastName, string calldata country, string calldata expertise, uint eventId) external eventAdmin(eventId) eventExists(eventId) {
@@ -236,7 +237,7 @@ contract Faculty {
 
         CourseAttendance curentGrade = events[eventId].students[studAddress].coursesAttendance[courseId];
         require(curentGrade == CourseAttendance.ENROLLED || curentGrade == CourseAttendance.FAILED);
-        require(grade >= 0 && grade <= 5);
+        require(grade >= 1 && grade <= 6);
 
         events[eventId].students[studAddress].coursesAttendance[courseId] = getCourseAttendance(grade);
     }

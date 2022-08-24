@@ -12,9 +12,8 @@ import { listStyles } from '../../styles'
 import { isUserAdmin } from '../../utils/userUtils'
 
 class ProfessorList extends React.Component {
-    onSubmit = async (name, addr) => {
-        this.props.addProfessor(name, addr, this.props.selectedEvent.eventId, this.props.selectedAccount)
-    }
+
+    onSubmit = async (name, addr) => this.props.addProfessor(name, addr, this.props.selectedEvent.eventId, this.props.selectedAccount)
 
     render() {
         const { professors } = this.props

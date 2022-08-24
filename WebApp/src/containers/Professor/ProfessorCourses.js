@@ -17,9 +17,9 @@ class ProfessorCourses extends React.Component {
         loadProfessorCourses(professor.id, this.props.selectedEvent.eventId)
     }
 
-    onSubmit = async (title, description, startTime, endTime, venue) => {
-        await this.props.addCourse(title, description, startTime, endTime, venue, this.props.professor.id, this.props.selectedEvent.eventId, this.props.selectedAccount)
-    }
+    onSubmit = async (title, description, startTime, endTime, venue) => 
+         this.props.addCourse(title, description, startTime, endTime, venue, this.props.professor.id, this.props.selectedEvent.eventId, this.props.selectedAccount)
+    
 
     render() {
         const { professor, courses, userRole } = this.props

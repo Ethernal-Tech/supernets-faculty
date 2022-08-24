@@ -17,9 +17,7 @@ class EventList extends React.Component {
         props.setSelectedEvent(event)
     }
 
-    onSubmit = async (title, location, venue, time, description) => {
-        await this.props.addEvent(title, location, venue, time, description, this.props.selectedAccount)
-    }
+    onSubmit = async (title, location, venue, time, description) => this.props.addEvent(title, location, venue, time, description, this.props.selectedAccount)
 
     render() {
         const { events } = this.props

@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import CourseDetails from '../containers/CourseDetails'
 import CourseStudents from '../containers/CourseStudents'
 import { getUserRole } from '../utils/userUtils'
 import withRouter from '../utils/withRouter'
@@ -12,7 +13,10 @@ class CourseDetailsPage extends React.Component {
             return null
         }
         return (
-            <CourseStudents course={course} userRole={userRole} selectedAccount={selectedAccount}/>
+            <>
+                <CourseDetails course={course} />
+                <CourseStudents course={course} userRole={userRole} selectedAccount={selectedAccount}/>
+            </>
         )
     }
 }
