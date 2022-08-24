@@ -7,12 +7,16 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import AddUserComponent from '../../components/AddUserComponent'
-import { addStudentAction } from '../../actions/userActions'
+import { addStudentAction, setSelectedUserAction } from '../../actions/userActions'
 import { listStyles } from '../../styles'
 import { isUserAdmin } from '../../utils/userUtils'
 
 class StudentList extends React.Component {
     onSubmit = async (name, addr) => this.props.addStudent(name, addr, this.props.selectedEvent.eventId, this.props.selectedAccount)
+
+    onEventClick(e, props, student){
+        props.setSelectedUser(student)
+    }
 
     render() {
         const { students } = this.props
@@ -28,8 +32,9 @@ class StudentList extends React.Component {
                     {
                         students.map((student, ind) => (                           
                             <Row key={`stud_${student.id}`} style={ind === students.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }}>
-                                <Col><Link to={`/student?stud=${ind}`}>{student.name}</Link></Col>
+                                <Col><Link to={`/student?stud=${ind}`}>{student.firstName}</Link></Col>
                                 <Col>{student.id}</Col>
+                                <Col><Link className="btn btn-primary" to={'/editUser'} onClick={e => this.onEventClick(e, this.props, student)}>Edit</Link></Col>
                             </Row>
                         ))
                     }
@@ -54,7 +59,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    addStudent: (name, addr, eventId, selectedAccount) => addStudentAction(name, addr, eventId, selectedAccount, dispatch)
+    addStudent: (name, addr, eventId, selectedAccount) => addStudentAction(name, addr, eventId, selectedAccount, dispatch),
+    setSelectedUser: (user) => setSelectedUserAction(user, dispatch)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(StudentList)

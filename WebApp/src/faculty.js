@@ -1,6 +1,6 @@
 import web3 from './web3';
 
-export const address = '0xb7036e1F70DDbC0c87EaCAD56d1A2C8d9c377aFB';
+export const address = '0x6d554308fA915613822aa05eb6725971B3Fc4d4F';
 const abi = [
 	{
 		"inputs": [
@@ -44,6 +44,11 @@ const abi = [
 				"internalType": "address",
 				"name": "professor",
 				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "points",
+				"type": "uint256"
 			},
 			{
 				"internalType": "uint256",
@@ -92,13 +97,46 @@ const abi = [
 	{
 		"inputs": [
 			{
+				"internalType": "uint256",
+				"name": "eventId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "adminAddress",
+				"type": "address"
+			}
+		],
+		"name": "addEventAdmin",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "address",
 				"name": "profAddress",
 				"type": "address"
 			},
 			{
 				"internalType": "string",
-				"name": "name",
+				"name": "firstName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "lastName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "country",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "expertise",
 				"type": "string"
 			},
 			{
@@ -121,7 +159,17 @@ const abi = [
 			},
 			{
 				"internalType": "string",
-				"name": "name",
+				"name": "firstName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "lastName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "country",
 				"type": "string"
 			},
 			{
@@ -151,6 +199,77 @@ const abi = [
 	{
 		"inputs": [
 			{
+				"internalType": "address",
+				"name": "profAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "firstName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "lastName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "country",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "expertise",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "eventId",
+				"type": "uint256"
+			}
+		],
+		"name": "editProfessor",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "studAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "firstName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "lastName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "country",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "eventId",
+				"type": "uint256"
+			}
+		],
+		"name": "editStudent",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "uint256",
 				"name": "courseId",
 				"type": "uint256"
@@ -162,6 +281,24 @@ const abi = [
 			}
 		],
 		"name": "enrollCourse",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "courseId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address[]",
+				"name": "studAddresses",
+				"type": "address[]"
+			}
+		],
+		"name": "enrollCourseMultiple",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -225,6 +362,11 @@ const abi = [
 						"internalType": "string",
 						"name": "venue",
 						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "points",
+						"type": "uint256"
 					},
 					{
 						"internalType": "address",
@@ -314,7 +456,22 @@ const abi = [
 					},
 					{
 						"internalType": "string",
-						"name": "name",
+						"name": "firstName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "lastName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "country",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "expertise",
 						"type": "string"
 					},
 					{
@@ -350,7 +507,17 @@ const abi = [
 					},
 					{
 						"internalType": "string",
-						"name": "name",
+						"name": "firstName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "lastName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "country",
 						"type": "string"
 					},
 					{
@@ -399,7 +566,7 @@ const abi = [
 				"type": "uint256"
 			}
 		],
-		"name": "getProfessorSubjects",
+		"name": "getProfessorCourses",
 		"outputs": [
 			{
 				"internalType": "uint256[]",
@@ -483,9 +650,9 @@ const abi = [
 				"type": "address"
 			},
 			{
-				"internalType": "bool",
-				"name": "passed",
-				"type": "bool"
+				"internalType": "uint256",
+				"name": "grade",
+				"type": "uint256"
 			}
 		],
 		"name": "gradeStudent",
