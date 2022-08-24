@@ -8,9 +8,9 @@ import LoadingSpinner from '../components/LoadingSpinner'
 import EventListenerService from "../utils/eventListenerService"
 import { generalStyles } from '../styles'
 import { connect } from 'react-redux'
-import { editStudentAction } from '../actions/userActions'
+import { editProfessorAction } from '../actions/userActions'
 
-class EditStudentPage extends React.Component {
+class EditProfessorPage extends React.Component {
     constructor(props) {
         super(props)
         this.onChange = this.onChange.bind(this)
@@ -22,6 +22,7 @@ class EditStudentPage extends React.Component {
         firstName: '',
         lastName: '',
         country: '',
+        expertise: '',
     }
 
     componentDidMount() {
@@ -29,14 +30,15 @@ class EditStudentPage extends React.Component {
         this.setState({ firstName: this.props.selectedUser.firstName })
         this.setState({ lastName: this.props.selectedUser.lastName })
         this.setState({ country: this.props.selectedUser.country })
+        this.setState({ expertise: this.props.selectedUser.expertise })
     }
 
     onSubmit = async evt => {
         evt.preventDefault()
-        if (this.state.addr && this.state.firstName && this.state.lastName && this.state.country) {
+        if (this.state.addr && this.state.firstName && this.state.lastName && this.state.country && this.state.expertise) {
             this.setState({ isWorking: true })
-            await this.props.editStudent(this.state.addr, this.state.firstName, this.state.lastName, this.state.country, this.props.selectedEvent.eventId, this.props.selectedAccount)
-            this.setState({ addr: '', firstName: '', lastName: '', country: '', isWorking: false })
+            await this.props.editProfessor(this.state.addr, this.state.firstName, this.state.lastName, this.state.country, this.state.expertise, this.props.selectedEvent.eventId, this.props.selectedAccount)
+            this.setState({ addr: '', firstName: '', lastName: '', country: '', expertise: '', isWorking: false })
         } else {
             EventListenerService.notify("error", 'fields not populated!')
         }
@@ -68,7 +70,7 @@ class EditStudentPage extends React.Component {
                             <Form.Control id="country" type="text" placeholder="Enter country" value={this.state.country} onChange={this.onChange} />
                         </Col>
                         <Col>
-                            {/* <Form.Control id="addr" type="text" placeholder="Enter expertise" value={this.state.expertise} onChange={this.onChange} /> */}
+                            <Form.Control id="expertise" type="text" placeholder="Enter expertise" value={this.state.expertise} onChange={this.onChange} />
                         </Col>
                     </Row>
                     <Row>
@@ -96,7 +98,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    editStudent: (ad, fn, ln, cn, eId, admin) => editStudentAction(ad, fn, ln, cn, eId, admin, dispatch)
+    editProfessor: (ad, fn, ln, cn, ex, eId, admin) => editProfessorAction(ad, fn, ln, cn, ex, eId, admin, dispatch)
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditStudentPage)
+export default connect(mapStateToProps, mapDispatchToProps)(EditProfessorPage)

@@ -12,7 +12,7 @@ import { listStyles } from '../../styles'
 import { isUserAdmin } from '../../utils/userUtils'
 
 class StudentList extends React.Component {
-    onSubmit = async (name, addr) => this.props.addStudent(name, addr, this.props.selectedEvent.eventId, this.props.selectedAccount)
+    onSubmit = async (ad, fn, ln, cn, _) => this.props.addStudent(ad, fn, ln, cn, this.props.selectedEvent.eventId, this.props.selectedAccount)
 
     onEventClick(e, props, student){
         props.setSelectedUser(student)
@@ -32,9 +32,9 @@ class StudentList extends React.Component {
                     {
                         students.map((student, ind) => (                           
                             <Row key={`stud_${student.id}`} style={ind === students.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }}>
-                                <Col><Link to={`/student?stud=${ind}`}>{student.firstName}</Link></Col>
+                                <Col><Link to={`/student?stud=${ind}`}>{student.firstName} {student.lastName}</Link></Col>
                                 <Col>{student.id}</Col>
-                                <Col><Link className="btn btn-primary" to={'/editUser'} onClick={e => this.onEventClick(e, this.props, student)}>Edit</Link></Col>
+                                <Col><Link className="btn btn-primary" to={'/editStudent'} onClick={e => this.onEventClick(e, this.props, student)}>Edit</Link></Col>
                             </Row>
                         ))
                     }
@@ -59,7 +59,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    addStudent: (name, addr, eventId, selectedAccount) => addStudentAction(name, addr, eventId, selectedAccount, dispatch),
+    addStudent: (ad, fn, ln, cn, eId, admin) => addStudentAction(ad, fn, ln, cn, eId, admin, dispatch),
     setSelectedUser: (user) => setSelectedUserAction(user, dispatch)
 })
 

@@ -59,27 +59,36 @@ export const loadUsersAction = async (eventId, dispatch) => {
     }
 }
 
-export const addProfessorAction = async (name, addr, eventId, account, dispatch) => {
+export const addProfessorAction = async (addr, firstName, lastName, country, expertise, eventId, account, dispatch) => {
     try {
-        await faculty.methods.addProfessor(addr, name, eventId).send({ from: account });
+        await faculty.methods.addProfessor(addr, firstName, lastName, country, expertise, eventId).send({ from: account });
         await loadProfessorsAction(eventId, dispatch)
     } catch (ex) {
         EventListenerService.notify("error", ex)
     }
 }
 
-export const addStudentAction = async (name, addr, eventId, account, dispatch) => {
+export const editProfessorAction = async (addr, firstName, lastName, country, expertise, eventId, account, dispatch) => {
     try {
-        await faculty.methods.addStudent(addr, name, name, name, eventId).send({ from: account });
+        await faculty.methods.editProfessor(addr, firstName, lastName, country, expertise, eventId).send({ from: account });
+        await loadProfessorsAction(eventId, dispatch)
+    } catch (ex) {
+        EventListenerService.notify("error", ex)
+    }
+}
+
+export const addStudentAction = async (addr, firstName, lastName, country, eventId, account, dispatch) => {
+    try {
+        await faculty.methods.addStudent(addr, firstName, lastName, country, eventId).send({ from: account });
         await loadStudentsAction(eventId, dispatch)
     } catch (ex) {
         EventListenerService.notify("error", ex)
     }
 }
 
-export const editStudentAction = async (addr, firstName, eventId, account, dispatch) => {
+export const editStudentAction = async (addr, firstName, lastName, country, eventId, account, dispatch) => {
     try {
-        await faculty.methods.editStudent(addr, firstName, firstName, firstName, eventId).send({ from: account });
+        await faculty.methods.editStudent(addr, firstName, lastName, country, eventId).send({ from: account });
         await loadStudentsAction(eventId, dispatch)
     } catch (ex) {
         EventListenerService.notify("error", ex)

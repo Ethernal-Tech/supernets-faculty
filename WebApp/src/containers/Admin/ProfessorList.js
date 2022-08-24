@@ -7,13 +7,18 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
 import AddUserComponent from '../../components/AddUserComponent'
-import { addProfessorAction } from '../../actions/userActions'
+import { addProfessorAction, setSelectedUserAction } from '../../actions/userActions'
 import { listStyles } from '../../styles'
 import { isUserAdmin } from '../../utils/userUtils'
 
 class ProfessorList extends React.Component {
 
-    onSubmit = async (name, addr) => this.props.addProfessor(name, addr, this.props.selectedEvent.eventId, this.props.selectedAccount)
+    onSubmit = async (ad, fn, ln, cn, ex) => this.props.addProfessor(ad, fn, ln, cn, ex, this.props.selectedEvent.eventId, this.props.selectedAccount)
+
+    onEventClick(e, props, professor){
+        debugger
+        props.setSelectedUser(professor)
+    }
 
     render() {
         const { professors } = this.props
@@ -30,8 +35,9 @@ class ProfessorList extends React.Component {
                         professors.map((professor, ind) => (                            
                             <Row key={`prof_${professor.id}`} 
                                 style={ind === professors.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }}>
-                                <Col><Link to={`/professor?prof=${ind}`}>{professor.name}</Link></Col>
+                                <Col><Link to={`/professor?prof=${ind}`}>{professor.firstName} {professor.lastName}</Link></Col>
                                 <Col>{professor.id}</Col>
+                                <Col><Link className="btn btn-primary" to={'/editProfessor'} onClick={e => this.onEventClick(e, this.props, professor)}>Edit</Link></Col>
                             </Row>                           
                         ))
                     }
@@ -56,7 +62,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    addProfessor: (name, addr, eventId, selectedAccount) => addProfessorAction(name, addr, eventId, selectedAccount, dispatch)
+    addProfessor: (ad, fn, ln, cn, ex, eId, admin) => addProfessorAction(ad, fn, ln, cn, ex, eId, admin, dispatch),
+    setSelectedUser: (user) => setSelectedUserAction(user, dispatch)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfessorList)

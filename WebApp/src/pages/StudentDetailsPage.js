@@ -14,6 +14,9 @@ class StudentDetailsPage extends React.Component {
 
         return (
             <div style={{ padding: '1rem' }}>
+                <h2>Name: {this.props.student.firstName} {this.props.student.lastName}</h2>
+                <h3>From: {this.props.student.country}</h3>
+                <br/>
                 <CourseList student={student} userRole={userRole} studParam={stud}/>
             </div>
         )

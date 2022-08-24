@@ -14,7 +14,13 @@ class ProfessorDetailsPage extends React.Component {
         }
 
         return (
+            <div style={{ padding: '1rem' }}>
+                <h2>Name: {this.props.professor.firstName} {this.props.professor.lastName}</h2>
+                <h3>From: {this.props.professor.country}</h3>
+                <h3>Expertise: {this.props.professor.expertise}</h3>
+                <br/>
             <ProfessorCourses professor={professor} userRole={userRole} selectedAccount={selectedAccount}/>
+            </div>
         )
     }
 }
