@@ -1,6 +1,6 @@
 import web3 from './web3';
 
-export const address = '0x6d554308fA915613822aa05eb6725971B3Fc4d4F';
+export const address = '0xcF579C32D5B275803A59301FBd09Df218caE1D65';
 const abi = [
 	{
 		"inputs": [
@@ -319,6 +319,25 @@ const abi = [
 		"name": "generateCertificate",
 		"outputs": [],
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "eventId",
+				"type": "uint256"
+			}
+		],
+		"name": "getAllAdmins",
+		"outputs": [
+			{
+				"internalType": "address[]",
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{

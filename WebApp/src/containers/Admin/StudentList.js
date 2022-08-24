@@ -9,7 +9,7 @@ import Col from 'react-bootstrap/Col'
 import AddUserComponent from '../../components/AddUserComponent'
 import { addStudentAction, setSelectedUserAction } from '../../actions/userActions'
 import { listStyles } from '../../styles'
-import { isUserAdmin } from '../../utils/userUtils'
+import { isEventAdmin } from '../../utils/userUtils'
 
 class StudentList extends React.Component {
     onSubmit = async (name, addr) => this.props.addStudent(name, addr, this.props.selectedEvent.eventId, this.props.selectedAccount)
@@ -49,7 +49,7 @@ class StudentList extends React.Component {
 }
 
 const mapStateToProps = state => {
-    const isAdmin = isUserAdmin(state)
+    const isAdmin = isEventAdmin(state)
     return {
         students: state.users.students || [],
         selectedAccount: state.eth.selectedAccount,

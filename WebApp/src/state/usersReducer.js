@@ -5,6 +5,7 @@ export const usersReducer = createSlice({
     initialState: {
         professors: undefined,
         students: undefined,
+        admins: undefined,
         selectedUser: undefined,
     },
     reducers: {
@@ -14,9 +15,13 @@ export const usersReducer = createSlice({
         setStudents: (state, action) => {
             state.students = action.payload
         },
+        setAdmins: (state, action) => {
+            state.admins = action.payload
+        },
         setUsers: (state, action) => {
             state.professors = action.payload.professors
             state.students = action.payload.students
+            state.admins = action.payload.admins
         },
         setSelectedUser: (state, action) => {
             state.selectedUser = action.payload
@@ -25,6 +30,6 @@ export const usersReducer = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { setProfessors, setStudents, setUsers, setSelectedUser } = usersReducer.actions
+export const { setProfessors, setStudents, setAdmins, setUsers, setSelectedUser } = usersReducer.actions
 
 export default usersReducer.reducer

@@ -56,7 +56,7 @@ class AddEventComponent extends React.Component {
                             <Form.Control id="venue" type="text" placeholder="Enter event venue" value={this.state.venue} onChange={this.onChange}/>
                         </Col>
                         <Col>
-                            <Form.Control id="time" type="datetime-local" onChange={this.onChange}/>
+                            <Form.Control id="time" type="datetime-local" value={this.state.time} onChange={this.onChange}/>
                         </Col>
                     </Row>
                     <Row>

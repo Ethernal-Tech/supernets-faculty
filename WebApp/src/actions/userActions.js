@@ -1,8 +1,17 @@
 import faculty from '../faculty'
 import { setStudentGrades } from '../state/coursesReducer'
-import { setProfessors, setStudents, setUsers, setSelectedUser } from '../state/usersReducer'
+import { setProfessors, setStudents, setAdmins, setUsers, setSelectedUser } from '../state/usersReducer'
 import { setAdminAccount } from '../state/ethReducer'
 import EventListenerService from "../utils/eventListenerService"
+
+export const loadAdminsAction = async (eventId, dispatch) => {
+    try {
+        const admins = await faculty.methods.getAllAdmins(eventId).call();
+        dispatch(setAdmins(admins))
+    } catch (ex) {
+        EventListenerService.notify("error", ex)
+    }
+}
 
 export const loadProfessorsAction = async(eventId, dispatch) => {
     try {
@@ -52,8 +61,18 @@ export const loadUsersAction = async (eventId, dispatch) => {
     try {
         const professors = await faculty.methods.getAllProfessors(eventId).call();
         const students = await faculty.methods.getAllStudents(eventId).call();
-        dispatch(setUsers({ professors, students }))
+        const admins = await faculty.methods.getAllAdmins(eventId).call();
+        dispatch(setUsers({ professors, students, admins }))
         await loadStudentGrades(students, eventId, dispatch)
+    } catch (ex) {
+        EventListenerService.notify("error", ex)
+    }
+}
+
+export const addAdminAction = async (eventId, addr, account, dispatch) => {
+    try {
+        await faculty.methods.addEventAdmin(eventId, addr,).send({ from: account });
+        await loadAdminsAction(eventId, dispatch)
     } catch (ex) {
         EventListenerService.notify("error", ex)
     }
