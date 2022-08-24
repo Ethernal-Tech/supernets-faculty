@@ -52,10 +52,10 @@ class AddCourseComponent extends React.Component {
                     </Row>
                     <Row>
                         <Col>
-                            <Form.Control id="startTime" type="datetime-local"  onChange={this.onChange}/>
+                            <Form.Control id="startTime" type="datetime-local" value={this.state.startTime} onChange={this.onChange}/>
                         </Col>                     
                         <Col>
-                            <Form.Control id="endTime" type="datetime-local"  onChange={this.onChange}/>
+                            <Form.Control id="endTime" type="datetime-local" value={this.state.endTime} onChange={this.onChange}/>
                         </Col>
                         <Col>
                             <Form.Control id="venue" type="text" placeholder="Enter course venue" value={this.state.venue} onChange={this.onChange}/>

@@ -9,7 +9,7 @@ import Col from 'react-bootstrap/Col'
 import AddUserComponent from '../../components/AddUserComponent'
 import { addProfessorAction, setSelectedUserAction } from '../../actions/userActions'
 import { listStyles } from '../../styles'
-import { isUserAdmin } from '../../utils/userUtils'
+import { isEventAdmin } from '../../utils/userUtils'
 
 class ProfessorList extends React.Component {
 
@@ -52,7 +52,7 @@ class ProfessorList extends React.Component {
 }
 
 const mapStateToProps = state => {
-    const isAdmin = isUserAdmin(state)
+    const isAdmin = isEventAdmin(state)
     return {
         professors: state.users.professors || [],
         selectedAccount: state.eth.selectedAccount,

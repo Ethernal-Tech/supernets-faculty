@@ -4,15 +4,20 @@ export const isUserAdmin = state => {
     return state.eth.selectedAccount === state.eth.adminAccount
 }
 
+export const isEventAdmin = state => {
+    return state.eth.selectedAccount === state.eth.adminAccount || (state.users.admins && state.users.admins.includes(state.eth.selectedAccount))
+}
+
 export const getUserRole = state => {
     const { selectedAccount, adminAccount } = state.eth
+    const eventAdmins = state.users.admins || [];
     const professors = state.users.professors || []
     const students = state.users.students || []
     if (!selectedAccount) {
         return USER_ROLES.GUEST
     }
 
-    if (adminAccount && adminAccount.toLowerCase() === selectedAccount.toLowerCase()) {
+    if ((adminAccount && adminAccount.toLowerCase() === selectedAccount.toLowerCase()) || eventAdmins.includes(selectedAccount)) {
         return USER_ROLES.ADMIN
     }
 

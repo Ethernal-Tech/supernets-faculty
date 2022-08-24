@@ -4,7 +4,7 @@ import { Tabs, Tab } from 'react-bootstrap'
 import EventDetails from './EventDetails'
 import ProfessorList from './Admin/ProfessorList'
 import StudentList from './Admin/StudentList'
-
+import AdminsList from './Admin/AdminsList'
 class AdminEventHome extends React.Component {
     state = {
         selectedTab: 'eventDetails',
@@ -26,6 +26,9 @@ class AdminEventHome extends React.Component {
                 </Tab>
                 <Tab eventKey="students" title="Students">
                     <StudentList userRole={this.props.userRole} />
+                </Tab>
+                <Tab eventKey="admins" title="Event Admins">
+                    <AdminsList />
                 </Tab>
             </Tabs>
         )

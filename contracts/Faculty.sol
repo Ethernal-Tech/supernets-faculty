@@ -15,6 +15,7 @@ contract Faculty {
         uint256 time;
         string description;
 
+        address[] adminsAddresses;
         mapping(address => bool) eventAdmins;
 
         address[] professorsAddresses;
@@ -181,6 +182,7 @@ contract Faculty {
 
     function addEventAdmin(uint eventId, address adminAddress) external onlyAdmin eventExists(eventId) canAddAddress(eventId, adminAddress) {
         events[eventId].eventAdmins[adminAddress] = true;
+        events[eventId].adminsAddresses.push(adminAddress);
     }
 
     function addProfessor(address profAddress, string calldata firstName, string calldata lastName, string calldata country, string calldata expertise, uint eventId) external eventAdmin(eventId) eventExists(eventId) canAddAddress(eventId, profAddress) {
@@ -282,6 +284,10 @@ contract Faculty {
         }
 
         return coursesArray;
+    }
+
+    function getAllAdmins(uint eventId) external view eventExists(eventId) returns(address[] memory) {
+        return events[eventId].adminsAddresses;
     }
 
     function getAllProfessors(uint eventId) external view eventExists(eventId) returns(ProfessorView[] memory) {   
