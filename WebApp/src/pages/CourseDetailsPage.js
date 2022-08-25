@@ -1,11 +1,20 @@
 import React from 'react'
+import { Tabs, Tab } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import CourseDetails from '../containers/CourseDetails'
+import CourseDetails from '../components/CourseDetails'
+import EnrollStudentsList from '../containers/Admin/EnrollStudentsList'
 import CourseStudents from '../containers/CourseStudents'
 import { getUserRole } from '../utils/userUtils'
 import withRouter from '../utils/withRouter'
+import { isEventAdmin } from '../utils/userUtils'
 
 class CourseDetailsPage extends React.Component {
+    state = {
+        selectedTab: 'couseDetails',
+    }
+
+    setSelectedTab = tab => this.setState({ selectedTab: tab })
+
     render() {
         const { course, userRole, selectedAccount } = this.props
 
@@ -13,10 +22,23 @@ class CourseDetailsPage extends React.Component {
             return null
         }
         return (
-            <>
-                <CourseDetails course={course} />
-                <CourseStudents course={course} userRole={userRole} selectedAccount={selectedAccount}/>
-            </>
+            <Tabs
+                activeKey={this.state.selectedTab}
+                onSelect={this.setSelectedTab}
+                className="mb-3">
+                <Tab eventKey="couseDetails" title="Course Details">
+                    <CourseDetails course={course} />
+                </Tab>
+                <Tab eventKey="enrolled" title="Students on course">
+                    <CourseStudents course={course} userRole={userRole} selectedAccount={selectedAccount}/>
+                </Tab>
+                {
+                    this.props.isAdmin && 
+                    <Tab eventKey="notEnrolled" title="Enroll students">
+                        <EnrollStudentsList course={course} selectedAccount={selectedAccount}/>
+                    </Tab>
+                }
+            </Tabs>
         )
     }
 }
@@ -25,10 +47,12 @@ const mapStateToProps = (state, ownProps) => {
     const userRole = getUserRole(state)
     const courses = state.courses.allCourses || []
     const course = ownProps.courseId ? courses.find(x => x.id === ownProps.courseId) : undefined
+    const isAdmin = isEventAdmin(state)
     return {
         userRole,
         course,
         selectedAccount: state.eth.selectedAccount,
+        isAdmin,
     }
 }
 

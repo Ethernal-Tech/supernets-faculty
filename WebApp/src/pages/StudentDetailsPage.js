@@ -28,11 +28,10 @@ const mapStateToProps = (state, ownProps) => {
     const students = state.users.students || []
     let student
     if (ownProps.stud) {
-        const studentInd = ownProps.stud ? parseInt(ownProps.stud) : -1
-        student = studentInd >= 0 && students.length > studentInd ? students[studentInd] : undefined
+        student = students.find(stud => stud.id === ownProps.stud)
     }
     else if (userRole === USER_ROLES.STUDENT) {
-        student = students.find(x => x.id === state.eth.selectedAccount)
+        student = students.find(stud => stud.id === state.eth.selectedAccount)
     }
 
     return {

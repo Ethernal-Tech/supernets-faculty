@@ -1,7 +1,7 @@
 import React from 'react'
 import { Tabs, Tab } from 'react-bootstrap'
 
-import EventDetails from './EventDetails'
+import EventDetails from '../components/EventDetails'
 import ProfessorList from './Admin/ProfessorList'
 import StudentList from './Admin/StudentList'
 import AdminsList from './Admin/AdminsList'

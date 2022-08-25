@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { USER_ROLES } from '../utils/constants'
 import { Tabs, Tab } from 'react-bootstrap'
 import ProfessorCourses from './Professor/ProfessorCourses'
-import EventDetails from './EventDetails'
+import EventDetails from '../components/EventDetails'
 
 class ProfessorEventHome extends React.Component {
 

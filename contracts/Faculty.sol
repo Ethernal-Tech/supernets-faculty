@@ -205,17 +205,6 @@ contract Faculty {
         populateStudent(studAddress, firstName, lastName, country, eventId);
     }
 
-    function enrollCourse(uint courseId, address studAddress) external {
-        uint eventId = courses[courseId].eventId;
-        require(events[eventId].exist == true);
-        require(isAdmin(eventId, msg.sender));
-
-        require(events[eventId].students[studAddress].exist == true);
-        require(events[eventId].students[studAddress].coursesAttendance[courseId] == CourseAttendance.NOT_ENROLLED);
-
-        enrollStudentToCourse(eventId, courseId, studAddress);
-    }
-
     function enrollCourseMultiple(uint courseId, address[] calldata studAddresses) external {
         uint eventId = courses[courseId].eventId;
         require(events[eventId].exist == true);
@@ -226,7 +215,9 @@ contract Faculty {
             require(events[eventId].students[studAddress].exist == true);
             require(events[eventId].students[studAddress].coursesAttendance[courseId] == CourseAttendance.NOT_ENROLLED);
 
-            enrollStudentToCourse(eventId, courseId, studAddress);
+            events[eventId].students[studAddress].coursesAttendance[courseId] = CourseAttendance.ENROLLED;
+            events[eventId].students[studAddress].eventCourses.push(courseId);
+            courses[courseId].students.push(studAddress);
         }
     }
 
@@ -382,12 +373,6 @@ contract Faculty {
         events[eventId].students[studAddress].lastName = lastName;
         events[eventId].students[studAddress].country = country;
         events[eventId].students[studAddress].exist = true;
-    }
-
-    function enrollStudentToCourse(uint eventId, uint courseId, address studAddress) private {
-        events[eventId].students[studAddress].coursesAttendance[courseId] = CourseAttendance.ENROLLED;
-        events[eventId].students[studAddress].eventCourses.push(courseId);
-        courses[courseId].students.push(studAddress);
     }
 
     function getCourseAttendance(uint grade) private pure returns(CourseAttendance) {

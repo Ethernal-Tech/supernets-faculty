@@ -10,54 +10,13 @@ import { listStyles } from '../styles'
 import EnrollStudentToCourseComponent from '../components/EnrollStudentToCourseComponent'
 import { USER_ROLES } from '../utils/constants'
 import EventListenerService from "../utils/eventListenerService"
-import { enrollStudentToCourseAction, gradeStudentAction } from '../actions/coursesActions'
+import { gradeStudentAction } from '../actions/coursesActions'
 import { isStringValueAnInt } from '../utils/utils'
 import LoadingSpinner from '../components/LoadingSpinner'
 
 class CourseStudents extends React.Component {
     state = {
         updatedGradesByStudent: {}
-    }
-
-    onStudentGradeChange = (studentId, evt) => this.setState({
-        updatedGradesByStudent: { ...this.state.updatedGradesByStudent, [studentId]: evt.target.value }
-    })
-
-    onStudentGradeChangeKeyDown = (studentId, evt) => {
-        if (evt.key === 'Escape') {
-            this.setState({
-                updatedGradesByStudent: { ...this.state.updatedGradesByStudent, [studentId]: undefined }
-            }, () => evt.target.blur())
-            
-        } 
-    }
-
-    onStudentGradeChangeSubmit = async (studentId, evt) => {
-        evt.preventDefault()
-
-        const oldGrade = this.props.gradesByStudent[studentId]
-        const updatedGrade = this.state.updatedGradesByStudent[studentId]
-        if (updatedGrade === oldGrade) {
-            return
-        }
-
-        if (!updatedGrade) {
-            EventListenerService.notify("error", 'fields not populated!')
-            return
-        } else if (!isStringValueAnInt(updatedGrade)) {
-            EventListenerService.notify("error", 'invalid value!')
-            return
-        }
-
-        const value = parseInt(updatedGrade)
-        if (value < 5 || value > 10) {
-            EventListenerService.notify("error", 'invalid value!')
-            return
-        }
-
-        this.setState({ isWorking: true })
-        await this.props.gradeStudent(this.props.course.id, studentId, updatedGrade, this.props.selectedAccount)
-        this.setState({ updatedGradesByStudent: {}, isWorking: false })
     }
 
     onEnroll = async studentAddr => this.props.enrollStudentToCourse(this.props.course.id, studentAddr, this.props.selectedAccount)
@@ -79,7 +38,7 @@ class CourseStudents extends React.Component {
                         courseStudents.map((student, ind) => (
                             <Row key={`stud_${student.id}`} style={ind === courseStudents.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }}>
                                 <Col>
-                                    <Link  to={`/student?stud=${studentIdToInd[student.id]}`}>{student.name}</Link>
+                                    <Link to={`/student?stud=${student.id}`}>{student.firstName} {student.lastName}</Link>
                                 </Col>
                                 <Col>{student.id}</Col>
                                 <Col xs={'auto'}>
@@ -110,10 +69,10 @@ class CourseStudents extends React.Component {
                         ))
                     }
                 </Container>
-                {
+                {/* {
                     userRole === USER_ROLES.ADMIN &&
                     <EnrollStudentToCourseComponent onSubmit={this.onEnroll} studentsToEnroll={studentsToEnroll}/>
-                }
+                } */}
             </div>
         )
     }
@@ -121,23 +80,58 @@ class CourseStudents extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
     const allStudents = (state.users.students || [])
-    const courseStudents = ownProps.course.students.map(x => allStudents.find(y => y.id === x))
-    const studentsToEnroll = allStudents.filter(x => !ownProps.course.students.some(y => y === x.id))
+    const courseStudents = ownProps.course.students.map(courseStud => allStudents.find(stud => stud.id === courseStud))
     const gradesByStudent = (state.courses.gradesByStudentByCourse || {})[ownProps.course.id] || {}
     return {
         courseStudents: courseStudents,
-        studentsToEnroll,
-        studentIdToInd: allStudents.reduce((acc, cv, ind) => {
-            acc[cv.id] = ind
-            return acc
-        }, {}),
         gradesByStudent,
     }
 }
 
 const mapDispatchToProps = dispatch => ({
-    enrollStudentToCourse: (courseId, studentAddr, selectedAccount) => enrollStudentToCourseAction(courseId, studentAddr, selectedAccount, dispatch),
     gradeStudent: (courseId, studentAddr, grade, selectedAccount) => gradeStudentAction(courseId, studentAddr, grade, selectedAccount, dispatch),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CourseStudents)
+
+
+// onStudentGradeChange = (studentId, evt) => this.setState({
+//     updatedGradesByStudent: { ...this.state.updatedGradesByStudent, [studentId]: evt.target.value }
+// })
+
+// onStudentGradeChangeKeyDown = (studentId, evt) => {
+//     if (evt.key === 'Escape') {
+//         this.setState({
+//             updatedGradesByStudent: { ...this.state.updatedGradesByStudent, [studentId]: undefined }
+//         }, () => evt.target.blur())
+        
+//     } 
+// }
+
+// onStudentGradeChangeSubmit = async (studentId, evt) => {
+//     evt.preventDefault()
+
+//     const oldGrade = this.props.gradesByStudent[studentId]
+//     const updatedGrade = this.state.updatedGradesByStudent[studentId]
+//     if (updatedGrade === oldGrade) {
+//         return
+//     }
+
+//     if (!updatedGrade) {
+//         EventListenerService.notify("error", 'fields not populated!')
+//         return
+//     } else if (!isStringValueAnInt(updatedGrade)) {
+//         EventListenerService.notify("error", 'invalid value!')
+//         return
+//     }
+
+//     const value = parseInt(updatedGrade)
+//     if (value < 5 || value > 10) {
+//         EventListenerService.notify("error", 'invalid value!')
+//         return
+//     }
+
+//     this.setState({ isWorking: true })
+//     await this.props.gradeStudent(this.props.course.id, studentId, updatedGrade, this.props.selectedAccount)
+//     this.setState({ updatedGradesByStudent: {}, isWorking: false })
+// }

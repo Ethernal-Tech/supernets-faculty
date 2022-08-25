@@ -32,7 +32,7 @@ class StudentList extends React.Component {
                     {
                         students.map((student, ind) => (                           
                             <Row key={`stud_${student.id}`} style={ind === students.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }}>
-                                <Col><Link to={`/student?stud=${ind}`}>{student.firstName} {student.lastName}</Link></Col>
+                                <Col><Link to={`/student?stud=${student.id}`}>{student.firstName} {student.lastName}</Link></Col>
                                 <Col>{student.id}</Col>
                                 <Col><Link className="btn btn-primary" to={'/editStudent'} onClick={e => this.onEventClick(e, this.props, student)}>Edit</Link></Col>
                             </Row>
