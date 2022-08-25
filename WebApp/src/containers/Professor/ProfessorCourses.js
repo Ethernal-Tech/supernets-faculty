@@ -17,8 +17,8 @@ class ProfessorCourses extends React.Component {
         loadProfessorCourses(professor.id, this.props.selectedEvent.eventId)
     }
 
-    onSubmit = async (title, description, startTime, endTime, venue) => 
-         this.props.addCourse(title, description, startTime, endTime, venue, this.props.professor.id, this.props.selectedEvent.eventId, this.props.selectedAccount)
+    onSubmit = async (title, description, startTime, endTime, venue, points) => 
+         this.props.addCourse(title, description, startTime, endTime, venue, this.props.professor.id, points, this.props.selectedEvent.eventId, this.props.selectedAccount)
     
 
     render() {
@@ -65,7 +65,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({
     loadProfessorCourses: (professorAddr, eventId) => loadProfessorCoursesAction(professorAddr, eventId, dispatch),
-    addCourse: (title, description, startTime, endTime, venue, professorAddr, eventId, selectedAccount) => addCourseAction(title, description, startTime, endTime, venue, professorAddr, eventId, selectedAccount, dispatch),
+    addCourse: (title, description, startTime, endTime, venue, professorAddr, points, eventId, selectedAccount) => addCourseAction(title, description, startTime, endTime, venue, professorAddr, points, eventId, selectedAccount, dispatch),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfessorCourses)

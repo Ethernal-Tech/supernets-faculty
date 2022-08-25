@@ -21,17 +21,18 @@ class AddCourseComponent extends React.Component {
         description: '',
         startTime: '',
         endTime: '',
-        venue: ''
+        venue: '',
+        points: ''
     }
 
     onSubmit = async event => {
         event.preventDefault()
-        if (this.state.title && this.state.description && this.state.startTime && this.state.endTime && this.state.venue) {
+        if (this.state.title && this.state.description && this.state.startTime && this.state.endTime && this.state.venue && this.state.points) {
             this.setState({ isWorking: true })
             const startTimeMs = new Date(this.state.startTime).getTime()
             const endTimeMs = new Date(this.state.endTime).getTime()
-            this.props.onSubmit && await this.props.onSubmit(this.state.title, this.state.description, startTimeMs, endTimeMs, this.state.venue)
-            this.setState({ title: '', description: '', startTime: '', endTime: '', venue: '', isWorking: false })
+            this.props.onSubmit && await this.props.onSubmit(this.state.title, this.state.description, startTimeMs, endTimeMs, this.state.venue, this.state.points)
+            this.setState({ title: '', description: '', startTime: '', endTime: '', venue: '', points: '', isWorking: false })
         } else {
             EventListenerService.notify("error", 'fields not populated!')
         }
@@ -59,6 +60,15 @@ class AddCourseComponent extends React.Component {
                         </Col>
                         <Col>
                             <Form.Control id="venue" type="text" placeholder="Enter course venue" value={this.state.venue} onChange={this.onChange}/>
+                        </Col>
+                        <Col>
+                            <Form.Control id="points" type="text" placeholder="Enter course points" value={this.state.points} onChange={this.onChange}
+                                onKeyPress={(event) => {
+                                    if (!/[0-9]/.test(event.key)) {
+                                        event.preventDefault();
+                                    }
+                                }}
+                            />
                         </Col>
                     </Row>
                     <Row>
