@@ -109,6 +109,11 @@ contract Faculty {
         CourseAttendance courseAttendance;
     }
 
+    struct StudentGrade {
+        address studentAddress;
+        CourseAttendance courseAttendance;
+    }
+
     modifier onlyAdmin {
         require (msg.sender == admin);
         _;
@@ -221,18 +226,23 @@ contract Faculty {
         }
     }
 
-    function gradeStudent(uint courseId, address studAddress, uint grade) external {
+    function gradeStudents(uint courseId, StudentGrade[] studentGrades) external {
         require(courses[courseId].exist == true);
 
         uint eventId = courses[courseId].eventId;
         require(isAdmin(eventId, msg.sender));
-        require(events[eventId].students[studAddress].exist == true);
 
-        CourseAttendance curentGrade = events[eventId].students[studAddress].coursesAttendance[courseId];
-        require(curentGrade == CourseAttendance.ENROLLED || curentGrade == CourseAttendance.FAILED);
-        require(grade >= 1 && grade <= 6);
+        for (uint i = 0; i < studentGrades.length; i++) {
+            StudentGrade studentGrade = studentGrades[i];
 
-        events[eventId].students[studAddress].coursesAttendance[courseId] = getCourseAttendance(grade);
+            require(events[eventId].students[studentGrade.studentAddress].exist == true);
+            CourseAttendance curentGrade = events[eventId].students[studentGrade.studentAddress].coursesAttendance[courseId];
+            require(curentGrade == CourseAttendance.ENROLLED || curentGrade == CourseAttendance.FAILED);
+            require(studentGrade.courseAttendance >= CourseAttendance.GRADE1 && 
+                studentGrade.courseAttendance <= CourseAttendance.FAILED);
+
+            events[eventId].students[studentGrade.studentAddress].coursesAttendance[courseId] = studentGrade.courseAttendance;
+        }
     }
 
     // Get functions
@@ -375,19 +385,19 @@ contract Faculty {
         events[eventId].students[studAddress].exist = true;
     }
 
-    function getCourseAttendance(uint grade) private pure returns(CourseAttendance) {
-        if (grade == 1) {
-            return CourseAttendance.GRADE1;
-        } else if (grade == 2) {
-            return CourseAttendance.GRADE2;
-        } else if (grade == 3) {
-            return CourseAttendance.GRADE3;
-        } else if (grade == 4) {
-            return CourseAttendance.GRADE4;
-        } else if (grade == 5) {
-            return CourseAttendance.GRADE5;
-        } else {
-            return CourseAttendance.FAILED;
-        }
-    }
+    // function getCourseAttendance(uint grade) private pure returns(CourseAttendance) {
+    //     if (grade == 1) {
+    //         return CourseAttendance.GRADE1;
+    //     } else if (grade == 2) {
+    //         return CourseAttendance.GRADE2;
+    //     } else if (grade == 3) {
+    //         return CourseAttendance.GRADE3;
+    //     } else if (grade == 4) {
+    //         return CourseAttendance.GRADE4;
+    //     } else if (grade == 5) {
+    //         return CourseAttendance.GRADE5;
+    //     } else {
+    //         return CourseAttendance.FAILED;
+    //     }
+    // }
 }

@@ -10,7 +10,7 @@ import { listStyles } from '../styles'
 import EnrollStudentToCourseComponent from '../components/EnrollStudentToCourseComponent'
 import { USER_ROLES } from '../utils/constants'
 import EventListenerService from "../utils/eventListenerService"
-import { gradeStudentAction } from '../actions/coursesActions'
+import { gradeStudentsAction } from '../actions/coursesActions'
 import { isStringValueAnInt } from '../utils/utils'
 import LoadingSpinner from '../components/LoadingSpinner'
 
@@ -89,7 +89,7 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    gradeStudent: (courseId, studentAddr, grade, selectedAccount) => gradeStudentAction(courseId, studentAddr, grade, selectedAccount, dispatch),
+    //gradeStudent: (courseId, studentAddr, grade, selectedAccount) => gradeStudentAction(courseId, studentAddr, grade, selectedAccount, dispatch),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CourseStudents)

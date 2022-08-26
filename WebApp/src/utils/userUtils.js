@@ -8,6 +8,16 @@ export const isEventAdmin = state => {
     return state.eth.selectedAccount === state.eth.adminAccount || (state.users.admins && state.users.admins.includes(state.eth.selectedAccount))
 }
 
+export const gradeToContract = [
+    { grade: '', contractGrade: 0 },
+    { grade: '10', contractGrade: 5 },
+    { grade: '9', contractGrade: 4 }, 
+    { grade: '8', contractGrade: 3 },
+    { grade: '7', contractGrade: 2 },
+    { grade: '6', contractGrade: 1 },
+    { grade: 'FAILED', contractGrade: 6 },
+];
+
 export const getUserRole = state => {
     const { selectedAccount, adminAccount } = state.eth
     const eventAdmins = state.users.admins || [];

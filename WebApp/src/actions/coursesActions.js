@@ -68,13 +68,16 @@ export const enrollStudentsToCourseAction = async (courseId, studentAddrs, selec
     await loadAllCoursesAction(eventId, dispatch)
 }
 
-export const gradeStudentAction = async (courseId, studentAddr, grade, selectedAccount, dispatch) => {
+export const gradeStudentsAction = async (courseId, studentGrades, selectedAccount, eventId, dispatch) => {
     try {
-        await faculty.methods.gradeStudent(courseId, studentAddr, grade).send({ from: selectedAccount });
+        debugger
+        return
+        await faculty.methods.gradeStudents(courseId, studentGrades).send({ from: selectedAccount });
     }
     catch (ex) {
         EventListenerService.notify("error", ex)
     }
 
-    await loadStudentsAction(dispatch)
+    await loadStudentsAction(eventId, dispatch)
+    await loadAllCoursesAction(eventId, dispatch)
 }

@@ -23,25 +23,33 @@ export const loadProfessorsAction = async(eventId, dispatch) => {
 }
 
 const loadStudentGrades = async (students, eventId, dispatch) => {
-    let gradesByCourseByStudent = {}
-    let gradesByStudentByCourse = {}
+    let gradesByCourseByStudent = []
+    let gradesByStudentByCourse = []
+
+    const courses = await faculty.methods.getAllCourses(eventId).call()
+    for (let i = 0; i < courses.length; ++i) {
+        gradesByStudentByCourse[courses[i].id] = []
+    }
+
     for (let i = 0; i < students.length; ++i) {
         const student = students[i]
         const grades = await faculty.methods.getStudentGrades(student.id, eventId).call()
 
-        const gradesByCourse = {}
+        const gradesByCourse = []
         for (let j = 0; j < grades.length; ++j) {
             const gradeObj = grades[j]
-            gradesByCourse[gradeObj.id] = gradeObj.grade
+            // gradesByCourse[gradeObj.courseId] = gradeObj.courseAttendance
+            gradesByCourse.push({courseId: gradeObj.courseId, grade: gradeObj.courseAttendance})
             
-            gradesByStudentByCourse[gradeObj.id] = {
-                ...gradesByStudentByCourse[gradeObj.id],
-                [student.id]: gradeObj.grade
-            }
-        }
+            // gradesByStudentByCourse[gradeObj.courseId] = {
+            //     ...gradesByStudentByCourse[gradeObj.courseId],
+            //     [student.id]: gradeObj.courseAttendance
+            // }
 
+            gradesByStudentByCourse[gradeObj.courseId].push({studentId: student.id, grade: gradeObj.courseAttendance})
+        }
+        
         gradesByCourseByStudent[student.id] = gradesByCourse
-    
     }
 
     dispatch(setStudentGrades({ gradesByCourseByStudent, gradesByStudentByCourse }))

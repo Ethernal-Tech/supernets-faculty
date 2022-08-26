@@ -1,6 +1,6 @@
 import React from 'react'
 
-class CourseDetails extends React.Component {
+class CourseDetailsComponent extends React.Component {
     render() {
         const { title, description, startTime, endTime, venue, points } = this.props.course
         return (
@@ -17,4 +17,4 @@ class CourseDetails extends React.Component {
     }
 }
 
-export default CourseDetails
+export default CourseDetailsComponent

@@ -1,12 +1,13 @@
 import React from 'react'
 import { Tabs, Tab } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import CourseDetails from '../components/CourseDetails'
-import EnrollStudentsList from '../containers/Admin/EnrollStudentsList'
-import CourseStudents from '../containers/CourseStudents'
-import { getUserRole } from '../utils/userUtils'
+import { getUserRole, isEventAdmin } from '../utils/userUtils'
 import withRouter from '../utils/withRouter'
-import { isEventAdmin } from '../utils/userUtils'
+
+import CourseDetailsComponent from '../components/CourseDetailsComponent'
+import CourseStudents from '../containers/CourseStudents'
+import EnrollStudentsList from '../containers/Admin/EnrollStudentsList'
+import GradeStudentsList from '../containers/Admin/GradeStudentsList'
 
 class CourseDetailsPage extends React.Component {
     state = {
@@ -27,7 +28,7 @@ class CourseDetailsPage extends React.Component {
                 onSelect={this.setSelectedTab}
                 className="mb-3">
                 <Tab eventKey="couseDetails" title="Course Details">
-                    <CourseDetails course={course} />
+                    <CourseDetailsComponent course={course} />
                 </Tab>
                 <Tab eventKey="enrolled" title="Students on course">
                     <CourseStudents course={course} userRole={userRole} selectedAccount={selectedAccount}/>
@@ -36,6 +37,12 @@ class CourseDetailsPage extends React.Component {
                     this.props.isAdmin && 
                     <Tab eventKey="notEnrolled" title="Enroll students">
                         <EnrollStudentsList course={course} selectedAccount={selectedAccount}/>
+                    </Tab>
+                }
+                {
+                    this.props.isAdmin && 
+                    <Tab eventKey="notGraded" title="Grade students">
+                        <GradeStudentsList course={course} selectedAccount={selectedAccount}/>
                     </Tab>
                 }
             </Tabs>
