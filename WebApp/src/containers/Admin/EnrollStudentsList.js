@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
 
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
@@ -11,11 +10,13 @@ import EventListenerService from "../../utils/eventListenerService"
 import { enrollStudentsToCourseAction } from '../../actions/coursesActions'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import { generalStyles } from '../../styles'
+import Pagination from '../../components/Pagination'
+import EnrollStudentRow from '../../components/EnrollStudentRow'
 
 class EnrollStudentsList extends React.Component {
     constructor(props) {
         super(props)
-        this.onChange = this.onChange.bind(this)
+        this.onQueryChange = this.onQueryChange.bind(this)
     }
 
     state = {
@@ -23,20 +24,32 @@ class EnrollStudentsList extends React.Component {
         query: '',
         allChecked: false,
         studentsToEnroll: [],
+        searchedStudents: [],
         selectedStudents: [],
     }
 
     componentDidMount() {
-        this.setState({ studentsToEnroll: this.props.studentsToEnroll.slice().map(stud => ({...stud, selected: false})) })
+        let tempList = this.props.studentsToEnroll.slice().map(stud => ({...stud, selected: false}))
+        this.setState({ 
+            studentsToEnroll: tempList,
+            searchedStudents: this.search(tempList, this.state.query)
+        })
     }
 
     onCheckAll(e) {
+        debugger
+        let tempSearchedList = this.state.searchedStudents;
+        tempSearchedList.map(user => (user.selected = e.target.checked));
+
         let tempList = this.state.studentsToEnroll;
-        tempList.map(user => (user.selected = e.target.checked));
+        tempSearchedList.forEach(searchedStud => {
+            tempList.find(stud => stud.id === searchedStud.id).selected = e.target.checked;
+        })
 
         this.setState({ 
             allChecked: e.target.checked, 
-            studentsToEnroll: tempList, 
+            studentsToEnroll: tempList,
+            searchedStudents: tempSearchedList, 
             selectedStudents: this.state.studentsToEnroll.filter((e) => e.selected) 
         });
     }
@@ -51,8 +64,8 @@ class EnrollStudentsList extends React.Component {
         });
 
         //To Control Master Checkbox State
-        const totalItems = this.state.studentsToEnroll.length;
-        const totalCheckedItems = tempList.filter((e) => e.selected).length;
+        const totalItems = this.state.searchedStudents.length;
+        const totalCheckedItems = this.state.searchedStudents.filter((e) => e.selected).length;
 
         // Update State
         this.setState({
@@ -62,17 +75,25 @@ class EnrollStudentsList extends React.Component {
         });
     }
 
-    onChange = ({target}) => {
-        this.setState({ [target.id]: target.value })
+    onQueryChange = ({target}) => {
+        let newSearchStudents = this.search(this.state.studentsToEnroll, target.value)
+        const totalItems = newSearchStudents.length;
+        const totalCheckedItems = newSearchStudents.filter((e) => e.selected).length;
+
+        this.setState({ 
+            allChecked: totalItems === totalCheckedItems,
+            [target.id]: target.value, 
+            searchedStudents: newSearchStudents
+        })
     }
 
     keys = ["firstName", "lastName", "id"]
-    search = (data) => {
-        return data.filter(item => this.keys.some(key => item[key].toLowerCase().includes(this.state.query.toLowerCase())))
+    search = (data, query) => {
+        return data.filter(item => this.keys.some(key => item[key].toLowerCase().includes(query.toLowerCase())))
     }
 
     enrollStudents = async() => {
-        if (this.state.selectedStudents.length != 0){
+        if (this.state.selectedStudents.length !== 0){
             this.setState({ isWorking: true })
             const studentAddrs = this.state.selectedStudents.map(stud => stud.id)
             await this.props.enrollStudentsToCourse(this.props.courseId, studentAddrs, this.props.selectedAccount, this.props.eventId)
@@ -84,7 +105,7 @@ class EnrollStudentsList extends React.Component {
     }
 
     render() {
-        const { course, courseStudents } = this.props
+        const { course } = this.props
         return (
             <div style={{ padding: '1rem' }}>
                 <h4>{course.name}</h4>
@@ -93,7 +114,7 @@ class EnrollStudentsList extends React.Component {
                     id="query"
                     placeholder='Search...'
                     className="search"
-                    onChange={this.onChange}/>
+                    onChange={this.onQueryChange}/>
                 
                 <Container>
                     <Row style={listStyles.borderBottom}>
@@ -108,25 +129,13 @@ class EnrollStudentsList extends React.Component {
                         <Col>Student name</Col>
                         <Col>Student address</Col>
                     </Row>
-                    {
-                        this.search(this.state.studentsToEnroll).map((student) => (
-                            <Row key={`stud_${student.id}`} >
-                                <Col>
-                                    <input
-                                        type="checkbox"
-                                        checked={student.selected}
-                                        className="form-check-input"
-                                        id={student.id}
-                                        onChange={(e) => this.onItemCheck(e, student)}
-                                    />
-                                </Col>
-                                <Col>
-                                    <Link to={`/student?stud=${student.id}`}>{student.firstName} {student.lastName}</Link>
-                                </Col>
-                                <Col>{student.id}</Col>
-                            </Row>
-                        ))
-                    }
+                    <Pagination 
+                            data={this.state.searchedStudents}
+                            RenderComponent={EnrollStudentRow}
+                            onCheck={this.onItemCheck.bind(this)}
+                            pageLimit={5}
+                            dataLimit={5}
+                        />
                 </Container>
                 {
                     this.state.isWorking ?
