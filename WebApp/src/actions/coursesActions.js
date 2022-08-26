@@ -58,7 +58,6 @@ export const loadStudentCoursesAction = async (accountAddress, eventId, dispatch
 
 export const enrollStudentsToCourseAction = async (courseId, studentAddrs, selectedAccount, eventId, dispatch) => {
     try {
-        debugger
         await faculty.methods.enrollCourseMultiple(courseId, studentAddrs).send({ from: selectedAccount });
     }
     catch (ex) {

@@ -16,7 +16,6 @@ class ProfessorList extends React.Component {
     onSubmit = async (ad, fn, ln, cn, ex) => this.props.addProfessor(ad, fn, ln, cn, ex, this.props.selectedEvent.eventId, this.props.selectedAccount)
 
     onEventClick(e, props, professor){
-        debugger
         props.setSelectedUser(professor)
     }
 

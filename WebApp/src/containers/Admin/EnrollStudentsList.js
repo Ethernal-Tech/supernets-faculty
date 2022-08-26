@@ -13,8 +13,14 @@ import LoadingSpinner from '../../components/LoadingSpinner'
 import { generalStyles } from '../../styles'
 
 class EnrollStudentsList extends React.Component {
+    constructor(props) {
+        super(props)
+        this.onChange = this.onChange.bind(this)
+    }
+
     state = {
         isWorking: false,
+        query: '',
         allChecked: false,
         studentsToEnroll: [],
         selectedStudents: [],
@@ -56,10 +62,18 @@ class EnrollStudentsList extends React.Component {
         });
     }
 
+    onChange = ({target}) => {
+        this.setState({ [target.id]: target.value })
+    }
+
+    keys = ["firstName", "lastName", "id"]
+    search = (data) => {
+        return data.filter(item => this.keys.some(key => item[key].toLowerCase().includes(this.state.query.toLowerCase())))
+    }
+
     enrollStudents = async() => {
         if (this.state.selectedStudents.length != 0){
             this.setState({ isWorking: true })
-            debugger
             const studentAddrs = this.state.selectedStudents.map(stud => stud.id)
             await this.props.enrollStudentsToCourse(this.props.courseId, studentAddrs, this.props.selectedAccount, this.props.eventId)
             this.setState({ isWorking: false, allChecked: false , studentsToEnroll: this.props.studentsToEnroll.slice().map(stud => ({...stud, selected: false})), selectedStudents: []})
@@ -74,6 +88,12 @@ class EnrollStudentsList extends React.Component {
         return (
             <div style={{ padding: '1rem' }}>
                 <h4>{course.name}</h4>
+
+                <input type="text"
+                    id="query"
+                    placeholder='Search...'
+                    className="search"
+                    onChange={this.onChange}/>
                 
                 <Container>
                     <Row style={listStyles.borderBottom}>
@@ -88,9 +108,8 @@ class EnrollStudentsList extends React.Component {
                         <Col>Student name</Col>
                         <Col>Student address</Col>
                     </Row>
-{/* style={ind === courseStudents.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }} */}
                     {
-                        this.state.studentsToEnroll.map((student, ind) => (
+                        this.search(this.state.studentsToEnroll).map((student) => (
                             <Row key={`stud_${student.id}`} >
                                 <Col>
                                     <input
