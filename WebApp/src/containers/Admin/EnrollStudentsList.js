@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import { connect } from 'react-redux'
 
 import Container from 'react-bootstrap/Container'
@@ -13,49 +13,39 @@ import { generalStyles } from '../../styles'
 import Pagination from '../../components/Pagination'
 import EnrollStudentRow from '../../components/EnrollStudentRow'
 
-class EnrollStudentsList extends React.Component {
-    constructor(props) {
-        super(props)
-        this.onQueryChange = this.onQueryChange.bind(this)
-    }
+function EnrollStudentsList(props) {
 
-    state = {
-        isWorking: false,
-        query: '',
-        allChecked: false,
-        studentsToEnroll: [],
-        searchedStudents: [],
-        selectedStudents: [],
-    }
+    const [isWorking, setIsWorking] = useState(false);
+    const [query, setQuery] = useState('');
+    const [allChecked, setAllChecked] = useState(false);
+    const [studentsToEnroll, setStudentsToEnroll] = useState([]);
+    const [searchedStudents, setSearchedStudents] = useState([]);
+    const [selectedStudents, setSelectedStudents] = useState([]);
 
-    componentDidMount() {
-        let tempList = this.props.studentsToEnroll.slice().map(stud => ({...stud, selected: false}))
-        this.setState({ 
-            studentsToEnroll: tempList,
-            searchedStudents: this.search(tempList, this.state.query)
-        })
-    }
+    useEffect(() => {
+        let tempList = props.studentsToEnroll.slice().map(stud => ({...stud, selected: false}))
+        setStudentsToEnroll(tempList)
+        setSearchedStudents(search(tempList, query))
+    }, [props.studentsToEnroll]);
 
-    onCheckAll(e) {
-        debugger
-        let tempSearchedList = this.state.searchedStudents;
+    const onCheckAll= (e) => {
+        let tempSearchedList = searchedStudents;
         tempSearchedList.map(user => (user.selected = e.target.checked));
 
-        let tempList = this.state.studentsToEnroll;
+        let tempList = studentsToEnroll;
         tempSearchedList.forEach(searchedStud => {
             tempList.find(stud => stud.id === searchedStud.id).selected = e.target.checked;
         })
 
-        this.setState({ 
-            allChecked: e.target.checked, 
-            studentsToEnroll: tempList,
-            searchedStudents: tempSearchedList, 
-            selectedStudents: this.state.studentsToEnroll.filter((e) => e.selected) 
-        });
+        setAllChecked(e.target.checked)
+        setStudentsToEnroll(tempList)
+        setSearchedStudents(tempSearchedList)
+        setSelectedStudents(studentsToEnroll.filter((e) => e.selected))
+
     }
 
-    onItemCheck(e, item) {
-        let tempList = this.state.studentsToEnroll;
+    const onItemCheck = (e, item) => {
+        let tempList = studentsToEnroll;
         tempList.map((stud) => {
             if (stud.id === item.id) {
                 stud.selected = e.target.checked;
@@ -64,88 +54,85 @@ class EnrollStudentsList extends React.Component {
         });
 
         //To Control Master Checkbox State
-        const totalItems = this.state.searchedStudents.length;
-        const totalCheckedItems = this.state.searchedStudents.filter((e) => e.selected).length;
+        const totalItems = searchedStudents.length;
+        const totalCheckedItems = searchedStudents.filter((e) => e.selected).length;
 
         // Update State
-        this.setState({
-            allChecked: totalItems === totalCheckedItems,
-            studentsToEnroll: tempList,
-            selectedStudents: this.state.studentsToEnroll.filter((e) => e.selected),
-        });
+        setAllChecked(totalItems === totalCheckedItems)
+        setStudentsToEnroll(tempList)
+        setSelectedStudents(studentsToEnroll.filter((e) => e.selected))
     }
 
-    onQueryChange = ({target}) => {
-        let newSearchStudents = this.search(this.state.studentsToEnroll, target.value)
+    const onQueryChange = ({target}) => {
+        let newSearchStudents = search(studentsToEnroll, target.value)
         const totalItems = newSearchStudents.length;
         const totalCheckedItems = newSearchStudents.filter((e) => e.selected).length;
 
-        this.setState({ 
-            allChecked: totalItems === totalCheckedItems,
-            [target.id]: target.value, 
-            searchedStudents: newSearchStudents
-        })
+        setAllChecked(totalItems === totalCheckedItems)
+        setQuery(target.value)
+        setSearchedStudents(newSearchStudents)
     }
 
-    keys = ["firstName", "lastName", "id"]
-    search = (data, query) => {
-        return data.filter(item => this.keys.some(key => item[key].toLowerCase().includes(query.toLowerCase())))
+    const keys = ["firstName", "lastName", "id"]
+    const search = (data, query) => {
+        return data.filter(item => keys.some(key => item[key].toLowerCase().includes(query.toLowerCase())))
     }
 
-    enrollStudents = async() => {
-        if (this.state.selectedStudents.length !== 0){
-            this.setState({ isWorking: true })
-            const studentAddrs = this.state.selectedStudents.map(stud => stud.id)
-            await this.props.enrollStudentsToCourse(this.props.courseId, studentAddrs, this.props.selectedAccount, this.props.eventId)
-            this.setState({ isWorking: false, allChecked: false , studentsToEnroll: this.props.studentsToEnroll.slice().map(stud => ({...stud, selected: false})), selectedStudents: []})
+    const enrollStudents = async() => {
+        if (selectedStudents.length !== 0){
+            setIsWorking(true)
+            const studentAddrs = selectedStudents.map(stud => stud.id)
+            await props.enrollStudentsToCourse(props.courseId, studentAddrs, props.selectedAccount, props.eventId)
+            setIsWorking(false)
+            setAllChecked(false)
+            setStudentsToEnroll(props.studentsToEnroll.slice().map(stud => ({...stud, selected: false})))
+            setSelectedStudents([])
         }
         else {
             EventListenerService.notify("error", 'fields not populated!')
         }
     }
 
-    render() {
-        const { course } = this.props
-        return (
-            <div style={{ padding: '1rem' }}>
-                <h4>{course.name}</h4>
+    const { course } = props
+    return (
+        <div style={{ padding: '1rem' }}>
+            <h4>{course.name}</h4>
 
-                <input type="text"
-                    id="query"
-                    placeholder='Search...'
-                    className="search"
-                    onChange={this.onQueryChange}/>
-                
-                <Container>
-                    <Row style={listStyles.borderBottom}>
-                        <Col xs={'auto'}>
-                            <input
-                                type="checkbox" className="form-check-input"
-                                checked={this.state.allChecked}
-                                id="checkAll"
-                                onChange={(e) => this.onCheckAll(e)}
-                            />
-                        </Col>
-                        <Col>Student name</Col>
-                        <Col>Student address</Col>
-                    </Row>
-                    <Pagination 
-                            data={this.state.searchedStudents}
-                            RenderComponent={EnrollStudentRow}
-                            onCheck={this.onItemCheck.bind(this)}
-                            pageLimit={5}
-                            dataLimit={5}
+            <input type="text"
+                id="query"
+                placeholder='Search...'
+                className="search"
+                onChange={onQueryChange}/>
+            
+            <Container>
+                <Row style={listStyles.borderBottom}>
+                    <Col xs={'auto'}>
+                        <input
+                            type="checkbox" className="form-check-input"
+                            checked={allChecked}
+                            id="checkAll"
+                            onChange={(e) => onCheckAll(e)}
                         />
-                </Container>
-                {
-                    this.state.isWorking ?
-                    <Button variant="primary" type="submit" style={generalStyles.button} disabled><LoadingSpinner/></Button> :
-                    <Button className="btn btn-primary" onClick={this.enrollStudents} disabled={this.state.selectedStudents.length === 0}>Enroll {this.state.selectedStudents.length} students</Button>
-                }
-                
-            </div>
-        )
-    }
+                    </Col>
+                    <Col>Student name</Col>
+                    <Col>Student address</Col>
+                </Row>
+                <Pagination 
+                        data={searchedStudents}
+                        RenderComponent={EnrollStudentRow}
+                        onCheck={onItemCheck}
+                        pageLimit={5}
+                        dataLimit={5}
+                    />
+            </Container>
+            {
+                isWorking ?
+                <Button variant="primary" type="submit" style={generalStyles.button} disabled><LoadingSpinner/></Button> :
+                <Button className="btn btn-primary" onClick={enrollStudents} disabled={selectedStudents.length === 0}>Enroll {selectedStudents.length} students</Button>
+            }
+            
+        </div>
+    )
 }
 
 const mapStateToProps = (state, ownProps) => {

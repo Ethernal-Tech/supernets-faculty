@@ -18,6 +18,16 @@ export const gradeToContract = [
     { grade: 'FAILED', contractGrade: 6 },
 ];
 
+export const contractToGrade = new Map([
+    ["1", "6"],
+    ["2", "7"],
+    ["3", "8"],
+    ["4", "9"],
+    ["5", "10"],
+    ["6", "Failed"],
+    ["7", "---"],
+  ]);
+
 export const getUserRole = state => {
     const { selectedAccount, adminAccount } = state.eth
     const eventAdmins = state.users.admins || [];

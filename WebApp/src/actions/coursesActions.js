@@ -70,8 +70,6 @@ export const enrollStudentsToCourseAction = async (courseId, studentAddrs, selec
 
 export const gradeStudentsAction = async (courseId, studentGrades, selectedAccount, eventId, dispatch) => {
     try {
-        debugger
-        return
         await faculty.methods.gradeStudents(courseId, studentGrades).send({ from: selectedAccount });
     }
     catch (ex) {

@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react'
 import '../paginationStyles.css'
 
 function Pagination({ data, RenderComponent, onCheck, pageLimit, dataLimit }) {
-    console.log('data length: ', data.length)
     const [pages, setPages] = useState(Math.ceil(data.length / dataLimit));
     const [currentPage, setCurrentPage] = useState(1);
   
@@ -13,8 +12,6 @@ function Pagination({ data, RenderComponent, onCheck, pageLimit, dataLimit }) {
 
     function goToNextPage() {
         setCurrentPage((page) => page + 1);
-        debugger
-        console.log(pages, currentPage)
     }
   
     function goToPreviousPage() {

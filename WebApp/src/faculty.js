@@ -1,6 +1,6 @@
 import web3 from './web3';
 
-export const address = '0x3960cA18b88b69c665b46b029D54F1D6d0fA79b5';
+export const address = '0x97bb38001449Babb12c4A36a77dd77E5F79F56BE';
 const abi = [
 	{
 		"inputs": [
@@ -263,24 +263,6 @@ const abi = [
 			}
 		],
 		"name": "editStudent",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "courseId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "studAddress",
-				"type": "address"
-			}
-		],
-		"name": "enrollCourse",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -664,17 +646,24 @@ const abi = [
 				"type": "uint256"
 			},
 			{
-				"internalType": "address",
-				"name": "studAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "grade",
-				"type": "uint256"
+				"components": [
+					{
+						"internalType": "address",
+						"name": "studentAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "enum Faculty.CourseAttendance",
+						"name": "courseAttendance",
+						"type": "uint8"
+					}
+				],
+				"internalType": "struct Faculty.StudentGrade[]",
+				"name": "studentGrades",
+				"type": "tuple[]"
 			}
 		],
-		"name": "gradeStudent",
+		"name": "gradeStudents",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"

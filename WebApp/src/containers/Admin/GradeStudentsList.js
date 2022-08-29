@@ -22,13 +22,8 @@ class GradeStudentsList extends React.Component {
     gradeChanged = (e) => {
         let newGrades = this.state.studentGrades
 
-        if (e.target.value == 0) {
-            // const removeProperty = dyProps => ({ [dyProps]: _, ...rest }) => rest;
-
-
-
+        if (e.target.value === 0) {
             delete newGrades[e.target.id]
-            // newGrades.delete(e.target.id)
         } else {
             newGrades[e.target.id] = e.target.value
         }
@@ -39,7 +34,11 @@ class GradeStudentsList extends React.Component {
     gradeStudents = async() => {
         if (Object.keys(this.state.studentGrades).length !== 0) {
             this.setState({isWorking: true})
-            await this.props.gradeStudents(this.props.courseId, this.state.studentGrades, this.props.selectedAccount, this.props.eventId)
+            let grades = []
+            Object.entries(this.state.studentGrades).forEach(([studentAddress, courseAttendance]) => {
+                grades.push({studentAddress, courseAttendance})
+            })
+            await this.props.gradeStudents(this.props.courseId, grades, this.props.selectedAccount, this.props.eventId)
             this.setState({isWorking: false, studentGrades: {}})
         } else {
             EventListenerService.notify("error", 'fields not populated!')
@@ -51,13 +50,6 @@ class GradeStudentsList extends React.Component {
         return (
             <div style={{ padding: '1rem' }}>
                 <h4>{course.name}</h4>
-
-                {/* <input type="text"
-                    id="query"
-                    placeholder='Search...'
-                    className="search"
-                    onChange={this.onChange}/>
-                 */}
                 <Container>
                     <Row style={listStyles.borderBottom}>
                         <Col>Student name</Col>
@@ -96,7 +88,7 @@ class GradeStudentsList extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
     const allStudents = (state.users.students || [])
-    const studentGrades = state.courses.gradesByStudentByCourse[ownProps.course.id]
+    const studentGrades = (state.courses.gradesByStudentByCourse[ownProps.course.id] || [])
     const studentsToGrade = allStudents.filter(stud => studentGrades.filter(sg => sg.grade > 5).some(fs => fs.studentId === stud.id))
     return {
         selectedAccount: state.eth.selectedAccount,
