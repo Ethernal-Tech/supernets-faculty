@@ -10,20 +10,66 @@ import "@openzeppelin/contracts@4.7.2/token/ERC721/extensions/ERC721URIStorage.s
 contract PlanBCertificate is ERC721, ERC721URIStorage {
     using Counters for Counters.Counter;
 
-    Counters.Counter private _tokenIdCounter;
+    struct Event {
+        address[] adminsAddresses;
+        mapping(address => bool) eventAdmins;
 
-    // Mapping from owner address to token ID
-    mapping(address => uint256) private _ownerToToken;
+        // Mapping from owner address to token ID
+        mapping(address => uint256) ownerToToken;
+    }
+
+    address private admin;
+    Counters.Counter private _tokenIdCounter;
+    mapping(uint => Event) private events;
+
+    modifier onlyAdmin {
+        require (msg.sender == admin);
+        _;
+    }
+
+    modifier eventAdmin(uint eventId) {
+        require (isAdmin(eventId, msg.sender) == true);
+        _;
+    }
 
     constructor() ERC721("PlanB Certificate", "PLANB") {}
 
-    function safeMint(address to, string memory uri) external virtual {
+    function addEventAdmin(uint eventId, address adminAddress) external onlyAdmin {
+        require(events[eventId].eventAdmins[adminAddress] == false);
+
+        events[eventId].eventAdmins[adminAddress] = true;
+        events[eventId].adminsAddresses.push(adminAddress);
+    }
+
+    function safeMint(address to, string memory uri, uint eventId) external virtual eventAdmin(eventId) {
+
         _tokenIdCounter.increment();
         uint256 tokenId = _tokenIdCounter.current();
         
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
-        _ownerToToken[to] = tokenId;
+
+        events[eventId].ownerToToken[to] = tokenId;
+    }
+
+    function tokenURI(uint256 tokenId)
+        public
+        view
+        override(ERC721, ERC721URIStorage)
+        returns (string memory)
+    {
+        return super.tokenURI(tokenId);
+    }
+
+    function getTokenForOwner(address owner, uint eventId) external view returns (uint256 tokenId) {
+        tokenId = events[eventId].ownerToToken[owner];
+        require(tokenId > 0);
+    }
+
+    // Private functions
+
+    function isAdmin(uint eventId, address addr) private view returns(bool) {
+        return (events[eventId].eventAdmins[addr] || addr == admin);
     }
 
     function _transfer(address,
@@ -36,20 +82,6 @@ contract PlanBCertificate is ERC721, ERC721URIStorage {
 
     function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
         super._burn(tokenId);
-    }
-
-    function tokenURI(uint256 tokenId)
-        public
-        view
-        override(ERC721, ERC721URIStorage)
-        returns (string memory)
-    {
-        return super.tokenURI(tokenId);
-    }
-
-    function getTokenForOwner(address owner) external view returns (uint256) {
-        require(owner != address(0), "Address zero is not a valid owner");
-        return _ownerToToken[owner];
     }
 }
 

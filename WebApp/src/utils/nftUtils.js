@@ -1,3 +1,5 @@
+import { contractToGrade } from "./userUtils"
+
 const ipfsClient = require('ipfs-http-client');
 const client = ipfsClient({ host: 'localhost', port: '5001', protocol: 'http', mode: 'no-cors' });
 
@@ -17,12 +19,12 @@ export const uploadMetadata = async metadata => {
 
 export const createMetadata = (student, studentCourses) => {
     return {
-        name: student.name + "'s PLanBCertificate",
+        name: student.firstName+ " " + student.lastName + "'s PLanBCertificate",
         description: 'This is PLanBCertificate NFT',
         attributes: studentCourses.map(course => {         
             return { 
-                value: course.grade,
-                trait_type: course.name,
+                value: contractToGrade.get(course.grade.grade),
+                trait_type: course.title,
             }
         })
     }

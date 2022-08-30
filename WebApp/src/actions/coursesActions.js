@@ -36,10 +36,10 @@ export const addCourseAction = async (title, description, startTime, endTime, ve
     await loadProfessorCoursesAction(professorAddr, eventId, dispatch)
 }
 
-export const generateCertificateAction = async (studentAddr, selectedAccount, ipfsURI) => {
+export const generateCertificateAction = async (studentAddr, selectedAccount, ipfsURI, eventId) => {
 
     try {
-        await faculty.methods.generateCertificate(studentAddr, ipfsURI).send({ from: selectedAccount });
+        await faculty.methods.generateCertificate(studentAddr, ipfsURI, eventId).send({ from: selectedAccount });
     }
     catch (ex) {
         EventListenerService.notify("error", ex)

@@ -188,6 +188,8 @@ contract Faculty {
     function addEventAdmin(uint eventId, address adminAddress) external onlyAdmin eventExists(eventId) canAddAddress(eventId, adminAddress) {
         events[eventId].eventAdmins[adminAddress] = true;
         events[eventId].adminsAddresses.push(adminAddress);
+
+        planBCertificate.addEventAdmin(eventId, adminAddress);
     }
 
     function addProfessor(address profAddress, string calldata firstName, string calldata lastName, string calldata country, string calldata expertise, uint eventId) external eventAdmin(eventId) eventExists(eventId) canAddAddress(eventId, profAddress) {
@@ -226,14 +228,14 @@ contract Faculty {
         }
     }
 
-    function gradeStudents(uint courseId, StudentGrade[] studentGrades) external {
+    function gradeStudents(uint courseId, StudentGrade[] memory studentGrades) external {
         require(courses[courseId].exist == true);
 
         uint eventId = courses[courseId].eventId;
         require(isAdmin(eventId, msg.sender));
 
         for (uint i = 0; i < studentGrades.length; i++) {
-            StudentGrade studentGrade = studentGrades[i];
+            StudentGrade memory studentGrade = studentGrades[i];
 
             require(events[eventId].students[studentGrade.studentAddress].exist == true);
             CourseAttendance curentGrade = events[eventId].students[studentGrade.studentAddress].coursesAttendance[courseId];
@@ -355,13 +357,13 @@ contract Faculty {
         coursesIds = events[eventId].students[studentAddress].eventCourses;
     }
 
-    function generateCertificate(address to, string memory uri) external onlyAdmin {
-        planBCertificate.safeMint(to, uri);
+    function generateCertificate(address studentAddress, string memory uri, uint eventId) external onlyAdmin eventExists(eventId) {
+        require(events[eventId].students[studentAddress].exist == true, "Student not found.");
+        planBCertificate.safeMint(studentAddress, uri, eventId);
     }
 
-    function getCertificateId(address student) external view returns (uint256) {
-        //sta ako vrati 0?
-        return planBCertificate.getTokenForOwner(student);
+    function getCertificateId(address student, uint eventId) external view returns (uint256) {
+        return planBCertificate.getTokenForOwner(student, eventId);
     }
 
     // Private functions

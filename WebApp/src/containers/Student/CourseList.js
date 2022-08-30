@@ -9,6 +9,7 @@ import Button from 'react-bootstrap/Button'
 import { loadProfessorCoursesAction, loadStudentCoursesAction, generateCertificateAction } from '../../actions/coursesActions'
 import { listStyles } from '../../styles'
 import { USER_ROLES } from '../../utils/constants'
+import { contractToGrade }  from '../../utils/userUtils'
 import { createMetadata, uploadMetadata } from '../../utils/nftUtils'
 import { address } from '../../faculty'
 
@@ -28,10 +29,11 @@ class CourseList extends React.Component {
 
     onGenerateCertificate = async evt => {
         const metadata = createMetadata(this.props.student, this.props.studentCourses)
+        console.log(metadata)
         const ipfsUri = await uploadMetadata(metadata);         
 
         console.log(ipfsUri)
-        await this.props.generateCertificate(this.props.student.id, this.props.selectedAccount, ipfsUri)
+        await this.props.generateCertificate(this.props.student.id, this.props.selectedAccount, ipfsUri, this.props.selectedEvent.eventId)
     }
 
     render() {
@@ -42,22 +44,24 @@ class CourseList extends React.Component {
                 <h4>{student.name}</h4>
 
                 <Container>
-                    {/* <Row style={{ padding: '1rem 0' }}>
-                        <Col>
-                            {
-                                certificateId > 0 
-                                ? userRole === USER_ROLES.ADMIN &&
-                                    <a href={`https://testnets.opensea.io/assets/rinkeby/${address}/${certificateId}`}>
-                                        <Button variant="primary" type="button">Certificate</Button>
-                                    </a>
-                                : <Button variant="primary" type="button" onClick={this.onGenerateCertificate}>Produce certificate</Button>
-                            }
-                        </Col>
-                    </Row> */}
+                    { 
+                        <Row style={{ padding: '1rem 0' }}>
+                            <Col>
+                                {
+                                    // certificateId > 0 
+                                    // ? userRole === USER_ROLES.ADMIN &&
+                                    //     <a href={`https://testnets.opensea.io/assets/rinkeby/${address}/${certificateId}`}>
+                                    //         <Button variant="primary" type="button">Certificate</Button>
+                                    //     </a>
+                                     <Button variant="primary" type="button" onClick={this.onGenerateCertificate}>Produce certificate</Button>
+                                }
+                            </Col>
+                        </Row> 
+                    }
                     <Row style={listStyles.borderBottom}>
                         <Col>Course Name</Col>
                         <Col>Professor's Name</Col>
-                        <Col>Something??</Col>
+                        <Col>Grade</Col>
                     </Row>
                     {
                         studentCourses.map((course, ind) => (
@@ -66,7 +70,7 @@ class CourseList extends React.Component {
                                 style={ind === studentCourses.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }}>
                                 <Col>{course.title}</Col>
                                 <Col>{course.professorName}</Col>
-                                <Col>{course.grade}</Col>
+                                <Col>{contractToGrade.get(course.grade.grade)}</Col>
                             </Row>
                         ))
                     }
@@ -81,7 +85,7 @@ const mapStateToProps = (state, ownProps) => {
     const gradesByCourse = (state.courses.gradesByCourseByStudent || {})[ownProps.student.id] || {}
     let studentCourses = ((state.courses.studentCourses || {})[ownProps.student.id] || []).map(x => {
         const course = allCourses.find(y => y.id === x)
-        const grade = gradesByCourse[x]
+        const grade = gradesByCourse.find(y => y.courseId === x)
         return {
             ...course,
             grade
@@ -98,7 +102,7 @@ const mapStateToProps = (state, ownProps) => {
         const professorCoursesSet = new Set((state.courses.coursesByProfessorAddr || {})[selectedAccount] || [])
         studentCourses = studentCourses.map(x => ({ ...x, grade: professorCoursesSet.has(x.id) ? x.grade : undefined }))
     }
-
+    
     return {
         selectedAccount,
         studentCourses: studentCourses,
@@ -109,7 +113,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => ({
     loadStudentCourses: (accountAddress, eventId) => loadStudentCoursesAction(accountAddress, eventId, dispatch),
     loadProfessorCourses: professorAddr => loadProfessorCoursesAction(professorAddr, dispatch),
-    generateCertificate: (studentAddr, selectedAccount, ipfsURI) => generateCertificateAction(studentAddr, selectedAccount, ipfsURI)
+    generateCertificate: (studentAddr, selectedAccount, ipfsURI, eventId) => generateCertificateAction(studentAddr, selectedAccount, ipfsURI, eventId)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CourseList)

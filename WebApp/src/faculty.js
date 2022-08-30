@@ -289,13 +289,18 @@ const abi = [
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "to",
+				"name": "studentAddress",
 				"type": "address"
 			},
 			{
 				"internalType": "string",
 				"name": "uri",
 				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "eventId",
+				"type": "uint256"
 			}
 		],
 		"name": "generateCertificate",
@@ -541,6 +546,11 @@ const abi = [
 				"internalType": "address",
 				"name": "student",
 				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "eventId",
+				"type": "uint256"
 			}
 		],
 		"name": "getCertificateId",
