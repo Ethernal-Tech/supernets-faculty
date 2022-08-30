@@ -357,7 +357,7 @@ contract Faculty {
         coursesIds = events[eventId].students[studentAddress].eventCourses;
     }
 
-    function generateCertificate(address studentAddress, string memory uri, uint eventId) external onlyAdmin eventExists(eventId) {
+    function generateCertificate(address studentAddress, string memory uri, uint eventId) external eventAdmin(eventId) eventExists(eventId) {
         require(events[eventId].students[studentAddress].exist == true, "Student not found.");
         planBCertificate.safeMint(studentAddress, uri, eventId);
     }

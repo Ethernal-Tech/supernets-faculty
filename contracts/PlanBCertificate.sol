@@ -23,12 +23,12 @@ contract PlanBCertificate is ERC721, ERC721URIStorage {
     mapping(uint => Event) private events;
 
     modifier onlyAdmin {
-        require (msg.sender == admin);
+        require (tx.origin == admin);
         _;
     }
 
     modifier eventAdmin(uint eventId) {
-        require (isAdmin(eventId, msg.sender) == true);
+        require (isAdmin(eventId, tx.origin) == true);
         _;
     }
 
@@ -42,6 +42,7 @@ contract PlanBCertificate is ERC721, ERC721URIStorage {
     }
 
     function safeMint(address to, string memory uri, uint eventId) external virtual eventAdmin(eventId) {
+        require(events[eventId].ownerToToken[to] == 0);
 
         _tokenIdCounter.increment();
         uint256 tokenId = _tokenIdCounter.current();
