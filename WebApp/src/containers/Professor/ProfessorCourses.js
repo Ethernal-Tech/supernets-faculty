@@ -19,11 +19,13 @@ function ProfessorCourses(props) {
     const [searchedCourses, setSearchedCourses] = useState([]);
 
     useEffect(() => {
-        props.loadProfessorCourses(props.professor.id, props.selectedEvent.eventId)
-
-        let temp = props.courses
-        setCourses(temp)
-        setSearchedCourses(search(temp, query))
+        if (courses.length == 0) {
+            props.loadProfessorCourses(props.professor.id, props.selectedEvent.eventId)
+    
+            let temp = props.courses
+            setCourses(temp)
+            setSearchedCourses(search(temp, query))
+        }
     }, [props.courses]);
 
     const onQueryChange = ({target}) => {
@@ -54,7 +56,7 @@ function ProfessorCourses(props) {
             <Container>
                 <Row style={listStyles.borderBottom}>
                     <Col>Course name</Col>
-                    <Col>Number of students</Col>
+                    <Col xs={'auto'}>Number of students</Col>
                 </Row>
                 <Pagination 
                     data={searchedCourses}
