@@ -11,7 +11,7 @@ import { gradeStudentsAction } from '../../actions/coursesActions'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import { generalStyles } from '../../styles'
 import Pagination from '../../components/Pagination'
-import GradeStudentRow from '../../components/GradeStudentRow'
+import GradeStudentRow from '../../components/RowComponents/GradeStudentRow'
 
 function GradeStudentsList(props) {
 

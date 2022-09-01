@@ -12,7 +12,7 @@ import { contractToGrade, gradeToContract }  from '../../utils/userUtils'
 import { createMetadata, uploadMetadata } from '../../utils/nftUtils'
 import { address } from '../../faculty'
 import Pagination from '../../components/Pagination'
-import StudentCourseRow from '../../components/StudentCourseRow'
+import StudentCourseRow from '../../components/RowComponents/StudentCourseRow'
 
 function CourseList(props) {
 

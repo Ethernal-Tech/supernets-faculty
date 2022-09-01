@@ -1,6 +1,6 @@
 import faculty from '../faculty'
 import { setStudentGrades } from '../state/coursesReducer'
-import { setProfessors, setStudents, setAdmins, setUsers, setSelectedUser } from '../state/usersReducer'
+import { setProfessors, setStudents, setAdmins, setUsers } from '../state/usersReducer'
 import { setAdminAccount } from '../state/ethReducer'
 import EventListenerService from "../utils/eventListenerService"
 
@@ -124,18 +124,9 @@ export const editStudentAction = async (addr, firstName, lastName, country, even
 
 export const loadAdminAccountAction = async (dispatch) => {
     try {
-        const adminAccount = await faculty.methods.getAdmin().call();
+        const adminAccount = await faculty.methods.admin().call();
         dispatch(setAdminAccount(adminAccount))
     } catch (ex) {
-        EventListenerService.notify("error", ex)
-    }
-}
-
-export const setSelectedUserAction = async (user, dispatch) => {
-    try {
-        await dispatch(setSelectedUser(user))
-    }
-    catch (ex) {
         EventListenerService.notify("error", ex)
     }
 }

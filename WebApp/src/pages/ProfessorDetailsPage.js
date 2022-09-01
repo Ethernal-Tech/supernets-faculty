@@ -19,7 +19,7 @@ class ProfessorDetailsPage extends React.Component {
                 <h3>From: {this.props.professor.country}</h3>
                 <h3>Expertise: {this.props.professor.expertise}</h3>
                 <br/>
-            <ProfessorCourses professor={professor} userRole={userRole} selectedAccount={selectedAccount}/>
+                <ProfessorCourses professor={professor} userRole={userRole} selectedAccount={selectedAccount}/>
             </div>
         )
     }
@@ -30,8 +30,7 @@ const mapStateToProps = (state, ownProps) => {
     const professors = state.users.professors || []
     let professor
     if (ownProps.prof) {
-        const professorInd = ownProps.prof ? parseInt(ownProps.prof) : -1
-        professor = professorInd >= 0 && professors.length > professorInd ? professors[professorInd] : undefined
+        professor = professors.find(prof => prof.id === ownProps.prof)
     }
     else if (userRole === USER_ROLES.PROFESSOR) {
         professor = professors.find(x => x.id === state.eth.selectedAccount)

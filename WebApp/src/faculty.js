@@ -1,6 +1,6 @@
 import web3 from './web3';
 
-export const address = '0x7aCE64D581484a2f60a92D77C3d87306e978d985';
+export const address = '0x44C7eb689f50EAaB436174df17680E1663419c20';
 const abi = [
 	{
 		"inputs": [
@@ -184,6 +184,19 @@ const abi = [
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "admin",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "address",
@@ -298,19 +311,6 @@ const abi = [
 		"name": "generateCertificate",
 		"outputs": [],
 		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getAdmin",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
 		"type": "function"
 	},
 	{

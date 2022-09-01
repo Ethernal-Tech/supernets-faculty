@@ -9,6 +9,7 @@ import EventListenerService from "../utils/eventListenerService"
 import { generalStyles } from '../styles'
 import { connect } from 'react-redux'
 import { editProfessorAction } from '../actions/userActions'
+import withRouter from '../utils/withRouter'
 
 class EditProfessorPage extends React.Component {
     constructor(props) {
@@ -26,11 +27,13 @@ class EditProfessorPage extends React.Component {
     }
 
     componentDidMount() {
-        this.setState({ addr: this.props.selectedUser.id })
-        this.setState({ firstName: this.props.selectedUser.firstName })
-        this.setState({ lastName: this.props.selectedUser.lastName })
-        this.setState({ country: this.props.selectedUser.country })
-        this.setState({ expertise: this.props.selectedUser.expertise })
+        const { professor } = this.props
+
+        this.setState({ addr: professor.id })
+        this.setState({ firstName: professor.firstName })
+        this.setState({ lastName: professor.lastName })
+        this.setState({ country: professor.country })
+        this.setState({ expertise: professor.expertise })
     }
 
     onSubmit = async evt => {
@@ -89,9 +92,12 @@ class EditProfessorPage extends React.Component {
     }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
+    const professors = state.users.professors || []
+    const professor = professors.find(prof => prof.id === ownProps.prof)
+    
     return {
-        selectedUser: state.users.selectedUser,
+        professor,
         selectedEvent: state.event.selectedEvent,
         selectedAccount: state.eth.selectedAccount
     }
@@ -101,4 +107,4 @@ const mapDispatchToProps = dispatch => ({
     editProfessor: (ad, fn, ln, cn, ex, eId, admin) => editProfessorAction(ad, fn, ln, cn, ex, eId, admin, dispatch)
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditProfessorPage)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(EditProfessorPage))

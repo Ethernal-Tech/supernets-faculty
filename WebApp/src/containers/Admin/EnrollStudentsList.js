@@ -11,7 +11,7 @@ import { enrollStudentsToCourseAction } from '../../actions/coursesActions'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import { generalStyles } from '../../styles'
 import Pagination from '../../components/Pagination'
-import EnrollStudentRow from '../../components/EnrollStudentRow'
+import EnrollStudentRow from '../../components/RowComponents/EnrollStudentRow'
 
 function EnrollStudentsList(props) {
 

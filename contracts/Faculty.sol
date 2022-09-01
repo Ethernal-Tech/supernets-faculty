@@ -136,7 +136,7 @@ contract Faculty {
         _;
     }
 
-    address admin;
+    address public admin;
     
     uint maxEventId;
     uint maxCourseId;
@@ -282,10 +282,6 @@ contract Faculty {
         }
 
         return coursesArray;
-    }
-
-    function getAdmin() external view returns(address) {
-        return admin;
     }
 
     function getAllAdmins(uint eventId) external view eventExists(eventId) returns(address[] memory) {

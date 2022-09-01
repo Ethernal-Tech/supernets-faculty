@@ -1,51 +1,71 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import '../../listStyles.css'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
 
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import AddUserComponent from '../../components/AddUserComponent'
-import { addStudentAction, setSelectedUserAction } from '../../actions/userActions'
+import Pagination from '../../components/Pagination'
+import StudentRow from '../../components/RowComponents/StudentRow'
+import { addStudentAction } from '../../actions/userActions'
 import { listStyles } from '../../styles'
 import { isEventAdmin } from '../../utils/userUtils'
 
-class StudentList extends React.Component {
-    onSubmit = async (ad, fn, ln, cn, _) => this.props.addStudent(ad, fn, ln, cn, this.props.selectedEvent.eventId, this.props.selectedAccount)
+function StudentList(props) {
 
-    onEventClick(e, props, student){
-        props.setSelectedUser(student)
+    const [query, setQuery] = useState('');
+    const [allStudents, setAllStudents] = useState([]);
+    const [searchedStudents, setSearchedStudents] = useState([]);
+
+    useEffect(() => {
+        let tempList = props.students
+        setAllStudents(tempList)
+        setSearchedStudents(search(tempList, query))
+    }, [props.students])
+
+    const onSubmit = async (ad, fn, ln, cn, _) => props.addStudent(ad, fn, ln, cn, props.selectedEvent.eventId, props.selectedAccount)
+
+    const onQueryChange = ({target}) => {
+        let newStudents = search(allStudents, target.value)
+
+        setQuery(target.value)
+        setSearchedStudents(newStudents)
     }
 
-    render() {
-        const { students } = this.props
-        return (
-            <div style={{ padding: '1rem' }}>
-                <h4>Students</h4>
-                
-                <Container>
-                    <Row style={listStyles.borderBottom}>
-                        <Col>Name</Col>
-                        <Col>Address</Col>
-                    </Row>
-                    {
-                        students.map((student, ind) => (                           
-                            <Row key={`stud_${student.id}`} style={ind === students.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }}>
-                                <Col><Link to={`/student?stud=${student.id}`}>{student.firstName} {student.lastName}</Link></Col>
-                                <Col>{student.id}</Col>
-                                <Col><Link className="btn btn-primary" to={'/editStudent'} onClick={e => this.onEventClick(e, this.props, student)}>Edit</Link></Col>
-                            </Row>
-                        ))
-                    }
-                </Container>
-                {
-                    this.props.isAdmin &&
-                    <AddUserComponent onSubmit={this.onSubmit} />
-                }
-            </div>
-        )
+    const keys = ["firstName", "lastName", "id"]
+    const search = (data, query) => {
+        return data.filter(item => keys.some(key => item[key].toLowerCase().includes(query.toLowerCase())))
     }
+
+    return (
+        <div style={{ padding: '1rem' }}>
+            <h4>Students</h4>
+
+            <input type="text"
+                id="query"
+                placeholder='Search...'
+                className="search"
+                onChange={onQueryChange}/>
+
+            <Container>
+                <Row style={listStyles.borderBottom}>
+                    <Col>Name</Col>
+                    <Col>Address</Col>
+                </Row>
+                <Pagination 
+                    data={searchedStudents}
+                    RenderComponent={StudentRow}
+                    pageLimit={2}
+                    dataLimit={2}
+                />
+            </Container>
+            {
+                props.isAdmin &&
+                <AddUserComponent onSubmit={onSubmit} />
+            }
+        </div>
+    )
 }
 
 const mapStateToProps = state => {
@@ -59,8 +79,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    addStudent: (ad, fn, ln, cn, eId, admin) => addStudentAction(ad, fn, ln, cn, eId, admin, dispatch),
-    setSelectedUser: (user) => setSelectedUserAction(user, dispatch)
+    addStudent: (ad, fn, ln, cn, eId, admin) => addStudentAction(ad, fn, ln, cn, eId, admin, dispatch)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(StudentList)

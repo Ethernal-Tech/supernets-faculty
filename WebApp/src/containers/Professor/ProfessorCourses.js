@@ -10,7 +10,7 @@ import { addCourseAction, loadProfessorCoursesAction } from '../../actions/cours
 import { listStyles } from '../../styles'
 import AddCourseComponent from '../../components/AddCourseComponent'
 import Pagination from '../../components/Pagination'
-import ProfessorCourseRow from '../../components/ProfessorCourseRow'
+import ProfessorCourseRow from '../../components/RowComponents/ProfessorCourseRow'
 
 function ProfessorCourses(props) {
 

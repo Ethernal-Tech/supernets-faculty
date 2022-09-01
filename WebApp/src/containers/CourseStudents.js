@@ -7,7 +7,7 @@ import Col from 'react-bootstrap/Col'
 import { listStyles } from '../styles'
 import { contractToGrade }  from '../utils/userUtils'
 import Pagination from '../components/Pagination'
-import CourseStudentRow from '../components/CourseStudentRow'
+import CourseStudentRow from '../components/RowComponents/CourseStudentRow'
 
 function CourseStudents(props) {
 
