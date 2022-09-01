@@ -1,6 +1,6 @@
 import web3 from './web3';
 
-export const address = '0xe3ef84f7c77c61a97c3Ba252A6E3D760805EDE81';
+export const address = '0x7aCE64D581484a2f60a92D77C3d87306e978d985';
 const abi = [
 	{
 		"inputs": [
@@ -184,19 +184,6 @@ const abi = [
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "admin",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "address",
@@ -278,6 +265,11 @@ const abi = [
 				"internalType": "address[]",
 				"name": "studAddresses",
 				"type": "address[]"
+			},
+			{
+				"internalType": "uint256",
+				"name": "eventId",
+				"type": "uint256"
 			}
 		],
 		"name": "enrollCourseMultiple",
@@ -306,6 +298,19 @@ const abi = [
 		"name": "generateCertificate",
 		"outputs": [],
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getAdmin",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -671,6 +676,11 @@ const abi = [
 				"internalType": "struct Faculty.StudentGrade[]",
 				"name": "studentGrades",
 				"type": "tuple[]"
+			},
+			{
+				"internalType": "uint256",
+				"name": "eventId",
+				"type": "uint256"
 			}
 		],
 		"name": "gradeStudents",

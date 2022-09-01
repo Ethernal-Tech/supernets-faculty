@@ -124,7 +124,7 @@ export const editStudentAction = async (addr, firstName, lastName, country, even
 
 export const loadAdminAccountAction = async (dispatch) => {
     try {
-        const adminAccount = await faculty.methods.admin().call();
+        const adminAccount = await faculty.methods.getAdmin().call();
         dispatch(setAdminAccount(adminAccount))
     } catch (ex) {
         EventListenerService.notify("error", ex)
