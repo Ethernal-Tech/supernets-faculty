@@ -1,54 +1,77 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import '../../listStyles.css'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
 
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import { isEventAdmin } from '../../utils/userUtils'
 import { addCourseAction, loadProfessorCoursesAction } from '../../actions/coursesActions'
 import { listStyles } from '../../styles'
-import { USER_ROLES } from '../../utils/constants'
 import AddCourseComponent from '../../components/AddCourseComponent'
+import Pagination from '../../components/Pagination'
+import ProfessorCourseRow from '../../components/ProfessorCourseRow'
 
-class ProfessorCourses extends React.Component {
-    componentDidMount() {
-        const { professor, loadProfessorCourses } = this.props
-        loadProfessorCourses(professor.id, this.props.selectedEvent.eventId)
+function ProfessorCourses(props) {
+
+    const [query, setQuery] = useState('');
+    const [courses, setCourses] = useState([]);
+    const [searchedCourses, setSearchedCourses] = useState([]);
+
+    useEffect(() => {
+        props.loadProfessorCourses(props.professor.id, props.selectedEvent.eventId)
+
+        let temp = props.courses
+        setCourses(temp)
+        setSearchedCourses(search(temp, query))
+    }, [props.courses]);
+
+    const onQueryChange = ({target}) => {
+        let newCourses = search(courses, target.value)
+
+        setQuery(target.value)
+        setSearchedCourses(newCourses)
     }
 
-    onSubmit = async (title, description, startTime, endTime, venue, points) => 
-         this.props.addCourse(title, description, startTime, endTime, venue, this.props.professor.id, points, this.props.selectedEvent.eventId, this.props.selectedAccount)
-    
-
-    render() {
-        const { professor, courses, userRole } = this.props
-        return (
-            <div style={{ padding: '1rem' }}>
-                <h4>{professor.name}</h4>
-                
-                <Container>
-                    <Row style={listStyles.borderBottom}>
-                        <Col>Course name</Col>
-                        <Col>Number of students</Col>
-                    </Row>
-
-                    {
-                        courses.map((course, ind) => (
-                            <Row key={`course_${course.id}`} style={ind === courses.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }}>
-                                <Col><Link to={`/course?courseId=${course.id}`}>{course.title}</Link></Col>
-                                <Col>{course.students.length}</Col>
-                            </Row>
-                        ))
-                    }
-                </Container>
-                {
-                    userRole === USER_ROLES.ADMIN &&
-                    <AddCourseComponent onSubmit={this.onSubmit} />
-                }
-            </div>
-        )
+    const keys = ["title"] // course.title
+    const search = (data, query) => {
+        return data.filter(item => keys.some(key => item[key].toLowerCase().includes(query.toLowerCase())))
     }
+
+    const onSubmit = async (title, description, startTime, endTime, venue, points) => 
+         props.addCourse(title, description, startTime, endTime, venue, props.professor.id, points, props.selectedEvent.eventId, props.selectedAccount)
+
+    const { professor, isAdmin } = props
+    return (
+        <div style={{ padding: '1rem' }}>
+            <h4>{professor.name}</h4>
+            <input type="text"
+                id="query"
+                placeholder='Search...'
+                className="search"
+                onChange={onQueryChange}/>
+            
+            <Container>
+                <Row style={listStyles.borderBottom}>
+                    <Col>Course name</Col>
+                    <Col>Number of students</Col>
+                </Row>
+                <Pagination 
+                    data={searchedCourses}
+                    RenderComponent={ProfessorCourseRow}
+                    pageLimit={5}
+                    dataLimit={5}
+                />
+            </Container>
+            {
+                isAdmin &&
+                <>
+                    <h4>Add new course</h4>
+                    <AddCourseComponent onSubmit={onSubmit} />
+                </>
+            }
+        </div>
+    )
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -56,10 +79,12 @@ const mapStateToProps = (state, ownProps) => {
     const allCourses = state.courses.allCourses || []
     const professorCoursesIds = (professorAddr ? state.courses.coursesByProfessorAddr[professorAddr] : undefined) || []
     const courses = allCourses.filter(x => professorCoursesIds.some(y => y === x.id))
+    const isAdmin = isEventAdmin(state)
     
     return {
         courses,
         selectedEvent: state.event.selectedEvent,
+        isAdmin,
     }
 }
 

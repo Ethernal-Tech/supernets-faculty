@@ -29,7 +29,7 @@ class StudentHome extends React.Component {
                     <CourseList student={student} userRole={userRole}/>
                 </Tab>
                 <Tab eventKey="eventDetails" title="Event Details">
-                    <EventDetails userRole={this.props.userRole} />
+                    <EventDetails userRole={userRole} />
                 </Tab>
             </Tabs>
         )

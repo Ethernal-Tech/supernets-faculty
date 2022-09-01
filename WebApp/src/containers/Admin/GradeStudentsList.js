@@ -1,6 +1,5 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
 
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
@@ -11,79 +10,97 @@ import EventListenerService from "../../utils/eventListenerService"
 import { gradeStudentsAction } from '../../actions/coursesActions'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import { generalStyles } from '../../styles'
-import { gradeToContract } from '../../utils/userUtils'
+import Pagination from '../../components/Pagination'
+import GradeStudentRow from '../../components/GradeStudentRow'
 
-class GradeStudentsList extends React.Component {
-    state = {
-        isWorking: false,
-        studentGrades: {},
+function GradeStudentsList(props) {
+
+    const [isWorking, setIsWorking] = useState(false);
+    const [query, setQuery] = useState('');
+    const [studentsToGrade, setStudentsToGrade] = useState([]);
+    const [searchedStudents, setSearchedStudents] = useState([]);
+    const [studentGrades, setStudentGrades] = useState([]);
+    const [gradeEnabled, setGradeEnabled] = useState(false);
+
+    useEffect(() => {
+        let temp = props.studentsToGrade
+        setStudentsToGrade(temp)
+        setSearchedStudents(search(temp, query))
+    }, [props.studentsToGrade]);
+
+    const onQueryChange = ({target}) => {
+        let newStudentsToEnroll = search(studentsToGrade, target.value)
+
+        setQuery(target.value)
+        setSearchedStudents(newStudentsToEnroll)
     }
 
-    gradeChanged = (e) => {
-        let newGrades = this.state.studentGrades
+    const keys = ["firstName", "lastName", "id"]
+    const search = (data, query) => {
+        return data.filter(item => keys.some(key => item[key].toLowerCase().includes(query.toLowerCase())))
+    }
 
-        if (e.target.value === 0) {
+    const gradeChanged = (e) => {
+        let newGrades = studentGrades
+
+        debugger
+        if (e.target.value == 0) {
             delete newGrades[e.target.id]
         } else {
             newGrades[e.target.id] = e.target.value
         }
 
-        this.setState({studentGrades: newGrades})
+        setGradeEnabled(Object.keys(newGrades).length !== 0)
+        setStudentGrades(newGrades)
     }
 
-    gradeStudents = async() => {
-        if (Object.keys(this.state.studentGrades).length !== 0) {
-            this.setState({isWorking: true})
+    const gradeStudents = async() => {
+        if (Object.keys(studentGrades).length !== 0) {
+            setIsWorking(true)
             let grades = []
-            Object.entries(this.state.studentGrades).forEach(([studentAddress, courseAttendance]) => {
+            Object.entries(studentGrades).forEach(([studentAddress, courseAttendance]) => {
                 grades.push({studentAddress, courseAttendance})
             })
-            await this.props.gradeStudents(this.props.courseId, grades, this.props.selectedAccount, this.props.eventId)
-            this.setState({isWorking: false, studentGrades: {}})
+            await props.gradeStudents(props.courseId, grades, props.selectedAccount, props.eventId)
+            setIsWorking(false)
+            setStudentGrades({})
         } else {
             EventListenerService.notify("error", 'fields not populated!')
         }
     }
     
-    render() {
-        const { course, studentsToGrade } = this.props
-        return (
-            <div style={{ padding: '1rem' }}>
-                <h4>{course.name}</h4>
-                <Container>
-                    <Row style={listStyles.borderBottom}>
-                        <Col>Student name</Col>
-                        <Col>Student address</Col>
-                        <Col xs={'auto'}>Grade</Col>
-                    </Row>
-                    {
-                        studentsToGrade.map((student) => (
-                            <Row key={`stud_${student.id}`} >
-                                <Col>
-                                    <Link to={`/student?stud=${student.id}`}>{student.firstName} {student.lastName}</Link>
-                                </Col>
-                                <Col>{student.id}</Col>
-                                <Col>
-                                    <select name="grade" id={student.id} onChange={this.gradeChanged}>
-                                        {gradeToContract.map((grade, key) => 
-                                        {
-                                            return <option key={key} value={grade.contractGrade}>{grade.grade}</option>
-                                        })}
-                                    </select>
-                                </Col>
-                            </Row>
-                        ))
-                    }
-                </Container>
-                {
-                    this.state.isWorking ?
-                    <Button variant="primary" type="submit" style={generalStyles.button} disabled><LoadingSpinner/></Button> :
-                    <Button className="btn btn-primary" onClick={this.gradeStudents} disabled={Object.keys(this.state.studentGrades).length === 0}>Grade students</Button>
-                }
+    const { course } = props
+    return (
+        <div style={{ padding: '1rem' }}>
+            <h4>{course.name}</h4>
+            <input type="text"
+                id="query"
+                placeholder='Search...'
+                className="search"
+                onChange={onQueryChange}/>
+                
+            <Container>
+                <Row style={listStyles.borderBottom}>
+                    <Col>Student name</Col>
+                    <Col>Student address</Col>
+                    <Col xs={'auto'}>Grade</Col>
+                </Row>
+                <Pagination 
+                    data={searchedStudents}
+                    RenderComponent={GradeStudentRow}
+                    func={gradeChanged}
+                    pageLimit={5}
+                    dataLimit={5}
+                />
+            </Container>
+            {
+                isWorking ?
+                <Button variant="primary" type="submit" style={generalStyles.button} disabled><LoadingSpinner/></Button> :
+                <Button className="btn btn-primary" onClick={gradeStudents} disabled={!gradeEnabled}>Grade students</Button>
+            }
 
-            </div>
-        )
-    }
+        </div>
+    )
 }
 
 const mapStateToProps = (state, ownProps) => {

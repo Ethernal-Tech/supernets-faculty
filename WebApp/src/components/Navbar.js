@@ -31,10 +31,7 @@ class Navbar extends React.Component {
     }
 
     render() {
-        const { location } = this.props
-        if (location.pathname === '/certificate') {
-            return null
-        }
+        const { location, selectedAccount, userName } = this.props
 
         return (
             <>
@@ -51,11 +48,11 @@ class Navbar extends React.Component {
                         </ul> */}
                     </div>
                     {
-                        !!this.props.selectedAccount &&
+                        !!selectedAccount &&
                         <div style={{ color: 'white', fontSize: 14 }}>
-                            {this.props.userName}
+                            {userName}
                             <br />
-                            {this.props.selectedAccount}
+                            {selectedAccount}
                         </div>
                     }
                 </nav>

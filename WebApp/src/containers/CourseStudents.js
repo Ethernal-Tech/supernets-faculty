@@ -1,52 +1,68 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
 
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { listStyles } from '../styles'
 import { contractToGrade }  from '../utils/userUtils'
+import Pagination from '../components/Pagination'
+import CourseStudentRow from '../components/CourseStudentRow'
 
-class CourseStudents extends React.Component {
-    state = {
-        updatedGradesByStudent: {}
+function CourseStudents(props) {
+
+    const [query, setQuery] = useState('');
+    const [students, setStudents] = useState([]);
+    const [searchedStudents, setSearchedStudents] = useState([]);
+
+    useEffect(() => {
+        let tempList = props.courseStudents
+        setStudents(tempList)
+        setSearchedStudents(search(tempList, query))
+    }, [props.courseStudents])
+
+    const getStudentGrade = (studentId) => {
+        return contractToGrade.get(props.gradesByStudent.find(x => x.studentId === studentId).grade)
     }
 
-    onEnroll = async studentAddr => this.props.enrollStudentToCourse(this.props.course.id, studentAddr, this.props.selectedAccount)
+    const onQueryChange = ({target}) => {
+        let newStudents = search(students, target.value)
 
-    render() {
-        const { course, courseStudents, gradesByStudent } = this.props
-        return (
-            <div style={{ padding: '1rem' }}>
-                <h4>{course.name}</h4>
-                
-                <Container>
-                    <Row style={listStyles.borderBottom}>
-                        <Col>Student</Col>
-                        <Col>Student address</Col>
-                        <Col xs={'auto'}>Grade</Col>
-                    </Row>
-
-                    {
-                        courseStudents.map((student, ind) => (
-                            <Row key={`stud_${student.id}`} style={ind === courseStudents.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }}>
-                                <Col>
-                                    <Link to={`/student?stud=${student.id}`}>{student.firstName} {student.lastName}</Link>
-                                </Col>
-                                <Col>{student.id}</Col>
-                                <Col xs={'auto'}>
-                                    {
-                                        contractToGrade.get(gradesByStudent.find(x => x.studentId === student.id).grade)
-                                    }
-                                </Col>
-                            </Row>
-                        ))
-                    }
-                </Container>
-            </div>
-        )
+        setQuery(target.value)
+        setSearchedStudents(newStudents)
     }
+
+    const keys = ["firstName", "lastName", "id"]
+    const search = (data, query) => {
+        return data.filter(item => keys.some(key => item[key].toLowerCase().includes(query.toLowerCase())))
+    }
+
+    const { course } = props
+    return (
+        <div style={{ padding: '1rem' }}>
+            <h4>{course.name}</h4>
+            <input type="text"
+                id="query"
+                placeholder='Search...'
+                className="search"
+                onChange={onQueryChange}/>
+
+            <Container>
+                <Row style={listStyles.borderBottom}>
+                    <Col>Student name</Col>
+                    <Col>Student address</Col>
+                    <Col xs={'auto'}>Grade</Col>
+                </Row>
+                <Pagination 
+                    data={searchedStudents}
+                    RenderComponent={CourseStudentRow}
+                    func={getStudentGrade}
+                    pageLimit={5}
+                    dataLimit={5}
+                />
+            </Container>
+        </div>
+    )
 }
 
 const mapStateToProps = (state, ownProps) => {

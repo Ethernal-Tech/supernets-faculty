@@ -58,11 +58,11 @@ export const getUserName = state => {
         case USER_ROLES.PROFESSOR:
             const professor = (state.users.professors || [])
                 .find(x => x.id.toLowerCase() === state.eth.selectedAccount.toLowerCase())
-            return professor ? professor.name : ''
+            return professor ? `${professor.firstName} ${professor.lastName}` : ''
         case USER_ROLES.STUDENT:
             const student = (state.users.students || [])
                 .find(x => x.id.toLowerCase() === state.eth.selectedAccount.toLowerCase())
-            return student ? student.name : ''
+            return student ? `${student.firstName} ${student.lastName}` : ''
         case USER_ROLES.ADMIN:
             return 'admin'
         default:

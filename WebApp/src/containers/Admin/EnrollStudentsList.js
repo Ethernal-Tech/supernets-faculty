@@ -120,7 +120,7 @@ function EnrollStudentsList(props) {
                 <Pagination 
                         data={searchedStudents}
                         RenderComponent={EnrollStudentRow}
-                        onCheck={onItemCheck}
+                        func={onItemCheck}
                         pageLimit={5}
                         dataLimit={5}
                     />

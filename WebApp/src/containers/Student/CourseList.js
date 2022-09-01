@@ -13,7 +13,7 @@ import { contractToGrade }  from '../../utils/userUtils'
 import { createMetadata, uploadMetadata } from '../../utils/nftUtils'
 import { address } from '../../faculty'
 
-class CourseList extends React.Component {
+function CourseList(props) {
     componentDidMount() {
         this.load()
     }

@@ -3,23 +3,23 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { Link } from 'react-router-dom'
 
-function EnrollStudentRow({student, onItemCheck}) {
+function EnrollStudentRow({object, func}) {
 
     return (
-        <Row key={`stud_${student.id}`} >
-            <Col>
+        <Row key={`stud_${object.id}`} >
+            <Col xs={'auto'}>
                 <input
                     type="checkbox"
-                    checked={student.selected}
+                    checked={object.selected}
                     className="form-check-input"
-                    id={student.id}
-                    onChange={(e) => onItemCheck(e, student)}
+                    id={object.id}
+                    onChange={(e) => func(e, object)}
                 />
             </Col>
             <Col>
-                <Link to={`/student?stud=${student.id}`}>{student.firstName} {student.lastName}</Link>
+                <Link to={`/student?stud=${object.id}`}>{object.firstName} {object.lastName}</Link>
             </Col>
-            <Col>{student.id}</Col>
+            <Col>{object.id}</Col>
         </Row>
     );
   }

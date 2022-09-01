@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import '../paginationStyles.css'
 
-function Pagination({ data, RenderComponent, onCheck, pageLimit, dataLimit }) {
+function Pagination({ data, RenderComponent, func, pageLimit, dataLimit }) {
     const [pages, setPages] = useState(Math.ceil(data.length / dataLimit));
     const [currentPage, setCurrentPage] = useState(1);
   
@@ -40,7 +40,7 @@ function Pagination({ data, RenderComponent, onCheck, pageLimit, dataLimit }) {
         <div>
           <div className="dataContainer">
             {getPaginatedData().map((d, idx) => (
-              <RenderComponent key={idx} student={d} onItemCheck={onCheck} />
+              <RenderComponent key={idx} object={d} func={func} />
             ))}
           </div>
 
