@@ -13,8 +13,8 @@ import AddCourseComponent from '../../components/AddCourseComponent'
 
 class ProfessorCourses extends React.Component {
     componentDidMount() {
-        const { professor, loadProfessorCourses } = this.props
-        loadProfessorCourses(professor.id, this.props.selectedEvent.eventId)
+        const { professor, loadProfessorCourses, selectedEvent } = this.props
+        loadProfessorCourses(professor.id, selectedEvent.eventId)
     }
 
     onSubmit = async (title, description, startTime, endTime, venue, points) => 

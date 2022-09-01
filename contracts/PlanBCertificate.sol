@@ -32,7 +32,9 @@ contract PlanBCertificate is ERC721, ERC721URIStorage {
         _;
     }
 
-    constructor() ERC721("PlanB Certificate", "PLANB") {}
+    constructor() ERC721("PlanB Certificate", "PLANB") {
+        admin = msg.sender;
+    }
 
     function addEventAdmin(uint eventId, address adminAddress) external onlyAdmin {
         require(events[eventId].eventAdmins[adminAddress] == false);

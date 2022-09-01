@@ -6,25 +6,16 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
 
-import { loadProfessorCoursesAction, loadStudentCoursesAction, generateCertificateAction } from '../../actions/coursesActions'
+import { loadStudentCoursesAction, generateCertificateAction } from '../../actions/coursesActions'
 import { listStyles } from '../../styles'
-import { USER_ROLES } from '../../utils/constants'
 import { contractToGrade }  from '../../utils/userUtils'
 import { createMetadata, uploadMetadata } from '../../utils/nftUtils'
 import { address } from '../../faculty'
 
 class CourseList extends React.Component {
     componentDidMount() {
-        this.load()
-    }
-
-    load = async () => {
-        const { userRole, student, loadStudentCourses, loadProfessorCourses, selectedAccount } = this.props
-        if (userRole === USER_ROLES.PROFESSOR) {
-            await loadProfessorCourses(selectedAccount)
-        }
-
-        await loadStudentCourses(student.id, this.props.selectedEvent.eventId)
+        const { student, loadStudentCourses, selectedEvent } = this.props
+        loadStudentCourses(student.id, selectedEvent.eventId)
     }
 
     onGenerateCertificate = async evt => {
@@ -91,20 +82,9 @@ const mapStateToProps = (state, ownProps) => {
             grade
         }
     })
-
-    const selectedAccount = state.eth.selectedAccount
-    if (ownProps.userRole === USER_ROLES.STUDENT) {
-        if (selectedAccount !== ownProps.student.id) {
-            studentCourses = studentCourses.map(x => ({ ...x, grade: undefined }))
-        }
-    }
-    else if (ownProps.userRole === USER_ROLES.PROFESSOR) {
-        const professorCoursesSet = new Set((state.courses.coursesByProfessorAddr || {})[selectedAccount] || [])
-        studentCourses = studentCourses.map(x => ({ ...x, grade: professorCoursesSet.has(x.id) ? x.grade : undefined }))
-    }
     
     return {
-        selectedAccount,
+        selectedAccount: state.eth.selectedAccount,
         studentCourses: studentCourses,
         selectedEvent: state.event.selectedEvent,
     }
@@ -112,7 +92,6 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({
     loadStudentCourses: (accountAddress, eventId) => loadStudentCoursesAction(accountAddress, eventId, dispatch),
-    loadProfessorCourses: professorAddr => loadProfessorCoursesAction(professorAddr, dispatch),
     generateCertificate: (studentAddr, selectedAccount, ipfsURI, eventId) => generateCertificateAction(studentAddr, selectedAccount, ipfsURI, eventId)
 })
 

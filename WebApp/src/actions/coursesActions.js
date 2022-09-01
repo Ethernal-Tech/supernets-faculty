@@ -58,7 +58,7 @@ export const loadStudentCoursesAction = async (accountAddress, eventId, dispatch
 
 export const enrollStudentsToCourseAction = async (courseId, studentAddrs, selectedAccount, eventId, dispatch) => {
     try {
-        await faculty.methods.enrollCourseMultiple(courseId, studentAddrs).send({ from: selectedAccount });
+        await faculty.methods.enrollCourseMultiple(courseId, studentAddrs, eventId).send({ from: selectedAccount });
     }
     catch (ex) {
         EventListenerService.notify("error", ex)
@@ -70,7 +70,7 @@ export const enrollStudentsToCourseAction = async (courseId, studentAddrs, selec
 
 export const gradeStudentsAction = async (courseId, studentGrades, selectedAccount, eventId, dispatch) => {
     try {
-        await faculty.methods.gradeStudents(courseId, studentGrades).send({ from: selectedAccount });
+        await faculty.methods.gradeStudents(courseId, studentGrades, eventId).send({ from: selectedAccount });
     }
     catch (ex) {
         EventListenerService.notify("error", ex)
