@@ -27,7 +27,7 @@ class AddCourseComponent extends React.Component {
 
     onSubmit = async event => {
         event.preventDefault()
-        if (this.state.title && this.state.description && this.state.startTime && this.state.endTime && this.state.venue && this.state.points) {
+        if (this.state.title && this.state.description && this.state.startTime && this.state.endTime && this.state.venue && this.state.points && !isNaN(this.state.points)) {
             this.setState({ isWorking: true })
             const startTimeMs = new Date(this.state.startTime).getTime()
             const endTimeMs = new Date(this.state.endTime).getTime()

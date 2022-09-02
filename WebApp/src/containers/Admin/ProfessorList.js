@@ -35,7 +35,19 @@ function ProfessorList(props) {
 
     const keys = ["firstName", "lastName", "id"]
     const search = (data, query) => {
-        return data.filter(item => keys.some(key => item[key].toLowerCase().includes(query.toLowerCase())))
+        let multiFilter
+        if (query !== '') {
+            multiFilter = []
+            let multiQuery = query.split(' ')
+            multiQuery.forEach(mq => { if (mq === '') return
+                multiFilter.push(data.filter(item => keys.some(key => item[key].toLowerCase().includes(mq.toLowerCase()))))
+            })
+
+            return multiFilter.reduce((p, c) => p.filter(e => c.includes(e)))
+        }
+    
+        return data
+        // return data.filter(item => keys.some(key => item[key].toLowerCase().includes(query)))
     }
 
     return (
@@ -56,8 +68,8 @@ function ProfessorList(props) {
                 <Pagination 
                     data={searchedProfessors}
                     RenderComponent={ProfessorRow}
-                    pageLimit={2}
-                    dataLimit={2}
+                    pageLimit={5}
+                    dataLimit={5}
                 />
             </Container>
             {
