@@ -2,7 +2,7 @@ import React from 'react'
 
 class EventComponent extends React.Component {
     render() {
-        const { title, description, venue, location, time } = this.props.event
+        const { title, venue } = this.props.event
         return (
             <>
                 <p>{title}</p>
