@@ -1,12 +1,15 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { addEventAction, loadAllEventsAction, setSelectedEventAction } from '../actions/eventActions'
 import EventComponent from '../components/EventComponent'
 import AddEventComponent from '../components/AddEventComponent'
 import { isUserAdmin } from '../utils/userUtils'
-
+import useCollapse from 'react-collapsed'
 
 function EventList(props) {
+    const [isExpanded, setExpanded] = useState(false)
+    const { getCollapseProps, getToggleProps } = useCollapse({ isExpanded })
+
     useEffect(() => {
         props.loadAllEvents()
     }, [])
@@ -23,15 +26,24 @@ function EventList(props) {
                 <h2 className='text-center'>Events</h2>
                 <div className='row hidden-md-up'>
                 {
-                    props.events.map((event) => (
-                        <EventComponent event={event} onEventClick={onEventClick}/>
+                    props.events.map((event, idx) => (
+                        <EventComponent key={idx} event={event} onEventClick={onEventClick}/>
                     ))
                 }
                 </div>
             </div>
             {
-                props.isAdmin && 
-                <AddEventComponent onSubmit={onSubmit} />
+                //props.isAdmin && 
+                <div>
+                    <button
+                        {...getToggleProps({
+                        onClick: () => setExpanded((prevExpanded) => !prevExpanded),
+                        })}
+                    >
+                        {isExpanded ? 'Collapse' : 'Expand'}
+                    </button>
+                    <section {...getCollapseProps()}><AddEventComponent onSubmit={onSubmit} /></section>
+                </div>
             }
         </div>
     )
