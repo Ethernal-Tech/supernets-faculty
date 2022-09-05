@@ -1,46 +1,40 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
 import { addEventAction, loadAllEventsAction, setSelectedEventAction } from '../actions/eventActions'
 import EventComponent from '../components/EventComponent'
 import AddEventComponent from '../components/AddEventComponent'
 import { isUserAdmin } from '../utils/userUtils'
 
 
-class EventList extends React.Component {
-
-    componentDidMount() {
-        this.props.loadAllEvents()
-    }
-
-    onEventClick(e, props, event){
+function EventList(props) {
+    useEffect(() => {
+        props.loadAllEvents()
+    }, [])
+    
+    const onEventClick = (event) => {
         props.setSelectedEvent(event)
     }
 
-    onSubmit = async (title, location, venue, time, description) => this.props.addEvent(title, location, venue, time, description, this.props.selectedAccount)
+    const onSubmit = async (title, location, venue, time, description) => props.addEvent(title, location, venue, time, description, props.selectedAccount)
 
-    render() {
-        const { events } = this.props
-        return (
-            <div style={{ padding: '1rem' }}>
-                <h4>Events</h4>
-                
+    return (
+        <div style={{ padding: '1rem' }}>            
+            <div className='container col-md-8'>
+                <h2 className='text-center'>Events</h2>
+                <div className='row hidden-md-up'>
                 {
-                    events.map((event, idx) => (
-                        <li key={idx}>
-                            <Link to={"/event"} onClick={e => this.onEventClick(e, this.props, event)}>
-                                <EventComponent event={event}/>
-                            </Link>
-                        </li>
+                    props.events.map((event) => (
+                        <EventComponent event={event} onEventClick={onEventClick}/>
                     ))
                 }
-                {
-                    this.props.isAdmin && 
-                    <AddEventComponent onSubmit={this.onSubmit} />
-                }
+                </div>
             </div>
-        )
-    }
+            {
+                props.isAdmin && 
+                <AddEventComponent onSubmit={onSubmit} />
+            }
+        </div>
+    )
 }
 
 const mapStateToProps = state => {
