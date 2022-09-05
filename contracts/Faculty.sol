@@ -15,15 +15,19 @@ contract Faculty {
         uint256 time;
         string description;
 
+        uint adminsCount;
         address[] adminsAddresses;
         mapping(address => bool) eventAdmins;
 
+        uint professorsCount;
         address[] professorsAddresses;
         mapping(address => Professor) professors;
 
+        uint studentsCount;
         address[] studentsAddresses;
         mapping(address => Student) students;
 
+        uint coursesCount;
         uint[] coursesIds;
         mapping(uint => Course) courses;
 
@@ -141,6 +145,8 @@ contract Faculty {
     uint maxEventId;
     uint maxCourseId;
 
+    uint eventCount;
+
     mapping(uint => Event) events;
     PlanBCertificate planBCertificate;
 
@@ -153,7 +159,7 @@ contract Faculty {
     }
 
     function addEvent(string calldata title, string calldata location, string calldata venue, uint256 time, string calldata description) external onlyAdmin {
-        maxEventId += 1;
+        maxEventId ++;
 
         events[maxEventId].title = title;
         events[maxEventId].location = location;
@@ -162,12 +168,13 @@ contract Faculty {
         events[maxEventId].description = description;
 
         events[maxEventId].exist = true;
+        eventCount ++;
     }
 
     function addCourse(string calldata title, string calldata description, uint256 startTime, uint256 endTime, string calldata venue, address professor, uint points, uint eventId) external eventAdmin(eventId) eventExists(eventId) {
         require(events[eventId].professors[professor].exist == true);
 
-        maxCourseId += 1;
+        maxCourseId ++;
 
         events[eventId].courses[maxCourseId].title = title;
         events[eventId].courses[maxCourseId].description = description;
@@ -181,6 +188,8 @@ contract Faculty {
         
         events[eventId].professors[professor].eventCourses.push(maxCourseId);
         events[eventId].coursesIds.push(maxCourseId);
+
+        events[eventId].coursesCount ++;
     }
 
     function addEventAdmin(uint eventId, address adminAddress) external onlyAdmin eventExists(eventId) canAddAddress(eventId, adminAddress) {
@@ -188,11 +197,14 @@ contract Faculty {
         events[eventId].adminsAddresses.push(adminAddress);
 
         planBCertificate.addEventAdmin(eventId, adminAddress);
+        events[eventId].adminsCount ++;
     }
 
     function addProfessor(address profAddress, string calldata firstName, string calldata lastName, string calldata country, string calldata expertise, uint eventId) external eventAdmin(eventId) eventExists(eventId) canAddAddress(eventId, profAddress) {
         populateProfessor(profAddress, firstName, lastName, country, expertise, eventId);
         events[eventId].professorsAddresses.push(profAddress);
+
+        events[eventId].professorsCount ++;
     }
 
     function editProfessor(address profAddress, string calldata firstName, string calldata lastName, string calldata country, string calldata expertise, uint eventId) external eventAdmin(eventId) eventExists(eventId) {
@@ -203,6 +215,8 @@ contract Faculty {
     function addStudent(address studAddress, string calldata firstName, string calldata lastName, string calldata country, uint eventId) external eventAdmin(eventId) eventExists(eventId) canAddAddress(eventId, studAddress) {
         populateStudent(studAddress, firstName, lastName, country, eventId);
         events[eventId].studentsAddresses.push(studAddress);
+
+        events[eventId].studentsCount ++;
     }
 
     function editStudent(address studAddress, string calldata firstName, string calldata lastName, string calldata country, uint eventId) external eventAdmin(eventId) eventExists(eventId) {
@@ -243,7 +257,7 @@ contract Faculty {
     // Get functions
 
     function getAllEvents() external view returns(EventView[] memory) {
-        EventView[] memory eventsArray = new EventView[](maxEventId);
+        EventView[] memory eventsArray = new EventView[](eventCount);
 
         for (uint i = 1; i <= maxEventId; i++) {
             eventsArray[i-1] = EventView({
