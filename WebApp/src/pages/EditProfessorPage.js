@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router'
 import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
@@ -11,85 +12,73 @@ import { connect } from 'react-redux'
 import { editProfessorAction } from '../actions/userActions'
 import withRouter from '../utils/withRouter'
 
-class EditProfessorPage extends React.Component {
-    constructor(props) {
-        super(props)
-        this.onChange = this.onChange.bind(this)
-    }
+function EditProfessorPage(props) {
 
-    state = {
-        isWorking: false,
-        addr: '',
-        firstName: '',
-        lastName: '',
-        country: '',
-        expertise: '',
-    }
+    const [isWorking, setIsWorking] = useState(false);
+    const [addr, setAddr] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [country, setCountry] = useState('');
+    const [expertise, setExpertise] = useState('');
 
-    componentDidMount() {
-        const { professor } = this.props
+    let navigate = useNavigate()
 
-        this.setState({ addr: professor.id })
-        this.setState({ firstName: professor.firstName })
-        this.setState({ lastName: professor.lastName })
-        this.setState({ country: professor.country })
-        this.setState({ expertise: professor.expertise })
-    }
+    useEffect(() => {
+        setAddr(props.professor.id)
+        setFirstName(props.professor.firstName)
+        setLastName(props.professor.lastName)
+        setCountry(props.professor.country)
+        setExpertise(props.professor.expertise)
+    }, [])
 
-    onSubmit = async evt => {
+    const onSubmit = async evt => {
         evt.preventDefault()
-        if (this.state.addr && this.state.firstName && this.state.lastName && this.state.country && this.state.expertise) {
-            this.setState({ isWorking: true })
-            await this.props.editProfessor(this.state.addr, this.state.firstName, this.state.lastName, this.state.country, this.state.expertise, this.props.selectedEvent.eventId, this.props.selectedAccount)
-            this.setState({ addr: '', firstName: '', lastName: '', country: '', expertise: '', isWorking: false })
+        if (addr && firstName && lastName && country && expertise) {
+            setIsWorking(true)
+            await props.editProfessor(addr, firstName, lastName, country, expertise, props.selectedEvent.eventId, props.selectedAccount)
+            navigate('/event?tab=professors')
         } else {
             EventListenerService.notify("error", 'fields not populated!')
         }
     }
 
-    onChange = ({target}) => {
-        this.setState({ [target.id]: target.value })
-    }
-
-    render() {
-        return (
-            <Container style={{ paddingTop: 20 }}>
-                <Form onSubmit={this.onSubmit}>
-                    <Row>
-                        <Col>
-                            <Form.Control id="addr" type="text" value={this.state.addr} onChange={this.onChange} disabled={true} />
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <Form.Control id="firstName" type="text" placeholder="Enter first name" value={this.state.firstName} onChange={this.onChange} />
-                        </Col>
-                        <Col>
-                            <Form.Control id="lastName" type="text" placeholder="Enter last name" value={this.state.lastName} onChange={this.onChange} />
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <Form.Control id="country" type="text" placeholder="Enter country" value={this.state.country} onChange={this.onChange} />
-                        </Col>
-                        <Col>
-                            <Form.Control id="expertise" type="text" placeholder="Enter expertise" value={this.state.expertise} onChange={this.onChange} />
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col xs={'auto'}>
-                        {
-                            this.state.isWorking ?
-                            <Button variant="primary" type="submit" style={generalStyles.button} disabled><LoadingSpinner /></Button>
-                            :
-                            <Button variant="primary" type="submit" style={generalStyles.button}>Edit</Button>
-                        }
-                        </Col>
-                    </Row>
-                </Form>
-            </Container>
-        )
-    }
+    return (
+        <Container style={{ paddingTop: 20 }}>
+            <Form onSubmit={onSubmit}>
+                <Row>
+                    <Col>
+                        <Form.Control id="addr" type="text" value={addr} onChange={e => setAddr(e.target.value)} disabled={true} />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Form.Control id="firstName" type="text" placeholder="Enter first name" value={firstName} onChange={e => setFirstName(e.target.value)} />
+                    </Col>
+                    <Col>
+                        <Form.Control id="lastName" type="text" placeholder="Enter last name" value={lastName} onChange={e => setLastName(e.target.value)} />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Form.Control id="country" type="text" placeholder="Enter country" value={country} onChange={e => setCountry(e.target.value)} />
+                    </Col>
+                    <Col>
+                        <Form.Control id="expertise" type="text" placeholder="Enter expertise" value={expertise} onChange={e => setExpertise(e.target.value)} />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col xs={'auto'}>
+                    {
+                        isWorking ?
+                        <Button variant="primary" type="submit" style={generalStyles.button} disabled><LoadingSpinner /></Button>
+                        :
+                        <Button variant="primary" type="submit" style={generalStyles.button}>Edit</Button>
+                    }
+                    </Col>
+                </Row>
+            </Form>
+        </Container>
+    )
 }
 
 const mapStateToProps = (state, ownProps) => {

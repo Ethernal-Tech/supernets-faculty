@@ -35,19 +35,17 @@ function ProfessorList(props) {
 
     const keys = ["firstName", "lastName", "id"]
     const search = (data, query) => {
-        let multiFilter
         if (query !== '') {
-            multiFilter = []
+            let filteredData = data
             let multiQuery = query.split(' ')
             multiQuery.forEach(mq => { if (mq === '') return
-                multiFilter.push(data.filter(item => keys.some(key => item[key].toLowerCase().includes(mq.toLowerCase()))))
+                filteredData = filteredData.filter(item => keys.some(key => item[key].toLowerCase().includes(mq.toLowerCase())))
             })
 
-            return multiFilter.reduce((p, c) => p.filter(e => c.includes(e)))
+            return filteredData
         }
     
         return data
-        // return data.filter(item => keys.some(key => item[key].toLowerCase().includes(query)))
     }
 
     return (

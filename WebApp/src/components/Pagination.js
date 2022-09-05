@@ -49,7 +49,7 @@ function Pagination({ data, RenderComponent, func, pageLimit, dataLimit }) {
               onClick={goToPreviousPage}
               className={`prev ${currentPage === 1 ? 'disabled' : ''}`}
             >
-              prev
+              Prev
             </button>
       
             {getPaginationGroup().map((item, index) => (
@@ -64,9 +64,9 @@ function Pagination({ data, RenderComponent, func, pageLimit, dataLimit }) {
       
             <button
               onClick={goToNextPage}
-              className={`next ${currentPage === pages ? 'disabled' : ''}`}
+              className={`next ${(currentPage === pages || pages === 0) ? 'disabled' : ''}`}
             >
-              next
+              Next
             </button>
           </div>
         </div>
