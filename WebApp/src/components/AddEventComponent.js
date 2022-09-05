@@ -11,6 +11,7 @@ import { generalStyles } from '../styles'
 class AddEventComponent extends React.Component {
     constructor(props) {
         super(props)
+        this.dateNow = new Date().toISOString().split("T")[0]
         this.onChange = this.onChange.bind(this)
     }
 
@@ -56,7 +57,7 @@ class AddEventComponent extends React.Component {
                             <Form.Control id="venue" type="text" placeholder="Enter event venue" value={this.state.venue} onChange={this.onChange}/>
                         </Col>
                         <Col>
-                            <Form.Control id="time" type="datetime-local" value={this.state.time} onChange={this.onChange}/>
+                            <Form.Control id="time" type="date" min={this.dateNow} value={this.state.time} onChange={this.onChange}/>
                         </Col>
                     </Row>
                     <Row>
