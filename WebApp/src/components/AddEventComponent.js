@@ -22,6 +22,7 @@ class AddEventComponent extends React.Component {
         venue: '',
         description: '',
         time: '',
+        time2: '',
     }
 
     onSubmit = async event => {
@@ -46,34 +47,46 @@ class AddEventComponent extends React.Component {
                 <Form onSubmit={this.onSubmit}>
                     <Row>
                         <Col>
-                            <Form.Control id="title" type="text" placeholder="Enter event name" value={this.state.title} onChange={this.onChange}/>
+                            <Form.Label>Event name</Form.Label>
+                            <Form.Control id="title" type="text" value={this.state.title} onChange={this.onChange}/>
+                        </Col>
+                        <Col>
+                            <Form.Label>Location</Form.Label>
+                            <Form.Control id="location" type="text" value={this.state.location} onChange={this.onChange}/>
+                        </Col>
+                        <Col>
+                            <Form.Label>Venue</Form.Label>
+                            <Form.Control id="venue" type="text" value={this.state.venue} onChange={this.onChange}/>
                         </Col>
                     </Row>
                     <Row>
                         <Col>
-                            <Form.Control id="location" type="text" placeholder="Enter event location" value={this.state.location} onChange={this.onChange}/>
-                        </Col>
-                        <Col>
-                            <Form.Control id="venue" type="text" placeholder="Enter event venue" value={this.state.venue} onChange={this.onChange}/>
-                        </Col>
-                        <Col>
+                            <Form.Label>Start date</Form.Label>
                             <Form.Control id="time" type="date" min={this.dateNow} value={this.state.time} onChange={this.onChange}/>
                         </Col>
+                        <Col>
+                            <Form.Label>End date</Form.Label>
+                            <Form.Control id="time" type="date" min={this.dateNow} value={this.state.time2} onChange={this.onChange}/>
+                        </Col>
                     </Row>
                     <Row>
                         <Col>
-                            <Form.Control id="description" type="text" placeholder="Enter event description" value={this.state.description} onChange={this.onChange}/>
+                            <Form.Label>Description</Form.Label>
+                            {/* <Form.Control id="description" type="text" placeholder="Enter event description" value={this.state.description} onChange={this.onChange}/> */}
+                            <textarea id="description" type="text" className="form-control" value={this.state.description} onChange={this.onChange}/>
                         </Col>
                     </Row>
 
                     <Row>
-                        <Col xs={'auto'}>
-                        {
-                            this.state.isWorking ?
-                            <Button variant="primary" type="submit" style={generalStyles.button} disabled><LoadingSpinner /></Button>
-                            :
-                            <Button variant="primary" type="submit" style={generalStyles.button}>Add</Button>
-                        }
+                        <Col>
+                            <div className='text-end'>
+                                {
+                                    this.state.isWorking ?
+                                    <Button className="btn btn-secondary" type="submit" disabled><LoadingSpinner/></Button>
+                                    :
+                                    <Button className="btn btn-secondary" type="submit">Add</Button>
+                                }
+                            </div>
                         </Col>
                     </Row>
                 </Form>

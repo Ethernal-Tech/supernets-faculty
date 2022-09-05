@@ -21,7 +21,7 @@ function EventList(props) {
     const onSubmit = async (title, location, venue, time, description) => props.addEvent(title, location, venue, time, description, props.selectedAccount)
 
     return (
-        <div style={{ padding: '1rem' }}>            
+        <div style={{ padding: '1rem' }}>
             <div className='container col-md-8'>
                 <h2 className='text-center'>Events</h2>
                 <div className='row hidden-md-up'>
@@ -31,20 +31,24 @@ function EventList(props) {
                     ))
                 }
                 </div>
+                {
+                    //props.isAdmin && 
+                    <>
+                        <div className='text-end'>
+                            <button
+                                className='btn btn-secondary'
+                                {...getToggleProps({
+                                onClick: () => setExpanded((prevExpanded) => !prevExpanded),
+                                })}>
+                                {isExpanded ? 'Hide' : 'Add event'}
+                            </button>
+                        </div>
+                        <section {...getCollapseProps()}>
+                            <AddEventComponent onSubmit={onSubmit}/>
+                        </section>
+                    </>
+                }
             </div>
-            {
-                //props.isAdmin && 
-                <div>
-                    <button
-                        {...getToggleProps({
-                        onClick: () => setExpanded((prevExpanded) => !prevExpanded),
-                        })}
-                    >
-                        {isExpanded ? 'Collapse' : 'Expand'}
-                    </button>
-                    <section {...getCollapseProps()}><AddEventComponent onSubmit={onSubmit} /></section>
-                </div>
-            }
         </div>
     )
 }
