@@ -11,7 +11,6 @@ contract PlanBCertificate is ERC721, ERC721URIStorage {
     using Counters for Counters.Counter;
 
     struct Event {
-        address[] adminsAddresses;
         mapping(address => bool) eventAdmins;
 
         // Mapping from owner address to token ID
@@ -40,11 +39,15 @@ contract PlanBCertificate is ERC721, ERC721URIStorage {
         require(events[eventId].eventAdmins[adminAddress] == false);
 
         events[eventId].eventAdmins[adminAddress] = true;
-        events[eventId].adminsAddresses.push(adminAddress);
+    }
+
+    function deleteEventAdmin(uint eventId, address adminAddress) external onlyAdmin {
+        require(events[eventId].eventAdmins[adminAddress] == true);
+
+        events[eventId].eventAdmins[adminAddress] = false;
     }
 
     function safeMint(address to, string memory uri, uint eventId) external virtual eventAdmin(eventId) {
-        require(events[eventId].ownerToToken[to] == 0);
 
         _tokenIdCounter.increment();
         uint256 tokenId = _tokenIdCounter.current();
