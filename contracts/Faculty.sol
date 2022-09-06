@@ -7,6 +7,8 @@ import "./PlanBCertificate.sol";
 contract Faculty {
 
     enum CourseAttendance{ NOT_ENROLLED, GRADE1, GRADE2, GRADE3, GRADE4, GRADE5, FAILED, ENROLLED }
+    enum AddressArrayType{ ADMIN_ADDR, PROF_ADDR, STUD_ADDR, COURSE_STUD }
+    enum UintArrayType { COURSES_IDS, PROF_COURSES, STUD_COURSES }
 
     struct Event {
         string title;
@@ -73,54 +75,31 @@ contract Faculty {
         bool exist;
     }
 
-    struct EventView {
-        uint eventId;
-        string title;
-        string location;
-        string venue;
-        uint256 time;
-        string description;
+    struct StudentGrade {
+        address studentAddress;
+        CourseAttendance courseAttendance;
     }
 
-    struct CourseView {
-        uint id;
-        string title;
-        string description;      
+    struct CoursesParams {
+        string  title;
+        string  description;
         uint256 startTime;
         uint256 endTime;
         string venue;
         uint points;
-
-        address professorAddress;
-        string professorName;
-        address[] students;
+        address profAddress;
+        uint studentsCount;
+        bool exist;
     }
 
-    struct ProfessorView {
-        address id;
+    struct PersonParams {
         string firstName;
         string lastName;
         string country;
         string expertise;
-        uint[] courses;
-    }
 
-    struct StudentView {
-        address id;
-        string firstName;
-        string lastName;
-        string country;
-        uint[] courses;
-    }
-
-    struct GradeView {
-        uint courseId;
-        CourseAttendance courseAttendance;
-    }
-
-    struct StudentGrade {
-        address studentAddress;
-        CourseAttendance courseAttendance;
+        uint coursesCount;
+        bool exist;
     }
 
     modifier onlyAdmin {
@@ -147,12 +126,12 @@ contract Faculty {
 
     address public admin;
     
-    uint maxEventId;
-    uint maxCourseId;
+    uint256 public maxEventId;
+    uint256 public maxCourseId;
 
-    uint eventCount;
+    uint256 public eventCount;
 
-    mapping(uint => Event) events;
+    mapping(uint => Event) public events;
     PlanBCertificate planBCertificate;
 
     constructor(address certificateAddress) {
@@ -309,200 +288,6 @@ contract Faculty {
         }
     }
 
-    // Get functions
-
-    function getAllEvents() external view returns(EventView[] memory) {
-        EventView[] memory eventsArray = new EventView[](eventCount);
-        uint count = 0;
-
-        for (uint i = 1; i <= maxEventId; i++) {
-            if (events[i].exist == true){
-                eventsArray[count++] = EventView({
-                    eventId: i,
-                    title: events[i].title,
-                    location: events[i].location,
-                    venue: events[i].venue,
-                    time: events[i].time,
-                    description: events[i].description
-                });
-            }
-        }
-
-        return eventsArray;
-    }
-
-    function getAllCourses(uint eventId) external view eventExists(eventId) returns(CourseView[] memory) {
-        CourseView[] memory coursesArray = new CourseView[](events[eventId].coursesCount);
-        uint count = 0;
-
-        for (uint i = 0; i < events[eventId].coursesIds.length; i++) {
-            uint id = events[eventId].coursesIds[i];
-            if (events[eventId].courses[id].exist == true) {                
-                coursesArray[count] = CourseView({
-                    id: id,
-                    title: events[eventId].courses[id].title,
-                    description: events[eventId].courses[id].description,
-                    startTime: events[eventId].courses[id].startTime,
-                    endTime: events[eventId].courses[id].endTime,
-                    venue: events[eventId].courses[id].venue,
-                    points: events[eventId].courses[id].points,
-                    professorAddress: address(0),
-                    professorName: "",
-                    students: new address[](events[eventId].courses[id].studentsCount)
-                });
-
-                address profAddress = events[eventId].courses[id].professor;
-                if (events[eventId].professors[profAddress].exist) {
-                    coursesArray[count].professorAddress = profAddress;
-                    coursesArray[count].professorName = string(abi.encodePacked(
-                        events[eventId].professors[events[eventId].courses[id].professor].firstName, " ", 
-                        events[eventId].professors[events[eventId].courses[id].professor].lastName));
-                }
-
-                uint studentsCounter;
-                for (uint j = 0; j < events[eventId].courses[id].students.length; j++) {
-                    address studAddr = events[eventId].courses[id].students[j];
-                    if (events[eventId].courses[id].enrolledStudents[studAddr]) {
-                        coursesArray[count].students[studentsCounter++] = studAddr;
-                    }
-                }
-
-                count++;
-            }
-        }
-
-        return coursesArray;
-    }
-
-    function getAllAdmins(uint eventId) external view eventExists(eventId) returns(address[] memory) {
-        address[] memory adminsAddresses = new address[](events[eventId].adminsCount);
-        uint count = 0;
-
-        for (uint i = 0; i < events[eventId].adminsAddresses.length; i++) {
-            address adminAddr = events[eventId].adminsAddresses[i];
-            if (events[eventId].eventAdmins[adminAddr] == true) {
-                adminsAddresses[count++] = adminAddr;
-            }
-        }
-
-        return events[eventId].adminsAddresses;
-    }
-
-    function getAllProfessors(uint eventId) external view eventExists(eventId) returns(ProfessorView[] memory) {   
-        ProfessorView[] memory professorsArray = new ProfessorView[](events[eventId].professorsCount);
-        uint profCounter;
-
-        for (uint i = 0; i < events[eventId].professorsAddresses.length; i++) {
-            address profAddress = events[eventId].professorsAddresses[i];
-
-            if (events[eventId].professors[profAddress].exist) {
-                professorsArray[profCounter] = ProfessorView({
-                    id: profAddress,
-                    firstName: events[eventId].professors[profAddress].firstName,
-                    lastName: events[eventId].professors[profAddress].lastName,
-                    country: events[eventId].professors[profAddress].country,
-                    expertise: events[eventId].professors[profAddress].expertise,
-                    courses: new uint[](events[eventId].professors[profAddress].coursesCount)
-                }); 
-
-                uint courseCount = 0;
-                for (uint j = 0; j < events[eventId].professors[profAddress].eventCourses.length; j++) {
-                    uint courseId = events[eventId].professors[profAddress].eventCourses[j];
-                    if (events[eventId].courses[courseId].exist) {
-                        professorsArray[profCounter].courses[courseCount++] = courseId;
-                    }
-                }
-
-                profCounter++;
-            }
-        }
-
-        return professorsArray;
-    }
-
-    function getAllStudents(uint eventId) external view eventExists(eventId) returns(StudentView[] memory) {
-        StudentView[] memory studentsArray = new StudentView[](events[eventId].studentsCount);
-        uint studentCounter;
-
-        for (uint i = 0; i < events[eventId].studentsAddresses.length; i++) {
-            address studAddress = events[eventId].studentsAddresses[i];
-
-            if (events[eventId].students[studAddress].exist) {
-                studentsArray[studentCounter] = StudentView({
-                    id: studAddress,
-                    firstName: events[eventId].students[studAddress].firstName,
-                    lastName: events[eventId].students[studAddress].lastName,
-                    country: events[eventId].students[studAddress].country,
-                    courses: events[eventId].students[studAddress].eventCourses
-                });
-
-                studentsArray[studentCounter].courses = new uint[](events[eventId].students[studAddress].coursesCount);
-                uint courseCount = 0;
-                for (uint j = 0; j < events[eventId].students[studAddress].eventCourses.length; j++) {
-                    uint courseId = events[eventId].students[studAddress].eventCourses[j];
-                    if (events[eventId].courses[courseId].exist) {
-                        studentsArray[studentCounter].courses[courseCount++] = courseId;
-                    }
-                }
-
-                studentCounter++;
-            }
-        }
-
-        return studentsArray;
-    }
-
-    function getStudentGrades(address studAddress, uint eventId) external view eventExists(eventId) returns(GradeView[] memory) {
-        require(events[eventId].students[studAddress].exist == true, "Student not found.");
-
-        GradeView[] memory grades = new GradeView[](events[eventId].students[studAddress].coursesCount);
-        uint count = 0;
-        
-        for (uint i = 0; i < events[eventId].students[studAddress].eventCourses.length; i++) {
-            uint courseId = events[eventId].students[studAddress].eventCourses[i];
-            if (events[eventId].courses[courseId].exist) {
-                grades[count++] = GradeView({
-                    courseId: courseId,
-                    courseAttendance: events[eventId].students[studAddress].coursesAttendance[courseId]
-                }); 
-            }     
-        }
-
-        return grades;
-    }
-
-    function getProfessorCourses(address professor, uint eventId) external view eventExists(eventId) returns(uint[] memory) {
-        require(events[eventId].professors[professor].exist == true, "Professor not found.");
-
-        uint[] memory coursesIds = new uint[](events[eventId].professors[professor].coursesCount);
-        uint count = 0;
-
-        for (uint i = 0; i < events[eventId].professors[professor].eventCourses.length; i++) {
-            uint courseId = events[eventId].professors[professor].eventCourses[i];
-            if (events[eventId].courses[courseId].exist) {
-                coursesIds[count++] = courseId;
-            }
-        }
-
-        return coursesIds;
-    }
-    
-    function getStudentCourses(address studentAddress, uint eventId) external view eventExists(eventId) returns(uint[] memory) {
-        require(events[eventId].students[studentAddress].exist == true, "Student not found.");
-
-        uint[] memory coursesIds = new uint[](events[eventId].students[studentAddress].coursesCount);
-        uint count = 0;
-
-        for (uint i = 0; i < events[eventId].students[studentAddress].eventCourses.length; i++) {
-            uint courseId = events[eventId].students[studentAddress].eventCourses[i];
-            if (events[eventId].courses[courseId].exist) {
-                coursesIds[count++] = courseId;
-            }
-        }
-
-        return coursesIds;
-    }
-
     function generateCertificate(address studentAddress, string memory uri, uint eventId) external eventAdmin(eventId) eventExists(eventId) {
         require(events[eventId].students[studentAddress].exist == true, "Student not found.");
         planBCertificate.safeMint(studentAddress, uri, eventId);
@@ -512,9 +297,84 @@ contract Faculty {
         return planBCertificate.getTokenForOwner(student, eventId);
     }
 
+    function getAddresses(uint eventId, AddressArrayType arrayType, uint courseId) external view returns(address[] memory) {
+        if (arrayType == AddressArrayType.ADMIN_ADDR) {
+            return events[eventId].adminsAddresses;
+        } else if (arrayType == AddressArrayType.PROF_ADDR) {
+            return events[eventId].professorsAddresses;
+        } else if (arrayType == AddressArrayType.STUD_ADDR) {
+            return events[eventId].studentsAddresses;
+        } else if (arrayType == AddressArrayType.COURSE_STUD) {
+            return events[eventId].courses[courseId].students;
+        }
+        
+        revert(); 
+    }
+
+    function getCoursesIds(uint eventId, UintArrayType arrayType, address userAddres) external view returns(uint[] memory) {
+        if (arrayType == UintArrayType.COURSES_IDS) {
+            return events[eventId].coursesIds;
+        } else if (arrayType == UintArrayType.PROF_COURSES) {
+            return events[eventId].professors[userAddres].eventCourses;
+        } else if (arrayType == UintArrayType.STUD_COURSES) {
+            return events[eventId].students[userAddres].eventCourses;
+        }
+        
+        revert(); 
+    }
+
+    function getCourse(uint eventId, uint courseId) external view returns(CoursesParams memory) {
+        Course storage course = events[eventId].courses[courseId];
+        return CoursesParams (
+            course.title, 
+            course.description,
+            course.startTime, 
+            course.endTime,
+            course.venue, 
+            course.points,
+            course.professor,
+            course.studentsCount, 
+            course.exist
+        );
+    }
+
+    function getProfessor(uint eventId, address profAddr) external view returns(PersonParams memory) {
+        Professor storage prof = events[eventId].professors[profAddr];
+
+        return PersonParams (
+            prof.firstName,
+            prof.lastName,
+            prof.country,
+            prof.expertise,
+            prof.coursesCount,
+            prof.exist
+        );
+    }
+
+    function getStudent(uint eventId, address studAddr) external view returns(PersonParams memory) {
+        Student storage student = events[eventId].students[studAddr];
+
+        return PersonParams (
+            student.firstName,
+            student.lastName,
+            student.country,
+            "",
+            student.coursesCount,
+            student.exist
+        );
+    }
+
+    function isStudentEnrolled(uint eventId, uint courseId, address studAddr) external view returns(bool) {
+        return events[eventId].courses[courseId].enrolledStudents[studAddr];
+    }
+
+    function getGrade(uint eventId, uint courseId, address studAddr)external view returns(CourseAttendance) {
+        return  events[eventId].students[studAddr].coursesAttendance[courseId];
+    }
+
     // Private functions
 
-    function isAdmin(uint eventId, address addr) private view returns(bool) {
+    function isAdmin(uint eventId, address addr) public view returns(bool) {
         return (events[eventId].eventAdmins[addr] || addr == admin);
     }
 
