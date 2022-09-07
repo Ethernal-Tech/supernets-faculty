@@ -68,6 +68,7 @@ contract FacultyState {
     }
 
     function deleteEvent(uint eventId) external onlyAdmin eventExists(eventId) {
+        require(events[eventId].coursesIds.length == 0);
         events[eventId].exist = false;
         eventCount--;
     }
@@ -95,6 +96,7 @@ contract FacultyState {
 
     function deleteCourse(uint courseId, uint eventId) external eventAdmin(eventId) eventExists(eventId) {
         require(courses[courseId].exist);
+        require(courses[courseId].students.length == 0);
 
         courses[courseId].exist = false;
 
@@ -233,20 +235,43 @@ contract FacultyState {
         return events[eventId];
     }
 
-    function getCourse(uint courseId) external view returns(FacultyStructs.Course memory) {
-        return courses[courseId];
+    function getCourses(uint[] calldata coursesIds) external view returns(FacultyStructs.Course[] memory) {
+        FacultyStructs.Course[] memory coursesArray = new FacultyStructs.Course[](coursesIds.length);
+        for (uint i = 0; i < coursesIds.length; i++) {
+            coursesArray[i] = courses[coursesIds[i]];
+        }
+
+        return coursesArray;
     }
 
-    function getProfessor(uint eventId, address addr) external view returns(FacultyStructs.Professor memory) {
-        return professors[getKey(addr, eventId)];
+    function getProfessors(uint eventId, address[] calldata profAddresses) external view returns(FacultyStructs.Professor[] memory) {
+        FacultyStructs.Professor[] memory profsArray = new FacultyStructs.Professor[](profAddresses.length);
+
+        for (uint i = 0; i < profAddresses.length; i++) {
+            profsArray[i] = professors[getKey(profAddresses[i], eventId)];
+        }
+
+        return profsArray;
     }
 
-    function getStudent(uint eventId, address addr) external view returns(FacultyStructs.Student memory) {
-        return students[getKey(addr, eventId)];
+    function getStudents(uint eventId, address[] calldata studentsAddresses) external view returns(FacultyStructs.Student[] memory) {
+        FacultyStructs.Student[] memory studentsArray = new FacultyStructs.Student[](studentsAddresses.length);
+
+        for (uint i = 0; i < studentsAddresses.length; i++) {
+            studentsArray[i] = students[getKey(studentsAddresses[i], eventId)];
+        }
+
+        return studentsArray;
     }
 
-    function getGrade(address studentAddress, uint courseId) external view returns(FacultyStructs.CourseGrade) {
-        return grades[getKey(studentAddress, courseId)];
+    function getGrades(address studentAddress, uint[] calldata coursesIds) external view returns(FacultyStructs.CourseGrade[] memory) {
+        FacultyStructs.CourseGrade[] memory gradesArray = new FacultyStructs.CourseGrade[](coursesIds.length);
+
+        for (uint i = 0; i < coursesIds.length; i++) {
+            gradesArray[i] = grades[getKey(studentAddress, coursesIds[i])];
+        }
+
+        return gradesArray;
     }
 
     //Private functions

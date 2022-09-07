@@ -35,13 +35,7 @@ contract FacultyReader {
     function getAllCourses(uint eventId) external view returns(FacultyStructs.Course[] memory) {
         FacultyStructs.Event memory ev = faculty.getEvent(eventId);
         require(ev.exist);
-
-        FacultyStructs.Course[] memory coursesArray = new FacultyStructs.Course[](ev.coursesIds.length);
-        for (uint i = 0; i < ev.coursesIds.length; i++) {
-            coursesArray[i] = faculty.getCourse(ev.coursesIds[i]);
-        }
-
-        return coursesArray;
+        return faculty.getCourses(ev.coursesIds);
     }
 
     function getAllAdmins(uint eventId) external view returns(address[] memory) {
@@ -55,47 +49,45 @@ contract FacultyReader {
         FacultyStructs.Event memory ev = faculty.getEvent(eventId);
         require(ev.exist);
 
-        FacultyStructs.Professor[] memory profArray = new FacultyStructs.Professor[](ev.professorsAddresses.length);
-        for (uint i = 0; i < ev.professorsAddresses.length; i++) {
-            profArray[i] = faculty.getProfessor(eventId, ev.professorsAddresses[i]);
-        }
-
-        return profArray;
+        return faculty.getProfessors(eventId, ev.professorsAddresses);
     }
 
     function getProfessorCourses(address professorAddress, uint eventId) external view returns(uint[] memory) {
         require(faculty.getEvent(eventId).exist);
-        return faculty.getProfessor(eventId, professorAddress).eventCourses;
+
+        address[] memory profAddrParam = new address[](1);
+        profAddrParam[0] = professorAddress;
+        return faculty.getProfessors(eventId, profAddrParam)[0].eventCourses;
     }
 
     function getAllStudents(uint eventId) external view returns(FacultyStructs.Student[] memory) {
         FacultyStructs.Event memory ev = faculty.getEvent(eventId);
         require(ev.exist);
 
-        FacultyStructs.Student[] memory studentArray = new FacultyStructs.Student[](ev.studentsAddresses.length);
-        for (uint i = 0; i < ev.studentsAddresses.length; i++) {
-            studentArray[i] = faculty.getStudent(eventId, ev.studentsAddresses[i]);
-        }
-
-        return studentArray;
+        return faculty.getStudents(eventId, ev.studentsAddresses);
     }
 
     function getStudentCourses(address studentAddress, uint eventId) external view returns(uint[] memory) {
         require(faculty.getEvent(eventId).exist);
-        return faculty.getStudent(eventId, studentAddress).eventCourses;
+
+        address[] memory studAddrParam = new address[](1);
+        studAddrParam[0] = studentAddress;
+        return faculty.getStudents(eventId, studAddrParam)[0].eventCourses;
     }
 
     function getStudentGrades(address studAddress, uint eventId) external view returns(GradeView[] memory) {
         require(faculty.getEvent(eventId).exist);
 
-        FacultyStructs.Student memory student = faculty.getStudent(eventId, studAddress);
+        address[] memory studAddrParam = new address[](1);
+        studAddrParam[0] = studAddress;
+        FacultyStructs.Student memory student = faculty.getStudents(eventId, studAddrParam)[0];
         require(student.exist == true);
 
         GradeView[] memory grades = new GradeView[](student.eventCourses.length);
+        FacultyStructs.CourseGrade[] memory gradesArray = faculty.getGrades(studAddress, student.eventCourses);
         
         for (uint i = 0; i < student.eventCourses.length; i++) {
-            FacultyStructs.CourseGrade grade = faculty.getGrade(studAddress, student.eventCourses[i]);
-            grades[i] = GradeView(student.eventCourses[i], grade);    
+            grades[i] = GradeView(student.eventCourses[i], gradesArray[i]);    
         }
 
         return grades;
