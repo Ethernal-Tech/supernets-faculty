@@ -90,4 +90,3 @@ contract PlanBCertificate is ERC721, ERC721URIStorage {
         super._burn(tokenId);
     }
 }
-
