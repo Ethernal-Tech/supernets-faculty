@@ -4,9 +4,9 @@ import { formatDate } from '../utils/utils'
 class EventDetails extends React.Component {
     constructor(props) {
         super(props)
-        const startDate = new Date(parseInt(props.selectedEvent.time))
+        const startDate = new Date(parseInt(props.selectedEvent.startDate))
         this.formatedDateStart = formatDate(startDate)
-        const endDate = new Date(parseInt(props.selectedEvent.time))
+        const endDate = new Date(parseInt(props.selectedEvent.endDate))
         this.formatedDateEnd = formatDate(endDate)
     }
 

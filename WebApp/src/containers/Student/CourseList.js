@@ -22,7 +22,7 @@ function CourseList(props) {
 
     useEffect(() => {
         if (courses.length == 0) {
-            props.loadStudentCourses(props.student.id, props.selectedEvent.eventId)
+            props.loadStudentCourses(props.student.id, props.selectedEvent.id)
     
             let temp = props.studentCourses
             setCourses(temp)
@@ -53,7 +53,7 @@ function CourseList(props) {
         const ipfsUri = await uploadMetadata(metadata);         
 
         console.log(ipfsUri)
-        await props.generateCertificate(props.student.id, props.selectedAccount, ipfsUri, props.selectedEvent.eventId)
+        await props.generateCertificate(props.student.id, props.selectedAccount, ipfsUri, props.selectedEvent.id)
     }
 
     const { student, studentCourses } = props

@@ -24,9 +24,9 @@ export const loadProfessorCoursesAction = async (professorAddr, eventId, dispatc
     }
 }
 
-export const addCourseAction = async (title, description, startTime, venue, professorAddr, points, eventId, selectedAccount, dispatch) => {
+export const addCourseAction = async (title, description, startTime, venue, points, professorAddr, eventId, selectedAccount, dispatch) => {
     try {
-        await faculty.methods.addCourse(title, description, startTime, venue, professorAddr, points, eventId).send({ from: selectedAccount });
+        await faculty.methods.addCourse(title, description, startTime, venue, points, professorAddr, eventId).send({ from: selectedAccount });
     }
     catch (ex) {
         EventListenerService.notify("error", ex)

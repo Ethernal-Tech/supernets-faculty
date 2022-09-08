@@ -6,9 +6,6 @@ class CourseDetailsComponent extends React.Component {
 
         const startDate = new Date(parseInt(props.course.startTime))
         this.formatedStartDate = startDate.toLocaleString()
-
-        const endDate = new Date(parseInt(props.course.endTime))
-        this.formatedEndDate = endDate.toLocaleString()
     }
 
     render() {
@@ -18,7 +15,6 @@ class CourseDetailsComponent extends React.Component {
                 <h3>{title}</h3>
                 <p>{description}</p>
                 <p>Start time: {this.formatedStartDate}</p>
-                <p>End time: {this.formatedEndDate}</p>
                 <p>Venue: {venue}</p>
                 <p>Points: {points}</p>
                 <br/>

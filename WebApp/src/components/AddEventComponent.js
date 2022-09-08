@@ -62,11 +62,11 @@ class AddEventComponent extends React.Component {
                     <Row>
                         <Col>
                             <Form.Label>Start date</Form.Label>
-                            <Form.Control id="time" type="date" min={this.dateNow} value={this.state.startDate} onChange={this.onChange}/>
+                            <Form.Control id="startDate" type="date" min={this.dateNow} value={this.state.startDate} onChange={this.onChange}/>
                         </Col>
                         <Col>
                             <Form.Label>End date</Form.Label>
-                            <Form.Control id="time" type="date" min={this.dateNow} value={this.state.endDate} onChange={this.onChange}/>
+                            <Form.Control id="endDate" type="date" min={this.state.startDate} value={this.state.endDate} onChange={this.onChange}/>
                         </Col>
                     </Row>
                     <Row>

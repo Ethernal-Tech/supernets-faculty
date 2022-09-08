@@ -68,8 +68,8 @@ function GradeStudentsList(props) {
         if (Object.keys(studentGrades).length !== 0) {
             setIsWorking(true)
             let grades = []
-            Object.entries(studentGrades).forEach(([studentAddress, courseAttendance]) => {
-                grades.push({studentAddress, courseAttendance})
+            Object.entries(studentGrades).forEach(([studentAddress, courseGrade]) => {
+                grades.push({studentAddress, courseGrade})
             })
             await props.gradeStudents(props.courseId, grades, props.selectedAccount, props.eventId)
             setIsWorking(false)
@@ -121,7 +121,7 @@ const mapStateToProps = (state, ownProps) => {
         selectedAccount: state.eth.selectedAccount,
         studentsToGrade,
         courseId: ownProps.course.id,
-        eventId: state.event.selectedEvent.eventId
+        eventId: state.event.selectedEvent.id
     }
 }
 

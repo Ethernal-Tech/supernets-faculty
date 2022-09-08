@@ -8,7 +8,7 @@ import Col from 'react-bootstrap/Col'
 import AddUserComponent from '../../components/AddUserComponent'
 import Pagination from '../../components/Pagination'
 import StudentRow from '../../components/RowComponents/StudentRow'
-import { addStudentAction } from '../../actions/userActions'
+import { addStudentAction, deleteStudentAction } from '../../actions/userActions'
 import { listStyles } from '../../styles'
 import { isEventAdmin } from '../../utils/userUtils'
 
@@ -24,13 +24,17 @@ function StudentList(props) {
         setSearchedStudents(search(tempList, query))
     }, [props.students])
 
-    const onSubmit = async (ad, fn, ln, cn, _) => props.addStudent(ad, fn, ln, cn, props.selectedEvent.eventId, props.selectedAccount)
+    const onSubmit = async (ad, fn, ln, cn, _) => props.addStudent(ad, fn, ln, cn, props.selectedEvent.id, props.selectedAccount)
 
     const onQueryChange = ({target}) => {
         let newStudents = search(allStudents, target.value)
 
         setQuery(target.value)
         setSearchedStudents(newStudents)
+    }
+
+    const onDelete = (studId) => {
+        props.deleteStudent(studId, props.selectedEvent.id, props.selectedAccount)
     }
 
     const keys = ["firstName", "lastName", "id"]
@@ -62,10 +66,13 @@ function StudentList(props) {
                 <Row style={listStyles.borderBottom}>
                     <Col>Name</Col>
                     <Col>Address</Col>
+                    <Col xs={"auto"}> </Col>
+                    <Col xs={"auto"}> </Col>
                 </Row>
                 <Pagination 
                     data={searchedStudents}
                     RenderComponent={StudentRow}
+                    func={onDelete}
                     pageLimit={5}
                     dataLimit={5}
                 />
@@ -89,7 +96,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    addStudent: (ad, fn, ln, cn, eId, admin) => addStudentAction(ad, fn, ln, cn, eId, admin, dispatch)
+    addStudent: (ad, fn, ln, cn, eId, admin) => addStudentAction(ad, fn, ln, cn, eId, admin, dispatch),
+    deleteStudent: (ad, eId, admin) => deleteStudentAction(ad, eId, admin, dispatch)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(StudentList)

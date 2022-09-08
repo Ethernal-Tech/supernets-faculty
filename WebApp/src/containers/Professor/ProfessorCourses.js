@@ -20,7 +20,7 @@ function ProfessorCourses(props) {
 
     useEffect(() => {
         if (courses.length == 0) {
-            props.loadProfessorCourses(props.professor.id, props.selectedEvent.eventId)
+            props.loadProfessorCourses(props.professor.id, props.selectedEvent.id)
     
             let temp = props.courses
             setCourses(temp)
@@ -41,7 +41,7 @@ function ProfessorCourses(props) {
     }
 
     const onSubmit = async (title, description, startTime, venue, points) => 
-         props.addCourse(title, description, startTime, venue, props.professor.id, points, props.selectedEvent.eventId, props.selectedAccount)
+         props.addCourse(title, description, startTime, venue, points, props.professor.id, props.selectedEvent.id, props.selectedAccount)
 
     const { professor, isAdmin } = props
     return (
@@ -92,7 +92,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({
     loadProfessorCourses: (professorAddr, eventId) => loadProfessorCoursesAction(professorAddr, eventId, dispatch),
-    addCourse: (title, description, startTime, venue, professorAddr, points, eventId, selectedAccount) => addCourseAction(title, description, startTime, venue, professorAddr, points, eventId, selectedAccount, dispatch),
+    addCourse: (title, description, startTime, venue, points, professorAddr, eventId, selectedAccount) => addCourseAction(title, description, startTime, venue, points, professorAddr, eventId, selectedAccount, dispatch),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfessorCourses)

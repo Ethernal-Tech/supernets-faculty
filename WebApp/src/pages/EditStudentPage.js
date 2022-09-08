@@ -33,7 +33,7 @@ function EditStudentPage(props) {
         evt.preventDefault()
         if (addr && firstName && lastName && country) {
             setIsWorking(true)
-            await props.editStudent(addr, firstName, lastName, country, props.selectedEvent.eventId, props.selectedAccount)
+            await props.editStudent(addr, firstName, lastName, country, props.selectedEvent.id, props.selectedAccount)
             navigate('/event?tab=students')
         } else {
             EventListenerService.notify("error", 'fields not populated!')

@@ -17,7 +17,7 @@ class StudentCertificate extends React.Component {
     }
 
     componentDidMount() {
-        this.props.loadStudentCourses(this.props.student.id, this.props.selectedEvent.eventId)
+        this.props.loadStudentCourses(this.props.student.id, this.props.selectedEvent.id)
     }
 
     render() {

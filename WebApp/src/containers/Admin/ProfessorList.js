@@ -8,7 +8,7 @@ import Col from 'react-bootstrap/Col'
 import AddUserComponent from '../../components/AddUserComponent'
 import Pagination from '../../components/Pagination'
 import ProfessorRow from '../../components/RowComponents/ProfessorRow'
-import { addProfessorAction } from '../../actions/userActions'
+import { addProfessorAction, deleteProfessorAction } from '../../actions/userActions'
 import { listStyles } from '../../styles'
 import { isEventAdmin } from '../../utils/userUtils'
 
@@ -24,13 +24,17 @@ function ProfessorList(props) {
         setSearchedProfessors(search(tempList, query))
     }, [props.professors])
 
-    const onSubmit = async (ad, fn, ln, cn, ex) => props.addProfessor(ad, fn, ln, cn, ex, props.selectedEvent.eventId, props.selectedAccount)
+    const onSubmit = async (ad, fn, ln, cn, ex) => props.addProfessor(ad, fn, ln, cn, ex, props.selectedEvent.id, props.selectedAccount)
 
     const onQueryChange = ({target}) => {
         let newProfessors = search(allProfessors, target.value)
 
         setQuery(target.value)
         setSearchedProfessors(newProfessors)
+    }
+
+    const onDelete = (profId) => {
+        props.deleteProfessor(profId, props.selectedEvent.id, props.selectedAccount)
     }
 
     const keys = ["firstName", "lastName", "id"]
@@ -62,10 +66,13 @@ function ProfessorList(props) {
                 <Row style={listStyles.borderBottom}>
                     <Col>Name</Col>
                     <Col>Address</Col>
+                    <Col xs={"auto"}> </Col>
+                    <Col xs={"auto"}> </Col>
                 </Row>
                 <Pagination 
                     data={searchedProfessors}
                     RenderComponent={ProfessorRow}
+                    func={onDelete}
                     pageLimit={5}
                     dataLimit={5}
                 />
@@ -89,7 +96,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    addProfessor: (ad, fn, ln, cn, ex, eId, admin) => addProfessorAction(ad, fn, ln, cn, ex, eId, admin, dispatch)
+    addProfessor: (ad, fn, ln, cn, ex, eId, admin) => addProfessorAction(ad, fn, ln, cn, ex, eId, admin, dispatch),
+    deleteProfessor: (ad, eId, admin) => deleteProfessorAction(ad, eId, admin, dispatch)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfessorList)

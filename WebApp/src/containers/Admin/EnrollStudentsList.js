@@ -151,7 +151,7 @@ const mapStateToProps = (state, ownProps) => {
     return {
         studentsToEnroll,
         courseId: ownProps.course.id,
-        eventId: state.event.selectedEvent.eventId
+        eventId: state.event.selectedEvent.id
     }
 }
 

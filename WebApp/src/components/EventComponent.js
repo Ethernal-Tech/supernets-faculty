@@ -4,9 +4,10 @@ import { formatDate } from '../utils/utils'
 
 function EventComponent({event, onEventClick}) {
     
-    const date = new Date(parseInt(event.time))
-    const formatedDate1 = formatDate(date)
-    const formatedDate2 = formatDate(date)
+    const startDate = new Date(parseInt(event.startDate))
+    const formatedDateStart = formatDate(startDate)
+    const endDate = new Date(parseInt(event.endDate))
+    const formatedDateEnd = formatDate(endDate)
 
     return (
         <div className='col-md-4'>
@@ -14,7 +15,7 @@ function EventComponent({event, onEventClick}) {
                 <div className='card-body'>
                     <h5 className='card-title'>{event.title}</h5>
                     <p className='card-text text-truncate'>{event.description}</p>
-                    <p className='card-text'>{formatedDate1} - {formatedDate2}</p>
+                    <p className='card-text'>{formatedDateStart} - {formatedDateEnd}</p>
                     <Link className='btn btn-secondary' to={"/event"} onClick={e => onEventClick(event)}>Details</Link>
                 </div>
             </div>

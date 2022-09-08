@@ -32,8 +32,8 @@ const EventPage = (props) => {
     }, [])
 
     const loadData = async () => {
-        await props.loadUsers(props.selectedEvent.eventId)
-        await props.loadAllCourse(props.selectedEvent.eventId)
+        await props.loadUsers(props.selectedEvent.id)
+        await props.loadAllCourse(props.selectedEvent.id)
     }
 
     const { userRole } = props

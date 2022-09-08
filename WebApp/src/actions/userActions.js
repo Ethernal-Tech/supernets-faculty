@@ -31,7 +31,7 @@ const loadStudentGrades = async (students, eventId, dispatch) => {
     for (let i = 0; i < courses.length; ++i) {
         gradesByStudentByCourse[courses[i].id] = []
     }
-
+    debugger
     for (let i = 0; i < students.length; ++i) {
         const student = students[i]
         const grades = await reader.methods.getStudentGrades(student.id, eventId).call()
@@ -40,14 +40,14 @@ const loadStudentGrades = async (students, eventId, dispatch) => {
         for (let j = 0; j < grades.length; ++j) {
             const gradeObj = grades[j]
             // gradesByCourse[gradeObj.courseId] = gradeObj.courseAttendance
-            gradesByCourse.push({courseId: gradeObj.courseId, grade: gradeObj.courseAttendance})
+            gradesByCourse.push({courseId: gradeObj.courseId, grade: gradeObj.courseGrade})
             
             // gradesByStudentByCourse[gradeObj.courseId] = {
             //     ...gradesByStudentByCourse[gradeObj.courseId],
             //     [student.id]: gradeObj.courseAttendance
             // }
 
-            gradesByStudentByCourse[gradeObj.courseId].push({studentId: student.id, grade: gradeObj.courseAttendance})
+            gradesByStudentByCourse[gradeObj.courseId].push({studentId: student.id, grade: gradeObj.courseGrade})
         }
         
         gradesByCourseByStudent[student.id] = gradesByCourse
@@ -87,6 +87,15 @@ export const addAdminAction = async (eventId, addr, account, dispatch) => {
     }
 }
 
+export const deleteAdminAction = async (eventId, addr, account, dispatch) => {
+    try {
+        await faculty.methods.deleteEventAdmin(eventId, addr,).send({ from: account });
+        await loadAdminsAction(eventId, dispatch)
+    } catch (ex) {
+        EventListenerService.notify("error", ex)
+    }
+}
+
 export const addProfessorAction = async (addr, firstName, lastName, country, expertise, eventId, account, dispatch) => {
     try {
         await faculty.methods.addProfessor(addr, firstName, lastName, country, expertise, eventId).send({ from: account });
@@ -105,6 +114,15 @@ export const editProfessorAction = async (addr, firstName, lastName, country, ex
     }
 }
 
+export const deleteProfessorAction = async (addr, eventId, account, dispatch) => {
+    try {
+        await faculty.methods.deleteProfessor(addr, eventId).send({ from: account });
+        await loadProfessorsAction(eventId, dispatch)
+    } catch (ex) {
+        EventListenerService.notify("error", ex)
+    }
+}
+
 export const addStudentAction = async (addr, firstName, lastName, country, eventId, account, dispatch) => {
     try {
         await faculty.methods.addStudent(addr, firstName, lastName, country, eventId).send({ from: account });
@@ -117,6 +135,15 @@ export const addStudentAction = async (addr, firstName, lastName, country, event
 export const editStudentAction = async (addr, firstName, lastName, country, eventId, account, dispatch) => {
     try {
         await faculty.methods.editStudent(addr, firstName, lastName, country, eventId).send({ from: account });
+        await loadStudentsAction(eventId, dispatch)
+    } catch (ex) {
+        EventListenerService.notify("error", ex)
+    }
+}
+
+export const deleteStudentAction = async (addr, eventId, account, dispatch) => {
+    try {
+        await faculty.methods.deleteStudent(addr, eventId).send({ from: account });
         await loadStudentsAction(eventId, dispatch)
     } catch (ex) {
         EventListenerService.notify("error", ex)

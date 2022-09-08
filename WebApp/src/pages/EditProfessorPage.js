@@ -35,7 +35,7 @@ function EditProfessorPage(props) {
         evt.preventDefault()
         if (addr && firstName && lastName && country && expertise) {
             setIsWorking(true)
-            await props.editProfessor(addr, firstName, lastName, country, expertise, props.selectedEvent.eventId, props.selectedAccount)
+            await props.editProfessor(addr, firstName, lastName, country, expertise, props.selectedEvent.id, props.selectedAccount)
             navigate('/event?tab=professors')
         } else {
             EventListenerService.notify("error", 'fields not populated!')
