@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { addAdminAction, deleteAdminAction } from '../../actions/userActions'
 import { isEventAdmin } from '../../utils/userUtils'
@@ -9,13 +9,18 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { listStyles } from '../../styles'
 import Button from 'react-bootstrap/esm/Button'
+import LoadingSpinner from '../../components/LoadingSpinner'
 
 function AdminsList(props) {
 
+    const [isWorking, setIsWorking] = useState(false)
+
     const onSubmit = async (addr) => props.addAdmin(props.selectedEvent.id, addr, props.selectedAccount)
 
-    const onDelete = (adminId) => {
-        props.deleteAdmin(props.selectedEvent.id, adminId, props.selectedAccount)
+    const onDelete = async(adminId) => {
+        setIsWorking(true)
+        await props.deleteAdmin(props.selectedEvent.id, adminId, props.selectedAccount)
+        setIsWorking(false)
     }
 
     return (
@@ -32,7 +37,12 @@ function AdminsList(props) {
                         <Row key={`prof_${admin}`} 
                             style={ind === props.admins.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }}>
                             <Col>{admin}</Col>
-                            <Col xs={"auto"}><Button className="btn btn-danger" onClick={() => onDelete(admin)}>Delete</Button></Col>
+                            {
+                                isWorking ?
+                                <Col xs={"auto"}><Button className="btn btn-danger"><LoadingSpinner/></Button></Col> :
+                                <Col xs={"auto"}><Button className="btn btn-danger" onClick={() => onDelete(admin)}>Delete</Button></Col>
+                            }
+
                         </Row>                           
                     ))
                 }

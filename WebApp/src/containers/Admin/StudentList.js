@@ -33,8 +33,8 @@ function StudentList(props) {
         setSearchedStudents(newStudents)
     }
 
-    const onDelete = (studId) => {
-        props.deleteStudent(studId, props.selectedEvent.id, props.selectedAccount)
+    const onDelete = async(studId) => {
+        await props.deleteStudent(studId, props.selectedEvent.id, props.selectedAccount)
     }
 
     const keys = ["firstName", "lastName", "id"]
