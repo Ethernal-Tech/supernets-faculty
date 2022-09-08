@@ -1,10 +1,11 @@
 import faculty from '../faculty'
+import reader from '../facultyReader'
 import { setEvents, setSelectedEvent } from '../state/eventReducer'
 import EventListenerService from "../utils/eventListenerService"
 
-export const addEventAction = async (title, location, venue, time, description, account, dispatch) => {
+export const addEventAction = async (title, location, venue, startDate, endDate, description, account, dispatch) => {
     try {
-        await faculty.methods.addEvent(title, location, venue, time, description).send({ from: account });
+        await faculty.methods.addEvent(title, location, venue, startDate, endDate, description).send({ from: account });
         await loadAllEventsAction(dispatch)
     } catch (ex) {
         EventListenerService.notify("error", ex)
@@ -13,7 +14,7 @@ export const addEventAction = async (title, location, venue, time, description, 
 
 export const loadAllEventsAction = async dispatch => {
     try {
-        const events = await faculty.methods.getAllEvents().call();
+        const events = await reader.methods.getAllEvents().call();
         await dispatch(setEvents(events))
     }
     catch (ex) {

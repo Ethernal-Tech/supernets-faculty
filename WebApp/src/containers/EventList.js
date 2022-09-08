@@ -18,7 +18,7 @@ function EventList(props) {
         props.setSelectedEvent(event)
     }
 
-    const onSubmit = async (title, location, venue, time, description) => props.addEvent(title, location, venue, time, description, props.selectedAccount)
+    const onSubmit = async (title, location, venue, startDate, endDate, description) => props.addEvent(title, location, venue, startDate, endDate, description, props.selectedAccount)
 
     return (
         <div style={{ padding: '1rem' }}>
@@ -65,7 +65,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
     loadAllEvents: () => loadAllEventsAction(dispatch),
     setSelectedEvent: (event) => setSelectedEventAction(event, dispatch),
-    addEvent: (title, location, venue, time, description, account) => addEventAction(title, location, venue, time, description, account, dispatch),
+    addEvent: (title, location, venue, startDate, endDate, description, account) => addEventAction(title, location, venue, startDate, endDate, description, account, dispatch),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(EventList)

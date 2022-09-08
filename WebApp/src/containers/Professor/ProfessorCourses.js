@@ -40,8 +40,8 @@ function ProfessorCourses(props) {
         return data.filter(item => keys.some(key => item[key].toLowerCase().includes(query.toLowerCase())))
     }
 
-    const onSubmit = async (title, description, startTime, endTime, venue, points) => 
-         props.addCourse(title, description, startTime, endTime, venue, props.professor.id, points, props.selectedEvent.eventId, props.selectedAccount)
+    const onSubmit = async (title, description, startTime, venue, points) => 
+         props.addCourse(title, description, startTime, venue, props.professor.id, points, props.selectedEvent.eventId, props.selectedAccount)
 
     const { professor, isAdmin } = props
     return (
@@ -92,7 +92,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({
     loadProfessorCourses: (professorAddr, eventId) => loadProfessorCoursesAction(professorAddr, eventId, dispatch),
-    addCourse: (title, description, startTime, endTime, venue, professorAddr, points, eventId, selectedAccount) => addCourseAction(title, description, startTime, endTime, venue, professorAddr, points, eventId, selectedAccount, dispatch),
+    addCourse: (title, description, startTime, venue, professorAddr, points, eventId, selectedAccount) => addCourseAction(title, description, startTime, venue, professorAddr, points, eventId, selectedAccount, dispatch),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfessorCourses)

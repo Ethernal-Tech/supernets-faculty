@@ -1,6 +1,6 @@
 import web3 from './web3';
 
-export const address = '0xCBc7E28141bdB63e3bD89457db49F5245a452F4d';
+export const address = '0x89E16D8866AD5d14F7b1032736D6206A3A2513d8';
 const abi = [
 	{
 		"inputs": [
@@ -31,24 +31,19 @@ const abi = [
 				"type": "uint256"
 			},
 			{
-				"internalType": "uint256",
-				"name": "endTime",
-				"type": "uint256"
-			},
-			{
 				"internalType": "string",
 				"name": "venue",
 				"type": "string"
 			},
 			{
-				"internalType": "address",
-				"name": "professor",
-				"type": "address"
-			},
-			{
 				"internalType": "uint256",
 				"name": "points",
 				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "professor",
+				"type": "address"
 			},
 			{
 				"internalType": "uint256",
@@ -80,7 +75,12 @@ const abi = [
 			},
 			{
 				"internalType": "uint256",
-				"name": "time",
+				"name": "startDate",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "endDate",
 				"type": "uint256"
 			},
 			{
@@ -154,7 +154,7 @@ const abi = [
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "studAddress",
+				"name": "studentAddress",
 				"type": "address"
 			},
 			{
@@ -199,6 +199,205 @@ const abi = [
 	{
 		"inputs": [
 			{
+				"internalType": "uint256",
+				"name": "courseId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "eventId",
+				"type": "uint256"
+			}
+		],
+		"name": "deleteCourse",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "eventId",
+				"type": "uint256"
+			}
+		],
+		"name": "deleteEvent",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "eventId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "adminAddress",
+				"type": "address"
+			}
+		],
+		"name": "deleteEventAdmin",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "profAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "eventId",
+				"type": "uint256"
+			}
+		],
+		"name": "deleteProfessor",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "studentAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "eventId",
+				"type": "uint256"
+			}
+		],
+		"name": "deleteStudent",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "courseId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address[]",
+				"name": "studAddresses",
+				"type": "address[]"
+			},
+			{
+				"internalType": "uint256",
+				"name": "eventId",
+				"type": "uint256"
+			}
+		],
+		"name": "disenrollCourseMultiple",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "courseId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "title",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "description",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "startTime",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "venue",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "points",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "professor",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "eventId",
+				"type": "uint256"
+			}
+		],
+		"name": "editCourse",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "eventId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "title",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "location",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "venue",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "startDate",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "endDate",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "description",
+				"type": "string"
+			}
+		],
+		"name": "editEvent",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "address",
 				"name": "profAddress",
 				"type": "address"
@@ -238,7 +437,7 @@ const abi = [
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "studAddress",
+				"name": "studentAddress",
 				"type": "address"
 			},
 			{
@@ -291,6 +490,19 @@ const abi = [
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "eventCount",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "address",
@@ -316,17 +528,22 @@ const abi = [
 	{
 		"inputs": [
 			{
+				"internalType": "address",
+				"name": "studentAddress",
+				"type": "address"
+			},
+			{
 				"internalType": "uint256",
 				"name": "eventId",
 				"type": "uint256"
 			}
 		],
-		"name": "getAllAdmins",
+		"name": "getCertificateId",
 		"outputs": [
 			{
-				"internalType": "address[]",
+				"internalType": "uint256",
 				"name": "",
-				"type": "address[]"
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -335,12 +552,12 @@ const abi = [
 	{
 		"inputs": [
 			{
-				"internalType": "uint256",
-				"name": "eventId",
-				"type": "uint256"
+				"internalType": "uint256[]",
+				"name": "coursesIds",
+				"type": "uint256[]"
 			}
 		],
-		"name": "getAllCourses",
+		"name": "getCourses",
 		"outputs": [
 			{
 				"components": [
@@ -365,11 +582,6 @@ const abi = [
 						"type": "uint256"
 					},
 					{
-						"internalType": "uint256",
-						"name": "endTime",
-						"type": "uint256"
-					},
-					{
 						"internalType": "string",
 						"name": "venue",
 						"type": "string"
@@ -381,21 +593,21 @@ const abi = [
 					},
 					{
 						"internalType": "address",
-						"name": "professorAddress",
+						"name": "professor",
 						"type": "address"
-					},
-					{
-						"internalType": "string",
-						"name": "professorName",
-						"type": "string"
 					},
 					{
 						"internalType": "address[]",
 						"name": "students",
 						"type": "address[]"
+					},
+					{
+						"internalType": "bool",
+						"name": "exist",
+						"type": "bool"
 					}
 				],
-				"internalType": "struct Faculty.CourseView[]",
+				"internalType": "struct FacultyStructs.Course[]",
 				"name": "",
 				"type": "tuple[]"
 			}
@@ -404,14 +616,20 @@ const abi = [
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "getAllEvents",
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "eventId",
+				"type": "uint256"
+			}
+		],
+		"name": "getEvent",
 		"outputs": [
 			{
 				"components": [
 					{
 						"internalType": "uint256",
-						"name": "eventId",
+						"name": "id",
 						"type": "uint256"
 					},
 					{
@@ -431,18 +649,72 @@ const abi = [
 					},
 					{
 						"internalType": "uint256",
-						"name": "time",
+						"name": "startDate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "endDate",
 						"type": "uint256"
 					},
 					{
 						"internalType": "string",
 						"name": "description",
 						"type": "string"
+					},
+					{
+						"internalType": "address[]",
+						"name": "adminsAddresses",
+						"type": "address[]"
+					},
+					{
+						"internalType": "address[]",
+						"name": "professorsAddresses",
+						"type": "address[]"
+					},
+					{
+						"internalType": "address[]",
+						"name": "studentsAddresses",
+						"type": "address[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "coursesIds",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "bool",
+						"name": "exist",
+						"type": "bool"
 					}
 				],
-				"internalType": "struct Faculty.EventView[]",
+				"internalType": "struct FacultyStructs.Event",
 				"name": "",
-				"type": "tuple[]"
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "studentAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "coursesIds",
+				"type": "uint256[]"
+			}
+		],
+		"name": "getGrades",
+		"outputs": [
+			{
+				"internalType": "enum FacultyStructs.CourseGrade[]",
+				"name": "",
+				"type": "uint8[]"
 			}
 		],
 		"stateMutability": "view",
@@ -454,9 +726,14 @@ const abi = [
 				"internalType": "uint256",
 				"name": "eventId",
 				"type": "uint256"
+			},
+			{
+				"internalType": "address[]",
+				"name": "profAddresses",
+				"type": "address[]"
 			}
 		],
-		"name": "getAllProfessors",
+		"name": "getProfessors",
 		"outputs": [
 			{
 				"components": [
@@ -487,11 +764,16 @@ const abi = [
 					},
 					{
 						"internalType": "uint256[]",
-						"name": "courses",
+						"name": "eventCourses",
 						"type": "uint256[]"
+					},
+					{
+						"internalType": "bool",
+						"name": "exist",
+						"type": "bool"
 					}
 				],
-				"internalType": "struct Faculty.ProfessorView[]",
+				"internalType": "struct FacultyStructs.Professor[]",
 				"name": "",
 				"type": "tuple[]"
 			}
@@ -505,9 +787,14 @@ const abi = [
 				"internalType": "uint256",
 				"name": "eventId",
 				"type": "uint256"
+			},
+			{
+				"internalType": "address[]",
+				"name": "studentsAddresses",
+				"type": "address[]"
 			}
 		],
-		"name": "getAllStudents",
+		"name": "getStudents",
 		"outputs": [
 			{
 				"components": [
@@ -533,119 +820,16 @@ const abi = [
 					},
 					{
 						"internalType": "uint256[]",
-						"name": "courses",
+						"name": "eventCourses",
 						"type": "uint256[]"
-					}
-				],
-				"internalType": "struct Faculty.StudentView[]",
-				"name": "",
-				"type": "tuple[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "student",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "eventId",
-				"type": "uint256"
-			}
-		],
-		"name": "getCertificateId",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "professor",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "eventId",
-				"type": "uint256"
-			}
-		],
-		"name": "getProfessorCourses",
-		"outputs": [
-			{
-				"internalType": "uint256[]",
-				"name": "coursesIds",
-				"type": "uint256[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "studentAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "eventId",
-				"type": "uint256"
-			}
-		],
-		"name": "getStudentCourses",
-		"outputs": [
-			{
-				"internalType": "uint256[]",
-				"name": "coursesIds",
-				"type": "uint256[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "studAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "eventId",
-				"type": "uint256"
-			}
-		],
-		"name": "getStudentGrades",
-		"outputs": [
-			{
-				"components": [
-					{
-						"internalType": "uint256",
-						"name": "courseId",
-						"type": "uint256"
 					},
 					{
-						"internalType": "enum Faculty.CourseAttendance",
-						"name": "courseAttendance",
-						"type": "uint8"
+						"internalType": "bool",
+						"name": "exist",
+						"type": "bool"
 					}
 				],
-				"internalType": "struct Faculty.GradeView[]",
+				"internalType": "struct FacultyStructs.Student[]",
 				"name": "",
 				"type": "tuple[]"
 			}
@@ -668,12 +852,12 @@ const abi = [
 						"type": "address"
 					},
 					{
-						"internalType": "enum Faculty.CourseAttendance",
-						"name": "courseAttendance",
+						"internalType": "enum FacultyStructs.CourseGrade",
+						"name": "courseGrade",
 						"type": "uint8"
 					}
 				],
-				"internalType": "struct Faculty.StudentGrade[]",
+				"internalType": "struct FacultyStructs.StudentGrade[]",
 				"name": "studentGrades",
 				"type": "tuple[]"
 			},
@@ -686,6 +870,32 @@ const abi = [
 		"name": "gradeStudents",
 		"outputs": [],
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "maxCourseId",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "maxEventId",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	}
 ]

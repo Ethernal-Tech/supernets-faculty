@@ -6,7 +6,6 @@ import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
 import LoadingSpinner from './LoadingSpinner'
 import EventListenerService from "../utils/eventListenerService"
-import { generalStyles } from '../styles'
 
 class AddEventComponent extends React.Component {
     constructor(props) {
@@ -21,17 +20,18 @@ class AddEventComponent extends React.Component {
         location: '',
         venue: '',
         description: '',
-        time: '',
-        time2: '',
+        startDate: '',
+        endDate: '',
     }
 
     onSubmit = async event => {
         event.preventDefault()
-        if (this.state.title && this.state.location && this.state.venue && this.state.description && this.state.time) {
+        if (this.state.title && this.state.location && this.state.venue && this.state.description && this.state.startDate && this.state.endDate) {
             this.setState({ isWorking: true })
-            const timeMs = new Date(this.state.time).getTime()
-            this.props.onSubmit && await this.props.onSubmit(this.state.title, this.state.location, this.state.venue, timeMs, this.state.description)
-            this.setState({ title: '', location: '', venue: '', description: '', time: '', isWorking: false })
+            const timeStartMs = new Date(this.state.startDate).getTime()
+            const timeEndMs = new Date(this.state.endDate).getTime()
+            this.props.onSubmit && await this.props.onSubmit(this.state.title, this.state.location, this.state.venue, timeStartMs, timeEndMs, this.state.description)
+            this.setState({ title: '', location: '', venue: '', description: '', startDate: '', endDate: '', isWorking: false })
         } else {
             EventListenerService.notify("error", 'fields not populated!')
         }
@@ -62,11 +62,11 @@ class AddEventComponent extends React.Component {
                     <Row>
                         <Col>
                             <Form.Label>Start date</Form.Label>
-                            <Form.Control id="time" type="date" min={this.dateNow} value={this.state.time} onChange={this.onChange}/>
+                            <Form.Control id="time" type="date" min={this.dateNow} value={this.state.startDate} onChange={this.onChange}/>
                         </Col>
                         <Col>
                             <Form.Label>End date</Form.Label>
-                            <Form.Control id="time" type="date" min={this.dateNow} value={this.state.time2} onChange={this.onChange}/>
+                            <Form.Control id="time" type="date" min={this.dateNow} value={this.state.endDate} onChange={this.onChange}/>
                         </Col>
                     </Row>
                     <Row>

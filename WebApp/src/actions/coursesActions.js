@@ -1,11 +1,12 @@
 import faculty from '../faculty'
+import reader from '../facultyReader'
 import { setAllCourses, setStudentCourses, setCoursesForProfessorAddr } from '../state/coursesReducer'
 import EventListenerService from "../utils/eventListenerService"
 import { loadProfessorsAction, loadStudentsAction } from './userActions';
 
 export const loadAllCoursesAction = async (eventId, dispatch) => {
     try {
-        const courses = await faculty.methods.getAllCourses(eventId).call();
+        const courses = await reader.methods.getAllCourses(eventId).call();
         dispatch(setAllCourses(courses))
     }
     catch (ex) {
@@ -15,7 +16,7 @@ export const loadAllCoursesAction = async (eventId, dispatch) => {
 
 export const loadProfessorCoursesAction = async (professorAddr, eventId, dispatch) => {
     try {
-        const courses = await faculty.methods.getProfessorCourses(professorAddr, eventId).call();
+        const courses = await reader.methods.getProfessorCourses(professorAddr, eventId).call();
         dispatch(setCoursesForProfessorAddr({ professorAddr, courses }))
     }
     catch (ex) {
@@ -23,9 +24,9 @@ export const loadProfessorCoursesAction = async (professorAddr, eventId, dispatc
     }
 }
 
-export const addCourseAction = async (title, description, startTime, endTime, venue, professorAddr, points, eventId, selectedAccount, dispatch) => {
+export const addCourseAction = async (title, description, startTime, venue, professorAddr, points, eventId, selectedAccount, dispatch) => {
     try {
-        await faculty.methods.addCourse(title, description, startTime, endTime, venue, professorAddr, points, eventId).send({ from: selectedAccount });
+        await faculty.methods.addCourse(title, description, startTime, venue, professorAddr, points, eventId).send({ from: selectedAccount });
     }
     catch (ex) {
         EventListenerService.notify("error", ex)
@@ -48,7 +49,7 @@ export const generateCertificateAction = async (studentAddr, selectedAccount, ip
 
 export const loadStudentCoursesAction = async (accountAddress, eventId, dispatch) => {
     try {
-        const courses = await faculty.methods.getStudentCourses(accountAddress, eventId).call();
+        const courses = await reader.methods.getStudentCourses(accountAddress, eventId).call();
         dispatch(setStudentCourses({ studentId: accountAddress, courses }))
     }
     catch (ex) {

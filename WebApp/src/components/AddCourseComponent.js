@@ -20,19 +20,17 @@ class AddCourseComponent extends React.Component {
         title: '',
         description: '',
         startTime: '',
-        endTime: '',
         venue: '',
         points: ''
     }
 
     onSubmit = async event => {
         event.preventDefault()
-        if (this.state.title && this.state.description && this.state.startTime && this.state.endTime && this.state.venue && this.state.points && !isNaN(this.state.points)) {
+        if (this.state.title && this.state.description && this.state.startTime && this.state.venue && this.state.points && !isNaN(this.state.points)) {
             this.setState({ isWorking: true })
             const startTimeMs = new Date(this.state.startTime).getTime()
-            const endTimeMs = new Date(this.state.endTime).getTime()
-            this.props.onSubmit && await this.props.onSubmit(this.state.title, this.state.description, startTimeMs, endTimeMs, this.state.venue, this.state.points)
-            this.setState({ title: '', description: '', startTime: '', endTime: '', venue: '', points: '', isWorking: false })
+            this.props.onSubmit && await this.props.onSubmit(this.state.title, this.state.description, startTimeMs, this.state.venue, this.state.points)
+            this.setState({ title: '', description: '', startTime: '', venue: '', points: '', isWorking: false })
         } else {
             EventListenerService.notify("error", 'fields not populated!')
         }
@@ -54,9 +52,6 @@ class AddCourseComponent extends React.Component {
                     <Row>
                         <Col>
                             <Form.Control id="startTime" type="datetime-local" value={this.state.startTime} onChange={this.onChange}/>
-                        </Col>                     
-                        <Col>
-                            <Form.Control id="endTime" type="datetime-local" value={this.state.endTime} onChange={this.onChange}/>
                         </Col>
                         <Col>
                             <Form.Control id="venue" type="text" placeholder="Enter course venue" value={this.state.venue} onChange={this.onChange}/>

@@ -1,4 +1,5 @@
 import faculty from '../faculty'
+import reader from '../facultyReader'
 import { setStudentGrades } from '../state/coursesReducer'
 import { setProfessors, setStudents, setAdmins, setUsers } from '../state/usersReducer'
 import { setAdminAccount } from '../state/ethReducer'
@@ -6,7 +7,7 @@ import EventListenerService from "../utils/eventListenerService"
 
 export const loadAdminsAction = async (eventId, dispatch) => {
     try {
-        const admins = await faculty.methods.getAllAdmins(eventId).call();
+        const admins = await reader.methods.getAllAdmins(eventId).call();
         dispatch(setAdmins(admins))
     } catch (ex) {
         EventListenerService.notify("error", ex)
@@ -15,7 +16,7 @@ export const loadAdminsAction = async (eventId, dispatch) => {
 
 export const loadProfessorsAction = async(eventId, dispatch) => {
     try {
-        const professors = await faculty.methods.getAllProfessors(eventId).call();
+        const professors = await reader.methods.getAllProfessors(eventId).call();
         dispatch(setProfessors(professors))
     } catch (ex) {
         EventListenerService.notify("error", ex)
@@ -26,14 +27,14 @@ const loadStudentGrades = async (students, eventId, dispatch) => {
     let gradesByCourseByStudent = []
     let gradesByStudentByCourse = []
 
-    const courses = await faculty.methods.getAllCourses(eventId).call()
+    const courses = await reader.methods.getAllCourses(eventId).call()
     for (let i = 0; i < courses.length; ++i) {
         gradesByStudentByCourse[courses[i].id] = []
     }
 
     for (let i = 0; i < students.length; ++i) {
         const student = students[i]
-        const grades = await faculty.methods.getStudentGrades(student.id, eventId).call()
+        const grades = await reader.methods.getStudentGrades(student.id, eventId).call()
 
         const gradesByCourse = []
         for (let j = 0; j < grades.length; ++j) {
@@ -57,7 +58,7 @@ const loadStudentGrades = async (students, eventId, dispatch) => {
 
 export const loadStudentsAction = async (eventId, dispatch) => {
     try {
-        const students = await faculty.methods.getAllStudents(eventId).call();
+        const students = await reader.methods.getAllStudents(eventId).call();
         dispatch(setStudents(students))
         await loadStudentGrades(students, eventId, dispatch)
     } catch (ex) {
@@ -67,9 +68,9 @@ export const loadStudentsAction = async (eventId, dispatch) => {
 
 export const loadUsersAction = async (eventId, dispatch) => {
     try {
-        const professors = await faculty.methods.getAllProfessors(eventId).call();
-        const students = await faculty.methods.getAllStudents(eventId).call();
-        const admins = await faculty.methods.getAllAdmins(eventId).call();
+        const professors = await reader.methods.getAllProfessors(eventId).call();
+        const students = await reader.methods.getAllStudents(eventId).call();
+        const admins = await reader.methods.getAllAdmins(eventId).call();
         dispatch(setUsers({ professors, students, admins }))
         await loadStudentGrades(students, eventId, dispatch)
     } catch (ex) {

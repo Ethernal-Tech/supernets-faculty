@@ -3,9 +3,11 @@ import { connect } from 'react-redux'
 import { formatDate } from '../utils/utils'
 class EventDetails extends React.Component {
     constructor(props) {
-        super(props) 
-        const date = new Date(parseInt(props.selectedEvent.time))
-        this.formatedDate = formatDate(date)
+        super(props)
+        const startDate = new Date(parseInt(props.selectedEvent.time))
+        this.formatedDateStart = formatDate(startDate)
+        const endDate = new Date(parseInt(props.selectedEvent.time))
+        this.formatedDateEnd = formatDate(endDate)
     }
 
     render() {
@@ -17,7 +19,7 @@ class EventDetails extends React.Component {
                 <p>{description}</p>
                 <p>{venue}</p>
                 <p>{location}</p>
-                <p>{this.formatedDate}</p>
+                <p>{this.formatedDateStart} - {this.formatedDateEnd}</p>
                 <br/>
             </>
         )
