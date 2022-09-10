@@ -43,7 +43,7 @@ function CourseStudents(props) {
 
             return filteredData
         }
-    
+
         return data
     }
 
@@ -63,7 +63,7 @@ function CourseStudents(props) {
                     <Col>Student address</Col>
                     <Col xs={'auto'}>Grade</Col>
                 </Row>
-                <Pagination 
+                <Pagination
                     data={searchedStudents}
                     RenderComponent={CourseStudentRow}
                     func={getStudentGrade}

@@ -15,7 +15,7 @@ class Navbar extends React.Component {
     componentDidMount() {
         this.listener = EventListenerService.subscribe("error", error => {
             const msg = error.message || error
-            const newErrors = [...this.state.errors, msg]            
+            const newErrors = [...this.state.errors, msg]
             !this.isUnmounted && this.setState({...this.state, errors: newErrors })
         })
     }
@@ -31,7 +31,7 @@ class Navbar extends React.Component {
     }
 
     render() {
-        const { location, selectedAccount, userName } = this.props
+        const { selectedAccount, userName } = this.props
 
         return (
             <>
@@ -63,7 +63,7 @@ class Navbar extends React.Component {
                             <p>{error}</p>
                         </Alert>
                     ))
-                }                
+                }
             </>
         )
     }

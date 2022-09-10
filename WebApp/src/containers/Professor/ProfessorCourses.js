@@ -19,9 +19,9 @@ function ProfessorCourses(props) {
     const [searchedCourses, setSearchedCourses] = useState([]);
 
     useEffect(() => {
-        if (courses.length == 0) {
+        if (courses.length === 0) {
             props.loadProfessorCourses(props.professor.id, props.selectedEvent.id)
-    
+
             let temp = props.courses
             setCourses(temp)
             setSearchedCourses(search(temp, query))
@@ -40,7 +40,7 @@ function ProfessorCourses(props) {
         return data.filter(item => keys.some(key => item[key].toLowerCase().includes(query.toLowerCase())))
     }
 
-    const onSubmit = async (title, description, startTime, venue, points) => 
+    const onSubmit = async (title, description, startTime, venue, points) =>
          props.addCourse(title, description, startTime, venue, points, props.professor.id, props.selectedEvent.id, props.selectedAccount)
 
     const { professor, isAdmin } = props
@@ -52,13 +52,13 @@ function ProfessorCourses(props) {
                 placeholder='Search...'
                 className="search"
                 onChange={onQueryChange}/>
-            
+
             <Container>
                 <Row style={listStyles.borderBottom}>
                     <Col>Course name</Col>
                     <Col xs={'auto'}>Number of students</Col>
                 </Row>
-                <Pagination 
+                <Pagination
                     data={searchedCourses}
                     RenderComponent={ProfessorCourseRow}
                     pageLimit={5}
@@ -82,7 +82,7 @@ const mapStateToProps = (state, ownProps) => {
     const professorCoursesIds = (professorAddr ? state.courses.coursesByProfessorAddr[professorAddr] : undefined) || []
     const courses = allCourses.filter(x => professorCoursesIds.some(y => y === x.id))
     const isAdmin = isEventAdmin(state)
-    
+
     return {
         courses,
         selectedEvent: state.event.selectedEvent,

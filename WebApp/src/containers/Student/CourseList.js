@@ -8,9 +8,8 @@ import Button from 'react-bootstrap/Button'
 
 import { loadStudentCoursesAction, generateCertificateAction } from '../../actions/coursesActions'
 import { listStyles } from '../../styles'
-import { contractToGrade, gradeToContract }  from '../../utils/userUtils'
+import { contractToGrade }  from '../../utils/userUtils'
 import { createMetadata, uploadMetadata } from '../../utils/nftUtils'
-import { address } from '../../faculty'
 import Pagination from '../../components/Pagination'
 import StudentCourseRow from '../../components/RowComponents/StudentCourseRow'
 
@@ -21,9 +20,9 @@ function CourseList(props) {
     const [searchedCourses, setSearchedCourses] = useState([]);
 
     useEffect(() => {
-        if (courses.length == 0) {
+        if (courses.length === 0) {
             props.loadStudentCourses(props.student.id, props.selectedEvent.id)
-    
+
             let temp = props.studentCourses
             setCourses(temp)
             setSearchedCourses(search(temp, query))
@@ -50,14 +49,14 @@ function CourseList(props) {
     const onGenerateCertificate = async evt => {
         const metadata = createMetadata(props.student, props.studentCourses)
         console.log(metadata)
-        const ipfsUri = await uploadMetadata(metadata);         
+        const ipfsUri = await uploadMetadata(metadata);
 
         console.log(ipfsUri)
         await props.generateCertificate(props.student.id, props.selectedAccount, ipfsUri, props.selectedEvent.id)
     }
 
-    const { student, studentCourses } = props
-    const certificateId = 1 // get from props
+	const { student } = props
+
     return (
         <div style={{ padding: '1rem' }}>
             <h4>{student.name}</h4>
@@ -68,11 +67,11 @@ function CourseList(props) {
                 onChange={onQueryChange}/>
 
             <Container>
-                { 
+                {
                     <Row style={{ padding: '1rem 0' }}>
                         <Col>
                             {
-                                // certificateId > 0 
+                                // certificateId > 0
                                 // ? userRole === USER_ROLES.ADMIN &&
                                 //     <a href={`https://testnets.opensea.io/assets/rinkeby/${address}/${certificateId}`}>
                                 //         <Button variant="primary" type="button">Certificate</Button>
@@ -80,14 +79,14 @@ function CourseList(props) {
                                     <Button variant="primary" type="button" onClick={onGenerateCertificate}>Produce certificate</Button>
                             }
                         </Col>
-                    </Row> 
+                    </Row>
                 }
                 <Row style={listStyles.borderBottom}>
                     <Col>Course Name</Col>
                     <Col>Professor's Name</Col>
                     <Col xs={'auto'}>Grade</Col>
                 </Row>
-                <Pagination 
+                <Pagination
                     data={searchedCourses}
                     RenderComponent={StudentCourseRow}
                     func={getCourseGrade}
