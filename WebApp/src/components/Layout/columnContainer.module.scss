@@ -1,0 +1,22 @@
+.container {
+
+	& > .item_disabled:not(:empty) + .item_disabled {
+		margin-top: 0px !important;
+	}
+
+	& > .item_small:not(:empty) + .item_small {
+		margin-top: 8px !important;
+	}
+
+	& > .item_medium:not(:empty) + .item_medium {
+		margin-top: 16px !important;
+	}
+
+	& > .item_large:not(:empty) + .item_large {
+		margin-top: 32px !important;
+	}
+
+	& > .item_xlarge:not(:empty) + .item_xlarge {
+		margin-top: 48px !important;
+	}
+}

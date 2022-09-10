@@ -1,0 +1,27 @@
+@import '../control.mixins.scss';
+
+:global {
+	.react-datepicker-wrapper {
+		display: block !important;
+	}
+
+	.react-datepicker__header__dropdown {
+		line-height: 21px;
+	}
+}
+
+.container {
+	position: relative;
+	width: 165px;
+}
+
+.date_picker {
+	@include control();
+}
+
+.icon {
+	position: absolute;
+	top: 7px;
+	right: 10px;
+	pointer-events: none;
+}

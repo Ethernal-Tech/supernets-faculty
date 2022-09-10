@@ -1,0 +1,39 @@
+@import '../control.mixins.scss';
+
+.container {
+	display: flex;
+	align-items: center;
+
+	.select_container {
+		position: relative;
+		flex: 1;
+	}
+
+	.description_container {
+		margin: 0 0 0 8px;
+	}
+}
+
+.select {
+	@include control();
+	padding: 6px 30px 6px 10px !important;
+
+	&:enabled {
+		cursor: pointer;
+	}
+
+	option {
+		color: var(--field-color);
+	}
+}
+
+.arrow {
+	position: absolute;
+	right: 10px;
+	top: 7px;
+	pointer-events: none;
+}
+
+.placeholder {
+	color: var(--field-placeholder-color);
+}

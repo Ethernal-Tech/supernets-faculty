@@ -1,0 +1,29 @@
+@import '../control.mixins.scss';
+
+.wrapper {
+	display: flex;
+	align-items: center;
+}
+
+.container {
+	flex: 1;
+	position: relative;
+}
+
+.textarea {
+	@include control();
+	height: unset;
+	resize: vertical;
+
+	&:focus ~ .max_length {
+		display: block;
+	}
+}
+
+.max_length {
+	display: none;
+}
+
+.explanation {
+	@include explanation();
+}

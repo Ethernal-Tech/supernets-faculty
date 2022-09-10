@@ -5,20 +5,17 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --brand-color: #3D8EEF;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
-#footer {
+/* #footer {
   position: fixed;
   width: 100%;
   bottom: 0px;
-  left: 0px;  
+  left: 0px;
   background: white;
-  padding: 20px;  
+  padding: 20px;
 }
 
 #poweredby {
@@ -26,4 +23,4 @@ code {
   font-family: 'Lato';
   font-size: 14px;
   text-align: right;
-}
+} */

@@ -1,0 +1,59 @@
+$control-border: 1px solid var(--field-border-color);
+$control-height: 32px;
+
+@mixin disabled_control() {
+	background: var(--field-disabled-background);
+    color: var(--field-disabled-color);
+    cursor: not-allowed;
+    opacity: 1;
+}
+
+@mixin focused_control() {
+	// color: unset;
+    // background-color: unset;
+    border-color: var(--field-focus-border-color);
+    outline: 0;
+	box-shadow: none;
+}
+
+@mixin control() {
+	// safari appearance for input and select is ugly
+	appearance: none;
+	border: $control-border;
+    border-radius: 4px;
+	font-family: inherit;
+    font-size: 14px;
+    line-height: 19px;
+    color: var(--field-color);
+    background: var(--field-background);
+    padding: 6px 10px;
+	height: $control-height;
+    width: 100%;
+
+	&:focus,
+	&:focus-within {
+		@include focused_control();
+	}
+
+	&:disabled {
+		@include disabled_control();
+	}
+}
+
+@mixin dropdown() {
+	position: absolute;
+	padding: 4px;
+	background: var(--field-dropdown-background);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+	border-radius: 4px;
+	z-index: 1;
+	display: none;
+
+	&.open {
+		display: block;
+	}
+}
+
+@mixin explanation() {
+	margin: 0 0 0 8px;
+}

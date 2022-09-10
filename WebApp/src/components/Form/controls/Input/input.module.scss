@@ -1,0 +1,27 @@
+@import '../control.mixins.scss';
+
+.wrapper {
+	display: flex;
+	align-items: center;
+}
+
+.container {
+	flex: 1;
+	position: relative;
+}
+
+.input {
+	@include control();
+
+	&:focus ~ .max_length {
+		display: block;
+	}
+}
+
+.max_length {
+	display: none;
+}
+
+.explanation {
+	@include explanation();
+}

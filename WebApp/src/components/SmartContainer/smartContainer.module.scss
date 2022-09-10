@@ -1,0 +1,104 @@
+.container {
+	display: flex;
+	flex-wrap: wrap;
+	margin: -16px;
+
+	& + .container {
+		margin-top: -32px;
+	}
+}
+
+.item_xsmall {
+	flex: 1;
+	min-width: 150px;
+	max-width: 250px;
+	margin: 16px;
+}
+
+.item_small {
+	flex: 1;
+	min-width: 200px;
+	max-width: 400px;
+	margin: 16px;
+}
+
+.item_medium {
+	flex: 1;
+	min-width: 330px;
+	max-width: 600px;
+	margin: 16px;
+}
+
+.item_large {
+	flex: 1;
+	min-width: 450px;
+	max-width: 800px;
+	margin: 16px;
+}
+
+.item_xlarge {
+	flex: 1;
+	min-width: 600px;
+	max-width: 1100px;
+	margin: 16px;
+}
+
+.item_xxlarge {
+	flex: 1;
+	min-width: 600px;
+	margin: 16px;
+}
+
+.form_group_inline {
+	display: flex;
+
+	& + .form_group_inline {
+		margin-top: 8px;
+	}
+
+	.label {
+		// flex: 4;
+		// min-width: 120px;
+		// max-width: 160px;
+		width: clamp(120px, 33%, 160px);
+		padding-right: 8px;
+		line-height: 32px;
+	}
+
+	// if there are both label and field
+	.label + .field {
+		// flex: 8;
+		width: clamp(100% - 160px, 67%, 100% - 120px);
+	}
+
+	// if the is only field without label
+	.field:first-child {
+		flex: 1;
+	}
+}
+
+.form_group_multiline {
+	display: flex;
+	flex-direction: column;
+
+	& + .form_group_multiline {
+		margin-top: 16px;
+	}
+
+	.label {
+		line-height: 32px;
+	}
+}
+
+.inline {
+	display: flex;
+	// align-items: center;
+
+	.inline_item {
+		// flex: 1;
+
+		& + .inline_item {
+			margin-left: 8px;
+		}
+	}
+}

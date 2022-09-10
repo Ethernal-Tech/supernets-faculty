@@ -1,0 +1,45 @@
+body {
+	// brand
+	--primary-color: var(--brand-color);
+	--secondary-color: #0F996D;
+	--neutral-color: #aaaaaa;
+	--destructive-color: rgba(244, 67, 54, 0.8);
+
+	--error-color: #FF245A;
+
+	// dom
+	--h1-color: var(--brand-color);
+	--h2-color: var(--brand-color);
+	--h3-color: var(--brand-color);
+	--h4-color: #D6D6D6;
+	--h5-color: var(--brand-color);
+	--h6-color: #D6D6D6;
+	--scroll-bar-background: #cccfd4;
+
+	// shell
+
+	--content-background: #ffffff;
+	--content-color: #4d4d4f;
+	--content-title-color: var(--brand-color);
+	--content-subtitle-color: var(--brand-color);
+	--content-separator-background: #eff3f6;
+	--content-selected-color: var(--brand-color);
+
+	// components
+	--field-background: #fff;
+	--field-color: #4d4d4f;
+	--field-border-color: rgba(77,77,79,0.2);
+	--field-disabled-background: rgba(77, 77, 79, .06);
+	--field-disabled-color: rgba(77, 77, 79, .45);
+	--field-placeholder-color: #21252980;
+	--field-focus-border-color: #80bdff;
+	--field-max-length-background: #fff;
+	--field-max-length-color: #80bdff;
+	--field-error: var(--error-color);
+	--field-warning: #F5C050;
+	--checkbox-checked-background: var(--brand-color);
+	--checkbox-unchecked-background: transparent;
+	--radio-checked-background: var(--brand-color);
+	--radio-unchecked-background: transparent;
+	--field-dropdown-background: #fff;
+}
