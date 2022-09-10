@@ -1,0 +1,33 @@
+.container {
+	display: flex;
+	flex-wrap: wrap;
+	margin-bottom: -8px;
+
+	.item_xsmall,
+	.item_small,
+	.item_medium,
+	.item_large,
+	.item_xlarge {
+		margin-bottom: 8px;
+	}
+
+	& > .item_xsmall + .item_xsmall {
+		margin-left: 4px !important;
+	}
+
+	& > .item_small + .item_small {
+		margin-left: 8px !important;
+	}
+
+	& > .item_medium + .item_medium {
+		margin-left: 16px !important;
+	}
+
+	& > .item_large + .item_large {
+		margin-left: 32px !important;
+	}
+
+	& > .item_xlarge + .item_xlarge {
+		margin-left: 48px !important;
+	}
+}
