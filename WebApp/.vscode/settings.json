@@ -1,0 +1,9 @@
+{
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "files.trimTrailingWhitespace": true,
+    "editor.insertSpaces": false,
+    "javascript.validate.enable": false,
+	"editor.detectIndentation": false,
+	"typescript.tsdk": ".\\node_modules\\typescript\\lib"
+}
