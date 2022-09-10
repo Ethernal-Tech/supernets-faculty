@@ -11,7 +11,7 @@ import { gradeStudentsAction } from '../../actions/coursesActions'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import { generalStyles } from '../../styles'
 import Pagination from '../../components/Pagination'
-import GradeStudentRow from '../../components/RowComponents/GradeStudentRow'
+import GradeStudentRow from '../RowComponents/GradeStudentRow'
 
 function GradeStudentsList(props) {
 
@@ -46,7 +46,7 @@ function GradeStudentsList(props) {
 
             return filteredData
         }
-    
+
         return data
     }
 
@@ -78,7 +78,7 @@ function GradeStudentsList(props) {
             EventListenerService.notify("error", 'fields not populated!')
         }
     }
-    
+
     const { course } = props
     return (
         <div style={{ padding: '1rem' }}>
@@ -88,14 +88,14 @@ function GradeStudentsList(props) {
                 placeholder='Search...'
                 className="search"
                 onChange={onQueryChange}/>
-                
+
             <Container>
                 <Row style={listStyles.borderBottom}>
                     <Col>Student name</Col>
                     <Col>Student address</Col>
                     <Col xs={'auto'}>Grade</Col>
                 </Row>
-                <Pagination 
+                <Pagination
                     data={searchedStudents}
                     RenderComponent={GradeStudentRow}
                     func={gradeChanged}

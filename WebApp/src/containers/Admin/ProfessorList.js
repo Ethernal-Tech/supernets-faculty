@@ -7,7 +7,7 @@ import Col from 'react-bootstrap/Col'
 
 import AddUserComponent from '../../components/AddUserComponent'
 import Pagination from '../../components/Pagination'
-import ProfessorRow from '../../components/RowComponents/ProfessorRow'
+import ProfessorRow from '../RowComponents/ProfessorRow'
 import { addProfessorAction, deleteProfessorAction } from '../../actions/userActions'
 import { listStyles } from '../../styles'
 import { isEventAdmin } from '../../utils/userUtils'
@@ -48,7 +48,7 @@ function ProfessorList(props) {
 
             return filteredData
         }
-    
+
         return data
     }
 
@@ -69,7 +69,7 @@ function ProfessorList(props) {
                     <Col xs={"auto"}> </Col>
                     <Col xs={"auto"}> </Col>
                 </Row>
-                <Pagination 
+                <Pagination
                     data={searchedProfessors}
                     RenderComponent={ProfessorRow}
                     func={onDelete}

@@ -7,7 +7,7 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import AddUserComponent from '../../components/AddUserComponent'
 import Pagination from '../../components/Pagination'
-import StudentRow from '../../components/RowComponents/StudentRow'
+import StudentRow from '../RowComponents/StudentRow'
 import { addStudentAction, deleteStudentAction } from '../../actions/userActions'
 import { listStyles } from '../../styles'
 import { isEventAdmin } from '../../utils/userUtils'
@@ -48,7 +48,7 @@ function StudentList(props) {
 
             return filteredData
         }
-    
+
         return data
     }
 
@@ -69,7 +69,7 @@ function StudentList(props) {
                     <Col xs={"auto"}> </Col>
                     <Col xs={"auto"}> </Col>
                 </Row>
-                <Pagination 
+                <Pagination
                     data={searchedStudents}
                     RenderComponent={StudentRow}
                     func={onDelete}

@@ -11,7 +11,7 @@ import { enrollStudentsToCourseAction } from '../../actions/coursesActions'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import { generalStyles } from '../../styles'
 import Pagination from '../../components/Pagination'
-import EnrollStudentRow from '../../components/RowComponents/EnrollStudentRow'
+import EnrollStudentRow from '../RowComponents/EnrollStudentRow'
 
 function EnrollStudentsList(props) {
 
@@ -84,7 +84,7 @@ function EnrollStudentsList(props) {
 
             return filteredData
         }
-    
+
         return data
     }
 
@@ -113,7 +113,7 @@ function EnrollStudentsList(props) {
                 placeholder='Search...'
                 className="search"
                 onChange={onQueryChange}/>
-            
+
             <Container>
                 <Row style={listStyles.borderBottom}>
                     <Col xs={'auto'}>
@@ -127,7 +127,7 @@ function EnrollStudentsList(props) {
                     <Col>Student name</Col>
                     <Col>Student address</Col>
                 </Row>
-                <Pagination 
+                <Pagination
                         data={searchedStudents}
                         RenderComponent={EnrollStudentRow}
                         func={onItemCheck}
@@ -140,7 +140,7 @@ function EnrollStudentsList(props) {
                 <Button variant="primary" type="submit" style={generalStyles.button} disabled><LoadingSpinner/></Button> :
                 <Button className="btn btn-primary" onClick={enrollStudents} disabled={selectedStudents.length === 0}>Enroll {selectedStudents.length} students</Button>
             }
-            
+
         </div>
     )
 }

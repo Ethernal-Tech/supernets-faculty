@@ -11,7 +11,7 @@ import { listStyles } from '../../styles'
 import { contractToGrade }  from '../../utils/userUtils'
 import { createMetadata, uploadMetadata } from '../../utils/nftUtils'
 import Pagination from '../../components/Pagination'
-import StudentCourseRow from '../../components/RowComponents/StudentCourseRow'
+import StudentCourseRow from '../RowComponents/StudentCourseRow'
 
 function CourseList(props) {
 

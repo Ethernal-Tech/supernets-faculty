@@ -1,9 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { formatDate } from '../utils/utils'
+import { formatDate } from '../../utils/utils'
 
 function EventComponent({event, onEventClick}) {
-    
+
     const startDate = new Date(parseInt(event.startDate))
     const formatedDateStart = formatDate(startDate)
     const endDate = new Date(parseInt(event.endDate))

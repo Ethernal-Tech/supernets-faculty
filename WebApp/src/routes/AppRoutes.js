@@ -2,7 +2,7 @@ import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import CertificatePage from '../pages/CertificatePage'
 
-import { EventList } from 'containers/EventList'
+import { EventList } from 'containers/EventList/EventList'
 import EventPage from '../pages/EventPage'
 import LandingPage from '../pages/LandingPage'
 import ProfessorDetailsPage from '../pages/ProfessorDetailsPage'

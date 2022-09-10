@@ -4,9 +4,9 @@ import Col from 'react-bootstrap/Col'
 import { Link } from 'react-router-dom'
 import { listStyles } from '../../styles'
 import Button from 'react-bootstrap/esm/Button'
-import LoadingSpinner from '../LoadingSpinner'
+import LoadingSpinner from '../../components/LoadingSpinner'
 
-function ProfessorRow({ object, func }) {
+function StudentRow({ object, func }) {
 
     const [isWorking, setIsWorking] = useState(false)
 
@@ -19,16 +19,16 @@ function ProfessorRow({ object, func }) {
     return (
         <Row key={`user_${object.id}`}
         style={{ ...listStyles.row, ...listStyles.borderBottomThin }}>
-            <Col><Link to={`/professor?prof=${object.id}`} style={{pointerEvents: isWorking ? "none" : ""}}>{object.firstName} {object.lastName}</Link></Col>
+            <Col><Link to={`/student?stud=${object.id}`} style={{pointerEvents: isWorking ? "none" : ""}}>{object.firstName} {object.lastName}</Link></Col>
             <Col>{object.id}</Col>
-            <Col xs={"auto"}><Link className="btn btn-primary" to={`/editProfessor?prof=${object.id}`}>Edit</Link></Col>
+            <Col xs={"auto"}><Link className="btn btn-primary" to={`/editStudent?stud=${object.id}`}>Edit</Link></Col>
             {
                 isWorking ?
                 <Col xs={"auto"}><Button className="btn btn-danger"><LoadingSpinner/></Button></Col> :
                 <Col xs={"auto"}><Button className="btn btn-danger" onClick={onDelete}>Delete</Button></Col>
             }
-        </Row>    
+        </Row>
     );
 }
 
-export default ProfessorRow;
+export default StudentRow;
