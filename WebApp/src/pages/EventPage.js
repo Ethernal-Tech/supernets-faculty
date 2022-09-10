@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 
 import AdminEventHome from '../containers/AdminEventHome'
-import GuestHome from '../containers/GuestHome'
+import { GuestHome } from 'containers/GuestHome'
 import ProfessorEventHome from '../containers/ProfessorEventHome'
 import StudentHome from '../containers/StudentHome'
 
@@ -14,7 +14,7 @@ import { loadAllCoursesAction } from '../actions/coursesActions'
 const EventPage = (props) => {
 
     const getHomeComponent = userRole => {
-        
+
         switch (userRole) {
             case USER_ROLES.ADMIN:
                 return AdminEventHome
@@ -41,7 +41,7 @@ const EventPage = (props) => {
     return (
         <HomeComponent userRole={userRole}/>
     )
-    
+
 }
 
 const mapStateToProps = state => {
