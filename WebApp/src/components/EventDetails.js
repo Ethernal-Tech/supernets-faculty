@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { formatDate } from '../utils/utils'
+
 class EventDetails extends React.Component {
     constructor(props) {
         super(props)
@@ -25,7 +26,6 @@ class EventDetails extends React.Component {
         )
     }
 }
-
 
 const mapStateToProps = state => ({
     selectedEvent: state.event.selectedEvent
