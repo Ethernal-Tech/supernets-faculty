@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import { addEventAction, loadAllEventsAction, setSelectedEventAction } from '../actions/eventActions'
+import { addEventAction, deleteEventAction, loadAllEventsAction, setSelectedEventAction } from '../actions/eventActions'
 import EventComponent from '../components/EventComponent'
 import AddEventComponent from '../components/AddEventComponent'
 import { isUserAdmin } from '../utils/userUtils'
@@ -18,6 +18,8 @@ function EventList(props) {
         props.setSelectedEvent(event)
     }
 
+    const onEventDelete = async (eventId) => props.deleteEvent(eventId, props.selectedAccount)
+
     const onSubmit = async (title, location, venue, startDate, endDate, description) => props.addEvent(title, location, venue, startDate, endDate, description, props.selectedAccount)
 
     return (
@@ -27,12 +29,12 @@ function EventList(props) {
                 <div className='row hidden-md-up'>
                 {
                     props.events.map((event, idx) => (
-                        <EventComponent key={idx} event={event} onEventClick={onEventClick}/>
+                        <EventComponent key={idx} event={event} onEventClick={onEventClick} onEventDelete={onEventDelete} isAdmin={props.isAdmin} />
                     ))
                 }
                 </div>
                 {
-                    //props.isAdmin && 
+                    props.isAdmin && 
                     <>
                         <div className='text-end'>
                             <button
@@ -66,6 +68,7 @@ const mapDispatchToProps = dispatch => ({
     loadAllEvents: () => loadAllEventsAction(dispatch),
     setSelectedEvent: (event) => setSelectedEventAction(event, dispatch),
     addEvent: (title, location, venue, startDate, endDate, description, account) => addEventAction(title, location, venue, startDate, endDate, description, account, dispatch),
+    deleteEvent: (eventId, account) => deleteEventAction(eventId, account, dispatch)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(EventList)

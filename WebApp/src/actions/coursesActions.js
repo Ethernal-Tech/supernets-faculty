@@ -37,6 +37,19 @@ export const addCourseAction = async (title, description, startTime, venue, poin
     await loadProfessorCoursesAction(professorAddr, eventId, dispatch)
 }
 
+export const deleteCourseAction = async (courseId, eventId, professorAddr, selectedAccount, dispatch) => {
+    try {
+        await faculty.methods.deleteCourse(courseId, eventId).send({ from: selectedAccount });
+    }
+    catch (ex) {
+        EventListenerService.notify("error", ex)
+    }
+
+    await loadProfessorsAction(eventId, dispatch)
+    await loadAllCoursesAction(eventId, dispatch)
+    await loadProfessorCoursesAction(professorAddr, eventId, dispatch)
+}
+
 export const generateCertificateAction = async (studentAddr, selectedAccount, ipfsURI, eventId) => {
 
     try {
@@ -60,6 +73,18 @@ export const loadStudentCoursesAction = async (accountAddress, eventId, dispatch
 export const enrollStudentsToCourseAction = async (courseId, studentAddrs, selectedAccount, eventId, dispatch) => {
     try {
         await faculty.methods.enrollCourseMultiple(courseId, studentAddrs, eventId).send({ from: selectedAccount });
+    }
+    catch (ex) {
+        EventListenerService.notify("error", ex)
+    }
+
+    await loadStudentsAction(eventId, dispatch)
+    await loadAllCoursesAction(eventId, dispatch)
+}
+
+export const disenrollStudentsToCourseAction = async (courseId, studentAddrs, selectedAccount, eventId, dispatch) => {
+    try {
+        await faculty.methods.disenrollCourseMultiple(courseId, studentAddrs, eventId).send({ from: selectedAccount });
     }
     catch (ex) {
         EventListenerService.notify("error", ex)

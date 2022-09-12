@@ -31,12 +31,12 @@ class CourseDetailsPage extends React.Component {
                     <CourseDetailsComponent course={course} />
                 </Tab>
                 <Tab eventKey="enrolled" title="Students on course">
-                    <CourseStudents course={course} userRole={userRole} selectedAccount={selectedAccount}/>
+                    <CourseStudents courseId={course.id} userRole={userRole} selectedAccount={selectedAccount}/>
                 </Tab>
                 {
                     this.props.isAdmin && 
                     <Tab eventKey="notEnrolled" title="Enroll students">
-                        <EnrollStudentsList course={course} selectedAccount={selectedAccount}/>
+                        <EnrollStudentsList courseId={course.id} selectedAccount={selectedAccount}/>
                     </Tab>
                 }
                 {

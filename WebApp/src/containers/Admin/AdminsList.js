@@ -13,8 +13,7 @@ import LoadingSpinner from '../../components/LoadingSpinner'
 
 function AdminsList(props) {
 
-    const [isWorking, setIsWorking] = useState(false)
-
+    const [isWorking, setIsWorking] = useState(false)  
     const onSubmit = async (addr) => props.addAdmin(props.selectedEvent.id, addr, props.selectedAccount)
 
     const onDelete = async(adminId) => {
