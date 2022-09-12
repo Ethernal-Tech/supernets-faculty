@@ -53,7 +53,6 @@ function GradeStudentsList(props) {
     const gradeChanged = (e) => {
         let newGrades = studentGrades
 
-        debugger
         if (e.target.value == 0) {
             delete newGrades[e.target.id]
         } else {

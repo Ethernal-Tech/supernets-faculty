@@ -1,15 +1,17 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { addEventAction, loadAllEventsAction, setSelectedEventAction } from 'actions/eventActions'
+import { addEventAction, loadAllEventsAction, setSelectedEventAction, deleteEventAction } from 'actions/eventActions'
 import { Dialog } from 'components/Dialog'
 import { emptyArray } from 'pages/commonHelper'
 import { EventComponent } from './EventComponent'
 import { AddEventComponent } from './AddEventComponent'
+import { isEventAdmin } from 'utils/userUtils';
 
 export const EventList = () => {
 	const dispatch = useDispatch();
 	// TODO:mika create RootState instead of any
 	const { event, eth } = useSelector((state: any) => state)
+	const isAdmin = isEventAdmin(state);
 	const events = event.allEvents || emptyArray
 	const selectedAccount = eth.selectedAccount;
 
@@ -39,6 +41,13 @@ export const EventList = () => {
 		[dispatch]
 	)
 
+	const onEventDelete = useCallback(
+		async (eventId) => {
+			deleteEventAction(eventId, selectedAccount, dispatch)
+		},
+		[selectedAccount, dispatch]
+	)
+
 	const onSubmit = useCallback(
 		async (title, location, venue, startDate, endDate, description) => {
 			await addEventAction(title, location, venue, startDate, endDate, description, selectedAccount, dispatch)
@@ -49,10 +58,11 @@ export const EventList = () => {
 	const eventsContent = useMemo(
 		() => {
 			return events.map((event, idx) => (
-				<EventComponent key={idx} event={event} onEventClick={onEventClick}/>
+				<EventComponent key={idx} event={event} onEventClick={onEventClick} onEventDelete={onEventDelete} isAdmin={isAdmin} />
+
 			))
 		},
-		[events, onEventClick]
+		[events, onEventClick, onEventDelete, isAdmin]
 	)
 
 	return (
@@ -62,8 +72,7 @@ export const EventList = () => {
 				<div className='row hidden-md-up'>
 					{eventsContent}
 				</div>
-				{
-					// isAdmin &&
+				{isAdmin &&
 					<>
 						<div className='text-end'>
 							<button

@@ -92,10 +92,9 @@ function EnrollStudentsList(props) {
         if (selectedStudents.length !== 0){
             setIsWorking(true)
             const studentAddrs = selectedStudents.map(stud => stud.id)
-            await props.enrollStudentsToCourse(props.courseId, studentAddrs, props.selectedAccount, props.eventId)
+            await props.enrollStudentsToCourse(props.course.id, studentAddrs, props.selectedAccount, props.eventId)
             setIsWorking(false)
             setAllChecked(false)
-            setStudentsToEnroll(props.studentsToEnroll.slice().map(stud => ({...stud, selected: false})))
             setSelectedStudents([])
         }
         else {
@@ -106,7 +105,7 @@ function EnrollStudentsList(props) {
     const { course } = props
     return (
         <div style={{ padding: '1rem' }}>
-            <h4>{course.name}</h4>
+            <h4>{course.title}</h4>
 
             <input type="text"
                 id="query"
@@ -147,10 +146,13 @@ function EnrollStudentsList(props) {
 
 const mapStateToProps = (state, ownProps) => {
     const allStudents = (state.users.students || [])
-    const studentsToEnroll = allStudents.filter(stud => !ownProps.course.students.some(y => y === stud.id))
+    const courses = state.courses.allCourses || []
+    const course = courses.find(x => x.id === ownProps.courseId)
+    const studentsToEnroll = allStudents.filter(stud => !course.students.some(y => y === stud.id))
+
     return {
         studentsToEnroll,
-        courseId: ownProps.course.id,
+        course,
         eventId: state.event.selectedEvent.id
     }
 }

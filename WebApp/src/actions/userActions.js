@@ -39,12 +39,12 @@ const loadStudentGrades = async (students, eventId, dispatch) => {
         const gradesByCourse = []
         for (let j = 0; j < grades.length; ++j) {
             const gradeObj = grades[j]
-            // gradesByCourse[gradeObj.courseId] = gradeObj.courseAttendance
+            // gradesByCourse[gradeObj.courseId] = gradeObj.courseGrade
             gradesByCourse.push({courseId: gradeObj.courseId, grade: gradeObj.courseGrade})
             
             // gradesByStudentByCourse[gradeObj.courseId] = {
             //     ...gradesByStudentByCourse[gradeObj.courseId],
-            //     [student.id]: gradeObj.courseAttendance
+            //     [student.id]: gradeObj.courseGrade
             // }
 
             gradesByStudentByCourse[gradeObj.courseId].push({studentId: student.id, grade: gradeObj.courseGrade})

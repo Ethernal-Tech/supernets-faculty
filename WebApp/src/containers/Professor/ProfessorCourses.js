@@ -5,7 +5,7 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { isEventAdmin } from '../../utils/userUtils'
-import { addCourseAction, loadProfessorCoursesAction } from '../../actions/coursesActions'
+import { addCourseAction, deleteCourseAction, loadProfessorCoursesAction } from '../../actions/coursesActions'
 import { listStyles } from '../../styles'
 import AddCourseComponent from '../../components/AddCourseComponent'
 import Pagination from '../../components/Pagination'
@@ -18,13 +18,13 @@ function ProfessorCourses(props) {
     const [searchedCourses, setSearchedCourses] = useState([]);
 
     useEffect(() => {
-        if (courses.length === 0) {
-            props.loadProfessorCourses(props.professor.id, props.selectedEvent.id)
+        props.loadProfessorCourses(props.professor.id, props.selectedEvent.id)
+    }, []);
 
-            let temp = props.courses
-            setCourses(temp)
-            setSearchedCourses(search(temp, query))
-        }
+    useEffect(() => {
+        let temp = props.courses
+        setCourses(temp)
+        setSearchedCourses(search(temp, query))
     }, [props.courses]);
 
     const onQueryChange = ({target}) => {
@@ -40,7 +40,10 @@ function ProfessorCourses(props) {
     }
 
     const onSubmit = async (title, description, startTime, venue, points) =>
-         props.addCourse(title, description, startTime, venue, points, props.professor.id, props.selectedEvent.id, props.selectedAccount)
+        props.addCourse(title, description, startTime, venue, points, props.professor.id, props.selectedEvent.id, props.selectedAccount)
+
+    const onDeleteCourse = async (courseId) =>
+        props.deleteCourse(courseId, props.selectedEvent.id, props.professor.id, props.selectedAccount)
 
     const { professor, isAdmin } = props
     return (
@@ -55,13 +58,16 @@ function ProfessorCourses(props) {
             <Container>
                 <Row style={listStyles.borderBottom}>
                     <Col>Course name</Col>
-                    <Col xs={'auto'}>Number of students</Col>
+                    <Col>Number of students</Col>
+                    { isAdmin && <Col></Col> }
                 </Row>
                 <Pagination
                     data={searchedCourses}
                     RenderComponent={ProfessorCourseRow}
+                    func={onDeleteCourse}
                     pageLimit={5}
                     dataLimit={5}
+                    isAdmin={isAdmin}
                 />
             </Container>
             {
@@ -91,7 +97,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({
     loadProfessorCourses: (professorAddr, eventId) => loadProfessorCoursesAction(professorAddr, eventId, dispatch),
-    addCourse: (title, description, startTime, venue, points, professorAddr, eventId, selectedAccount) => addCourseAction(title, description, startTime, venue, points, professorAddr, eventId, selectedAccount, dispatch),
+    addCourse: (title, description, startTime, venue, professorAddr, points, eventId, selectedAccount) => addCourseAction(title, description, startTime, venue, professorAddr, points, eventId, selectedAccount, dispatch),
+    deleteCourse: (courseId, eventId, professorAddr, selectedAccount) => deleteCourseAction(courseId, eventId, professorAddr, selectedAccount, dispatch)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfessorCourses)
