@@ -3,13 +3,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import AddUserComponent from 'components/AddUserComponent'
 import Pagination from 'components/Pagination'
 import ProfessorRow from '../../RowComponents/ProfessorRow'
 import { addProfessorAction, deleteProfessorAction } from 'actions/userActions'
 import { listStyles } from '../../../styles'
 import { isEventAdmin } from 'utils/userUtils'
-import { emptyArray } from 'pages/commonHelper'
+import { emptyArray, noop } from 'pages/commonHelper'
+import { ContentShell } from 'features/Content'
+import { Dialog } from 'components/Dialog'
+import { UserForm } from '../UserForm'
 
 const keys = ["firstName", "lastName", "id"]
 
@@ -23,7 +25,19 @@ export const ProfessorList = () => {
 
     const [query, setQuery] = useState('');
     const [allProfessors, setAllProfessors] = useState([]);
-    const [searchedProfessors, setSearchedProfessors] = useState([]);
+	const [searchedProfessors, setSearchedProfessors] = useState([]);
+
+	const [isDialogOpen, setIsDialogOpen] = useState(false)
+
+	const openDialogCallback = useCallback(
+		() => setIsDialogOpen(true),
+		[]
+	)
+
+	const closeDialogCallback = useCallback(
+		() => setIsDialogOpen(false),
+		[]
+	)
 
     const search = useCallback(
 		(data, query) => {
@@ -76,16 +90,13 @@ export const ProfessorList = () => {
 	)
 
     return (
-        <div style={{ padding: '1rem' }}>
-            <h4>Professors</h4>
-
+        <ContentShell title='Professors'>
             <input type="text"
                 id="query"
                 placeholder='Search...'
                 className="search"
                 onChange={onQueryChange}
 			/>
-
             <Container>
                 <Row style={listStyles.borderBottom}>
                     <Col>Name</Col>
@@ -98,12 +109,23 @@ export const ProfessorList = () => {
                     RenderComponent={ProfessorRow}
                     func={onDelete}
                     pageLimit={5}
-                    dataLimit={5}
+					dataLimit={5}
+					func1={noop}
+					isAdmin={undefined}
                 />
             </Container>
-            {isAdmin &&
-                <AddUserComponent onSubmit={onSubmit} />
+			{isAdmin &&
+				<Dialog
+					title='Add Professor'
+					onClose={closeDialogCallback}
+					open={isDialogOpen}
+				>
+                	<UserForm
+						onSubmit={onSubmit}
+						onCancel={closeDialogCallback}
+					/>
+				</Dialog>
             }
-        </div>
+        </ContentShell>
     )
 }

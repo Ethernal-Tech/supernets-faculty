@@ -9,11 +9,11 @@ import { isEventAdmin } from 'utils/userUtils';
 
 export const EventList = () => {
 	const dispatch = useDispatch();
-	// TODO:mika create RootState instead of any
-	const { event, eth } = useSelector((state: any) => state)
+	// TODO:mika create RootState instead of any on all places where useSelector is used
+	const state = useSelector((state: any) => state)
 	const isAdmin = isEventAdmin(state);
-	const events = event.allEvents || emptyArray
-	const selectedAccount = eth.selectedAccount;
+	const events = state.event.allEvents || emptyArray
+	const selectedAccount = state.eth.selectedAccount;
 
 	const [isDialogOpen, setIsDialogOpen] = useState(false)
 

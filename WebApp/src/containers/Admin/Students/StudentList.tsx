@@ -1,15 +1,17 @@
-import  { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import AddUserComponent from 'components/AddUserComponent'
 import Pagination from 'components/Pagination'
 import StudentRow from '../../RowComponents/StudentRow'
 import { addStudentAction, deleteStudentAction } from 'actions/userActions'
 import { listStyles } from '../../../styles'
 import { isEventAdmin } from 'utils/userUtils'
-import { emptyArray } from 'pages/commonHelper'
+import { emptyArray, noop } from 'pages/commonHelper'
+import { ContentShell } from 'features/Content';
+import { Dialog } from 'components/Dialog'
+import { UserForm } from '../UserForm'
 
 const keys = ["firstName", "lastName", "id"]
 
@@ -24,6 +26,18 @@ export const StudentList = () => {
     const [query, setQuery] = useState('');
     const [allStudents, setAllStudents] = useState([]);
     const [searchedStudents, setSearchedStudents] = useState([]);
+
+	const [isDialogOpen, setIsDialogOpen] = useState(false)
+
+	const openDialogCallback = useCallback(
+		() => setIsDialogOpen(true),
+		[]
+	)
+
+	const closeDialogCallback = useCallback(
+		() => setIsDialogOpen(false),
+		[]
+	)
 
     useEffect(
 		() => {
@@ -76,9 +90,7 @@ export const StudentList = () => {
 	)
 
     return (
-        <div style={{ padding: '1rem' }}>
-            <h4>Students</h4>
-
+        <ContentShell title='Students'>
             <input type="text"
                 id="query"
                 placeholder='Search...'
@@ -97,12 +109,23 @@ export const StudentList = () => {
                     RenderComponent={StudentRow}
                     func={onDelete}
                     pageLimit={5}
-                    dataLimit={5}
+					dataLimit={5}
+					func1={noop}
+					isAdmin={undefined}
                 />
             </Container>
-            {isAdmin &&
-                <AddUserComponent onSubmit={onSubmit} />
+			{isAdmin &&
+				<Dialog
+					title='Add Student'
+					onClose={closeDialogCallback}
+					open={isDialogOpen}
+				>
+                	<UserForm
+						onSubmit={onSubmit}
+						onCancel={closeDialogCallback}
+					/>
+				</Dialog>
             }
-        </div>
+        </ContentShell>
     )
 }

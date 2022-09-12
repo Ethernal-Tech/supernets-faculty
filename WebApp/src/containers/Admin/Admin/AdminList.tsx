@@ -2,7 +2,6 @@ import { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addAdminAction, deleteAdminAction } from 'actions/userActions'
 import { isEventAdmin } from 'utils/userUtils'
-import AddAdminComponent from 'components/AddAdminComponent'
 
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
@@ -11,6 +10,9 @@ import { listStyles } from '../../../styles'
 import Button from 'react-bootstrap/esm/Button'
 import LoadingSpinner from 'components/LoadingSpinner'
 import { emptyArray } from 'pages/commonHelper'
+import { ContentShell } from 'features/Content';
+import { Dialog } from 'components/Dialog'
+import { AdminForm } from './AdminForm'
 
 export const AdminList = () => {
 	const dispatch = useDispatch()
@@ -21,6 +23,18 @@ export const AdminList = () => {
 	const selectedEvent = state.event.selectedEvent
 
     const [isWorking, setIsWorking] = useState(false)
+
+	const [isDialogOpen, setIsDialogOpen] = useState(false)
+
+	const openDialogCallback = useCallback(
+		() => setIsDialogOpen(true),
+		[]
+	)
+
+	const closeDialogCallback = useCallback(
+		() => setIsDialogOpen(false),
+		[]
+	)
 
     const onSubmit = useCallback(
 		async (addr) => {
@@ -39,9 +53,7 @@ export const AdminList = () => {
 	)
 
     return (
-        <div style={{ padding: '1rem' }}>
-            <h4>Event Admins</h4>
-
+        <ContentShell title='Event Admins'>
             <Container>
                 <Row style={listStyles.borderBottom}>
                     <Col>Address</Col>
@@ -60,9 +72,18 @@ export const AdminList = () => {
                     </Row>
                 ))}
             </Container>
-            {isAdmin &&
-                <AddAdminComponent onSubmit={onSubmit} />
+			{isAdmin &&
+				<Dialog
+					title='Add Admin'
+					onClose={closeDialogCallback}
+					open={isDialogOpen}
+				>
+                	<AdminForm
+						onSubmit={onSubmit}
+						onCancel={closeDialogCallback}
+					/>
+				</Dialog>
             }
-        </div>
+        </ContentShell>
     )
 }

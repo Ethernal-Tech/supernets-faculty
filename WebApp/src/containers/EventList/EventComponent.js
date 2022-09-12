@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { formatDate } from '../utils/utils'
+import { formatDate } from 'utils/utils'
 import Button from 'react-bootstrap/Button'
-import LoadingSpinner from '../components/LoadingSpinner'
+import LoadingSpinner from 'components/LoadingSpinner'
 import Tooltip from 'react-bootstrap/Tooltip'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 
