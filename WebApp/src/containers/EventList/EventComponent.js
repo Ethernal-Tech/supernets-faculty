@@ -1,9 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { formatDate } from '../../utils/utils'
+import { formatDate } from 'utils/utils'
 
-function EventComponent({event, onEventClick}) {
-
+export const EventComponent = ({ event, onEventClick }) => {
     const startDate = new Date(parseInt(event.startDate))
     const formatedDateStart = formatDate(startDate)
     const endDate = new Date(parseInt(event.endDate))
@@ -16,11 +15,15 @@ function EventComponent({event, onEventClick}) {
                     <h5 className='card-title'>{event.title}</h5>
                     <p className='card-text text-truncate'>{event.description}</p>
                     <p className='card-text'>{formatedDateStart} - {formatedDateEnd}</p>
-                    <Link className='btn btn-secondary' to={"/event"} onClick={e => onEventClick(event)}>Details</Link>
+                    <Link
+						className='btn btn-secondary'
+						to={"/event"}
+						onClick={e => onEventClick(event)}
+					>
+						Details
+					</Link>
                 </div>
             </div>
         </div>
     )
 }
-
-export default EventComponent

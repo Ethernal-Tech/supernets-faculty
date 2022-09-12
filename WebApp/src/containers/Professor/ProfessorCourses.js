@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import '../../listStyles.css'
 import { connect } from 'react-redux'
 
 import Container from 'react-bootstrap/Container'

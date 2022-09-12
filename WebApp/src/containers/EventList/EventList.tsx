@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addEventAction, loadAllEventsAction, setSelectedEventAction } from 'actions/eventActions'
-import EventComponent from 'containers/EventList/EventComponent'
-import { AddEventComponent } from './AddEventComponent'
 import { Dialog } from 'components/Dialog'
 import { emptyArray } from 'pages/commonHelper'
+import { EventComponent } from './EventComponent'
+import { AddEventComponent } from './AddEventComponent'
 
 export const EventList = () => {
 	const dispatch = useDispatch();
