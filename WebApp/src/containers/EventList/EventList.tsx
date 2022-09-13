@@ -7,6 +7,9 @@ import { EventComponent } from './EventComponent'
 import { EventForm } from './EventForm'
 import { isEventAdmin } from 'utils/userUtils';
 import { ContentShell } from 'features/Content';
+import VerticalSeparator from 'components/Layout/Separator/VerticalSeparator'
+import { Button } from 'components/Button';
+import { ColumnContainer, RowContainer } from 'components/Layout'
 
 export const EventList = () => {
 	const dispatch = useDispatch();
@@ -57,47 +60,50 @@ export const EventList = () => {
 	)
 
 	const eventsContent = useMemo(
-		() => {
-			return events.map((event, idx) => (
-				<EventComponent key={idx} event={event} onEventClick={onEventClick} onEventDelete={onEventDelete} isAdmin={isAdmin} />
-
-			))
-		},
+		() => events.map((event, idx) => (
+			<EventComponent
+				key={idx}
+				event={event}
+				onEventClick={onEventClick}
+				onEventDelete={onEventDelete}
+				isAdmin={isAdmin}
+			/>
+		)),
 		[events, onEventClick, onEventDelete, isAdmin]
 	)
 
 	return (
-		<ContentShell>
-			<div className='container col-md-8'>
-				<h2 className='text-center'>Events</h2>
-				<div className='row hidden-md-up'>
-					{eventsContent}
-				</div>
-				{isAdmin &&
-					<>
-						<div className='text-end'>
-							<button
-								className='btn btn-secondary'
+		<>
+			<VerticalSeparator margin='medium' />
+			<ContentShell title='Events'>
+				<ColumnContainer>
+					{isAdmin &&
+						<RowContainer>
+							<Button
+								text='Add event'
 								onClick={openDialogCallback}
-							>
-								Add event
-							</button>
+							/>
+							{isDialogOpen &&
+								<Dialog
+									title='Add Event'
+									onClose={closeDialogCallback}
+									open={true}
+								>
+									<EventForm
+										onSubmit={onSubmit}
+										onCancel={closeDialogCallback}
+									/>
+								</Dialog>
+							}
+						</RowContainer>
+					}
+					<div className='container col-md-8'>
+						<div className='row hidden-md-up'>
+							{eventsContent}
 						</div>
-						{isDialogOpen &&
-							<Dialog
-								title='Add Event'
-								onClose={closeDialogCallback}
-								open={true}
-							>
-								<EventForm
-									onSubmit={onSubmit}
-									onCancel={closeDialogCallback}
-								/>
-							</Dialog>
-						}
-					</>
-				}
-			</div>
-		</ContentShell>
+					</div>
+				</ColumnContainer>
+			</ContentShell>
+		</>
 	)
 }

@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button'
 import LoadingSpinner from 'components/LoadingSpinner'
 import Tooltip from 'react-bootstrap/Tooltip'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import { RowContainer } from 'components/Layout'
 
 export const EventComponent = ({ event, onEventClick, onEventDelete, isAdmin }) => {
     const [isWorking, setIsWorking] = useState(false);
@@ -31,33 +32,35 @@ export const EventComponent = ({ event, onEventClick, onEventDelete, isAdmin }) 
                     <h5 className='card-title'>{event.title}</h5>
                     <p className='card-text text-truncate'>{event.description}</p>
                     <p className='card-text'>{formatedStartDate} - {formatedEndDate}</p>
-                    <Link
-						className={isWorking ? 'btn btn-secondary disabled' : 'btn btn-secondary' }
-						to={"/event"}
-						onClick={e => onEventClick(event)}
-					>
-						Details
-					</Link>
-                    {isAdmin &&
-                        <>
-                            {isWorking ?
-                                <Button className="btn btn-secondary" type="submit" disabled><LoadingSpinner/></Button> :
-                                <>
-                                    {event.coursesIds.length === 0 ?
-                                        <Button variant="danger" onClick={onDeleteClick}>Delete</Button> :
-                                        <OverlayTrigger
-                                            placement="right"
-                                            delay={{ show: 250, hide: 400 }}
-                                            overlay={renderTooltip}
-                                        >
-                                            <Button variant="btn btn-secondary">Delete</Button>
-                                        </OverlayTrigger>
-                                    }
-                                </>
+					<RowContainer>
+	                    <Link
+							className={isWorking ? 'btn btn-secondary disabled' : 'btn btn-secondary' }
+							to={"/event"}
+							onClick={e => onEventClick(event)}
+						>
+							Details
+						</Link>
+	                    {isAdmin &&
+	                        <>
+	                            {isWorking ?
+	                                <Button className="btn btn-secondary" type="submit" disabled><LoadingSpinner/></Button> :
+	                                <>
+	                                    {event.coursesIds.length === 0 ?
+	                                        <Button variant="danger" onClick={onDeleteClick}>Delete</Button> :
+	                                        <OverlayTrigger
+	                                            placement="right"
+	                                            delay={{ show: 250, hide: 400 }}
+	                                            overlay={renderTooltip}
+	                                        >
+	                                            <Button variant="btn btn-secondary">Delete</Button>
+	                                        </OverlayTrigger>
+	                                    }
+	                                </>
 
-                            }
-                        </>
-                    }
+	                            }
+	                        </>
+	                    }
+					</RowContainer>
                 </div>
             </div>
         </div>
