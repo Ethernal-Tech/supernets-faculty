@@ -4,7 +4,7 @@ import { addEventAction, loadAllEventsAction, setSelectedEventAction, deleteEven
 import { Dialog } from 'components/Dialog'
 import { emptyArray } from 'utils/commonHelper'
 import { EventComponent } from './EventComponent'
-import { AddEventComponent } from './AddEventComponent'
+import { EventForm } from './EventForm'
 import { isEventAdmin } from 'utils/userUtils';
 import { ContentShell } from 'features/Content';
 
@@ -89,7 +89,7 @@ export const EventList = () => {
 								onClose={closeDialogCallback}
 								open={true}
 							>
-								<AddEventComponent
+								<EventForm
 									onSubmit={onSubmit}
 									onCancel={closeDialogCallback}
 								/>

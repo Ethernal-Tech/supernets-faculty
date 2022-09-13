@@ -8,6 +8,7 @@ import CourseDetailsComponent from 'components/CourseDetailsComponent'
 import { CourseStudents } from 'containers/CourseStudents'
 import { EnrollStudentsList } from 'containers/Admin/EnrollStudentsList'
 import { GradeStudentsList } from 'containers/Admin/GradeStudentsList'
+import { emptyArray } from 'utils/commonHelper'
 
 class CourseDetailsPage extends React.Component {
     state = {
@@ -51,8 +52,7 @@ class CourseDetailsPage extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    const userRole = getUserRole(state)
-    const courses = state.courses.allCourses || []
+    const courses = state.courses.allCourses || emptyArray
     const course = ownProps.courseId ? courses.find(x => x.id === ownProps.courseId) : undefined
     const isAdmin = isEventAdmin(state)
     return {

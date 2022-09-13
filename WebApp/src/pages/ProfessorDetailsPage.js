@@ -4,6 +4,11 @@ import { ProfessorCourses } from 'containers/Professor/ProfessorCourses'
 import { USER_ROLES } from '../utils/constants'
 import { getUserRole } from '../utils/userUtils'
 import withRouter from '../utils/withRouter'
+import { ContentShell } from 'features/Content'
+import { Input } from 'components/Form'
+import { SmartFormGroup } from 'components/SmartContainer/SmartContainer'
+import VerticalSeparator from 'components/Layout/Separator/VerticalSeparator'
+import { emptyArray } from 'utils/commonHelper'
 
 class ProfessorDetailsPage extends React.Component {
     render() {
@@ -14,20 +19,40 @@ class ProfessorDetailsPage extends React.Component {
         }
 
         return (
-            <div style={{ padding: '1rem' }}>
-                <h2>Name: {this.props.professor.firstName} {this.props.professor.lastName}</h2>
-                <h3>From: {this.props.professor.country}</h3>
-                <h3>Expertise: {this.props.professor.expertise}</h3>
-                <br/>
-                <ProfessorCourses professor={professor} userRole={userRole} selectedAccount={selectedAccount}/>
-            </div>
+			<>
+				<VerticalSeparator margin='medium' />
+	            <ContentShell title='Professor'>
+					<div style={{ width: '600px' }}>
+						<SmartFormGroup label='Name'>
+							<Input
+								value={`${professor.firstName} ${professor.lastName}`}
+								disabled
+							/>
+						</SmartFormGroup>
+						<SmartFormGroup label='Country'>
+							<Input
+								value={professor.country}
+								disabled
+							/>
+						</SmartFormGroup>
+						<SmartFormGroup label='Expertise'>
+							<Input
+								value={professor.expertise}
+								disabled
+							/>
+						</SmartFormGroup>
+					</div>
+					<VerticalSeparator margin='xlarge' />
+	                <ProfessorCourses professor={professor} userRole={userRole} selectedAccount={selectedAccount}/>
+	            </ContentShell>
+			</>
         )
     }
 }
 
 const mapStateToProps = (state, ownProps) => {
     const userRole = getUserRole(state)
-    const professors = state.users.professors || []
+    const professors = state.users.professors || emptyArray
     let professor
     if (ownProps.prof) {
         professor = professors.find(prof => prof.id === ownProps.prof)

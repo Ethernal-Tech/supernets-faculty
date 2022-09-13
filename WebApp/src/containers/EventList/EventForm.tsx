@@ -13,7 +13,7 @@ class Model {
     endDate!: Date
 }
 
-export const AddEventComponent = ({ onSubmit, onCancel }) => {
+export const EventForm = ({ onSubmit, onCancel }) => {
 	const [values, setValues] = useState(new Model())
 
 	const submitCallback = useCallback(

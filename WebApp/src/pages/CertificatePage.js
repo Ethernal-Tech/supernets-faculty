@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { emptyArray } from 'utils/commonHelper'
 import StudentCertificate from '../containers/Student/StudentCertificate'
 import { USER_ROLES } from '../utils/constants'
 import { getUserRole } from '../utils/userUtils'
@@ -20,7 +21,7 @@ class CertificatePage extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
     const userRole = getUserRole(state)
-    const students = state.users.students || []
+    const students = state.users.students || emptyArray
     let student
     if (ownProps.stud) {
         const studentInd = ownProps.stud ? parseInt(ownProps.stud) : -1

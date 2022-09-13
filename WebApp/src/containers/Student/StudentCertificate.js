@@ -8,6 +8,7 @@ import Col from 'react-bootstrap/Col'
 import { loadStudentCoursesAction } from '../../actions/coursesActions'
 import { listStyles } from '../../styles'
 import { formatDate } from '../../utils/utils'
+import { emptyArray, emptyObject } from 'utils/commonHelper'
 
 class StudentCertificate extends React.Component {
     constructor(props) {
@@ -59,9 +60,9 @@ class StudentCertificate extends React.Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-    const allCourses = state.courses.allCourses || []
-    const gradesByCourse = (state.courses.gradesByCourseByStudent || {})[ownProps.student.id] || {}
-    const studentCourses = ((state.courses.studentCourses || {})[ownProps.student.id] || []).map(x => {
+    const allCourses = state.courses.allCourses || emptyArray
+    const gradesByCourse = (state.courses.gradesByCourseByStudent || emptyObject)[ownProps.student.id] || emptyObject
+    const studentCourses = ((state.courses.studentCourses || emptyObject)[ownProps.student.id] || emptyArray).map(x => {
         const course = allCourses.find(y => y.id === x)
         const grade = gradesByCourse[x]
         return {

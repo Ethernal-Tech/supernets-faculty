@@ -105,7 +105,6 @@ export const ProfessorList = () => {
 					expertise: professor.expertise,
 					id: professor.id
 				})
-				console.log(professor)
 			}
 	        setSearchedProfessors(localTableProfessors)
 		},

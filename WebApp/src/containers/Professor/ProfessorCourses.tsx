@@ -1,8 +1,7 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEventAdmin } from 'utils/userUtils'
 import { addCourseAction, deleteCourseAction, loadProfessorCoursesAction } from 'actions/coursesActions'
-import { ContentShell } from 'features/Content';
 import { BaseColumnModel, LocalTable } from 'components/Table'
 import { ColumnContainer, RowContainer } from 'components/Layout'
 import { Button } from 'components/Button';
@@ -16,7 +15,7 @@ const keys = ["title"]
 
 const tableColumns: BaseColumnModel[] = [
 	{
-		field: 'courseName',
+		field: 'title',
 		title: 'Course name',
 		visible: true
 	},
@@ -33,8 +32,11 @@ export const ProfessorCourses = ({ professor, selectedAccount }) => {
 	const state = useSelector((state: any) => state)
 	const professorAddr = professor?.id
     const allCourses = state.courses.allCourses || emptyArray
-    const professorCoursesIds = (professorAddr ? state.courses.coursesByProfessorAddr[professorAddr] : undefined) || []
-    const coursesProps = allCourses.filter(x => professorCoursesIds.some(y => y === x.id))
+    const professorCoursesIds = (professorAddr ? state.courses.coursesByProfessorAddr[professorAddr] : undefined) || emptyArray
+    const coursesProps = useMemo(
+		() => allCourses.filter(x => professorCoursesIds.some(y => y === x.id)),
+		[allCourses, professorCoursesIds]
+	)
     const isAdmin = isEventAdmin(state)
 	const selectedEvent = state.event.selectedEvent
 
@@ -94,7 +96,8 @@ export const ProfessorCourses = ({ professor, selectedAccount }) => {
 
     const onSubmit = useCallback(
 		async ({ title, description, startTime, venue, points }) => {
-			await addCourseAction(title, description, startTime, venue, points, professor.id, selectedEvent.id, selectedAccount, dispatch)
+            const startTimeMs = new Date(startTime).getTime()
+			await addCourseAction(title, description, startTimeMs, venue, points, professor.id, selectedEvent.id, selectedAccount, dispatch)
 		},
 		[dispatch, professor, selectedAccount, selectedEvent.id]
 	)
@@ -121,55 +124,54 @@ export const ProfessorCourses = ({ professor, selectedAccount }) => {
 	)
 
     return (
-        <ContentShell title={professor.name}>
-			<ColumnContainer margin='medium'>
-				<div style={{ width: '200px'}}>
-					<Input
-						value={query}
-						placeholder='Search...'
-						onChange={setQuery}
-					/>
-				</div>
-				<RowContainer>
-					<Button
-						text='Create'
-						onClick={openDialogCallback}
-						disabled={!isAdmin}
-					/>
-					<Button
-						text={'View'}
-						disabled={!selectedCourse?.id}
-						onClick={onView}
-					/>
-					<Button
-						text='Delete'
-						color='destructive'
-						onClick={onDelete}
-						disabled={!selectedCourse?.id || !isAdmin}
-					/>
-				</RowContainer>
-				<LocalTable
-					columns={tableColumns}
-					data={searchedCourses}
-					rowSelectionChanged={selectionChangeCallback}
-					hasPagination
-					limit={5}
+		<ColumnContainer margin='medium'>
+			<h5>Courses</h5>
+			<div style={{ width: '200px'}}>
+				<Input
+					value={query}
+					placeholder='Search...'
+					onChange={setQuery}
 				/>
-				{/* Tooltip Delete: Course with enrolled students cannot be deleted */}
+			</div>
+			<RowContainer>
+				<Button
+					text='Create'
+					onClick={openDialogCallback}
+					disabled={!isAdmin}
+				/>
+				<Button
+					text={'View'}
+					disabled={!selectedCourse?.id}
+					onClick={onView}
+				/>
+				<Button
+					text='Delete'
+					color='destructive'
+					onClick={onDelete}
+					disabled={!selectedCourse?.id || !isAdmin}
+				/>
+			</RowContainer>
+			<LocalTable
+				columns={tableColumns}
+				data={searchedCourses}
+				rowSelectionChanged={selectionChangeCallback}
+				hasPagination
+				limit={5}
+			/>
+			{/* Tooltip Delete: Course with enrolled students cannot be deleted */}
 
-				{isAdmin &&
-					<Dialog
-						title='Add Course'
-						onClose={closeDialogCallback}
-						open={isDialogOpen}
-					>
-	                	<CourseForm
-							onSubmit={onSubmit}
-							onCancel={closeDialogCallback}
-						/>
-					</Dialog>
-	            }
-			</ColumnContainer>
-        </ContentShell>
+			{isAdmin &&
+				<Dialog
+					title='Add Course'
+					onClose={closeDialogCallback}
+					open={isDialogOpen}
+				>
+                	<CourseForm
+						onSubmit={onSubmit}
+						onCancel={closeDialogCallback}
+					/>
+				</Dialog>
+            }
+		</ColumnContainer>
     )
 }

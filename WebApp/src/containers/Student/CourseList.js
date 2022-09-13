@@ -1,49 +1,78 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-import Button from 'react-bootstrap/Button'
 import { loadStudentCoursesAction, generateCertificateAction } from 'actions/coursesActions'
-import { listStyles } from '../../styles'
 import { contractToGrade }  from 'utils/userUtils'
 import { createMetadata, uploadMetadata } from 'utils/nftUtils'
-import Pagination from 'components/Pagination'
-import StudentCourseRow from '../RowComponents/StudentCourseRow'
-import { ContentShell } from 'features/Content';
+import { BaseColumnModel, LocalTable } from 'components/Table';
+import { ColumnContainer } from 'components/Layout'
+import { Input } from 'components/Form'
+import { Button } from 'components/Button'
+import { emptyArray, emptyObject } from 'utils/commonHelper'
+
+const keys = ["title"]
+
+const tableColumns: BaseColumnModel[] = [
+	{
+		field: 'title',
+		title: 'Course name',
+		visible: true
+	},
+	{
+		field: 'professorName',
+		title: "Professor's Name",
+		visible: true
+	},
+	{
+		field: 'grade',
+		title: "Grade",
+		visible: true
+	}
+]
 
 function CourseList(props) {
-
     const [query, setQuery] = useState('');
     const [courses, setCourses] = useState([]);
     const [searchedCourses, setSearchedCourses] = useState([]);
 
-    useEffect(() => {
-        if (courses.length === 0) {
-            props.loadStudentCourses(props.student.id, props.selectedEvent.id)
+    useEffect(
+		() => {
+			if (courses.length === 0) {
+				props.loadStudentCourses(props.student.id, props.selectedEvent.id)
+			}
+		},
+		[courses, props.student, props.selectedEvent]
+	);
 
-            let temp = props.studentCourses
-            setCourses(temp)
-            setSearchedCourses(search(temp, query))
-        }
-    }, [props.studentCourses]);
+    useEffect(
+		() => {
+            setCourses(props.studentCourses)
+		},
+		[props.studentCourses]
+	);
 
-    const getCourseGrade = (courseId) => {
-        const grade = courses.find(x => x.id === courseId).grade.grade
-        return contractToGrade.get(grade)
-    }
+    const search = useCallback(
+		(data, query) => {
+	        return data.filter(item => keys.some(key => item[key].toLowerCase().includes(query.toLowerCase())))
+		},
+		[]
+	)
 
-    const onQueryChange = ({target}) => {
-        let newCourses = search(courses, target.value)
-
-        setQuery(target.value)
-        setSearchedCourses(newCourses)
-    }
-
-    const keys = ["title"] // course.title
-    const search = (data, query) => {
-        return data.filter(item => keys.some(key => item[key].toLowerCase().includes(query.toLowerCase())))
-    }
+    useEffect(
+		() => {
+			const newCourses = search(courses, query)
+			const localTableCourses: any[] = [];
+			for (const course of newCourses || []) {
+				localTableCourses.push({
+					title: course.title,
+					professorName: course.professorName,
+					grade: contractToGrade.get(course.grade.grade),
+					id: course.id
+				})
+			}
+	        setSearchedCourses(localTableCourses)
+		},
+		[query, search, courses]
+	)
 
     const onGenerateCertificate = async evt => {
         const metadata = createMetadata(props.student, props.studentCourses)
@@ -54,50 +83,34 @@ function CourseList(props) {
         await props.generateCertificate(props.student.id, props.selectedAccount, ipfsUri, props.selectedEvent.id)
     }
 
-	const { student } = props
-
     return (
-        <ContentShell title={student.name}>
-            <input type="text"
-                id="query"
-                placeholder='Search...'
-                className="search"
-                onChange={onQueryChange}/>
-
-            <Container>
-                <Row style={{ padding: '1rem 0' }}>
-                    <Col>
-                        {
-                            // certificateId > 0
-                            // ? userRole === USER_ROLES.ADMIN &&
-                            //     <a href={`https://testnets.opensea.io/assets/rinkeby/${address}/${certificateId}`}>
-                            //         <Button variant="primary" type="button">Certificate</Button>
-                            //     </a>
-                                <Button variant="primary" type="button" onClick={onGenerateCertificate}>Produce certificate</Button>
-                        }
-                    </Col>
-                </Row>
-                <Row style={listStyles.borderBottom}>
-                    <Col>Course Name</Col>
-                    <Col>Professor's Name</Col>
-                    <Col xs={'auto'}>Grade</Col>
-                </Row>
-                <Pagination
-                    data={searchedCourses}
-                    RenderComponent={StudentCourseRow}
-                    func={getCourseGrade}
-                    pageLimit={5}
-                    dataLimit={5}
-                />
-            </Container>
-        </ContentShell>
+		<ColumnContainer margin='medium'>
+			<h5>Courses</h5>
+			<div style={{ width: '200px'}}>
+				<Input
+					value={query}
+					placeholder='Search...'
+					onChange={setQuery}
+				/>
+			</div>
+			<Button
+				text='Produce certificate'
+				onClick={onGenerateCertificate}
+			/>
+			<LocalTable
+				columns={tableColumns}
+				data={searchedCourses}
+				hasPagination
+				limit={5}
+			/>
+		</ColumnContainer>
     )
 }
 
 const mapStateToProps = (state, ownProps) => {
-    const allCourses = state.courses.allCourses || []
-    const gradesByCourse = (state.courses.gradesByCourseByStudent || {})[ownProps.student.id] || {}
-    const studentCourses = ((state.courses.studentCourses || {})[ownProps.student.id] || []).map(x => {
+    const allCourses = state.courses.allCourses || emptyArray
+    const gradesByCourse = (state.courses.gradesByCourseByStudent || {})[ownProps.student.id] || emptyObject
+    const studentCourses = ((state.courses.studentCourses || {})[ownProps.student.id] || emptyArray).map(x => {
         const course = allCourses.find(y => y.id === x)
         const grade = gradesByCourse.find(y => y.courseId === x)
         return {

@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { Form } from 'components/Form/Form';
-import { InputField } from 'components/Form';
+import { DateField, InputField } from 'components/Form';
 import { propertyOf } from 'utils/propertyOf';
 
 class Model {
@@ -51,7 +51,7 @@ export const CourseForm = ({ onSubmit, onCancel, course }: Props) => {
 						label='Name'
 						isRequired
 					/>
-					<InputField
+					<DateField
 						id={propertyOf<Model>('startTime')}
 						label='Start date'
 						isRequired

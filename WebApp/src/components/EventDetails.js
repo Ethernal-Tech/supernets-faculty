@@ -1,6 +1,9 @@
+import { ContentShell } from 'features/Content'
 import React from 'react'
 import { connect } from 'react-redux'
 import { formatDate } from '../utils/utils'
+import { Input, Textarea } from './Form'
+import { SmartFormGroup } from './SmartContainer/SmartContainer'
 
 class EventDetails extends React.Component {
     constructor(props) {
@@ -15,14 +18,40 @@ class EventDetails extends React.Component {
         const { title, description, venue, location } = this.props.selectedEvent
 
         return (
-            <>
-                <p>{title}</p>
-                <p>{description}</p>
-                <p>{venue}</p>
-                <p>{location}</p>
-                <p>{this.formatedDateStart} - {this.formatedDateEnd}</p>
-                <br/>
-            </>
+            <ContentShell title='Event Details'>
+				<div style={{ width: '600px' }}>
+					<SmartFormGroup label='Name'>
+						<Input
+							value={title}
+							disabled
+						/>
+					</SmartFormGroup>
+					<SmartFormGroup label='Description'>
+						<Textarea
+							value={description}
+							disabled
+						/>
+					</SmartFormGroup>
+					<SmartFormGroup label='Venue'>
+						<Input
+							value={venue}
+							disabled
+						/>
+					</SmartFormGroup>
+					<SmartFormGroup label='Location'>
+						<Input
+							value={location}
+							disabled
+						/>
+					</SmartFormGroup>
+					<SmartFormGroup label='Period'>
+						<Input
+							value={`${this.formatedDateStart} - ${this.formatedDateEnd}`}
+							disabled
+						/>
+					</SmartFormGroup>
+				</div>
+            </ContentShell>
         )
     }
 }

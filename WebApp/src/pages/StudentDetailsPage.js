@@ -1,5 +1,10 @@
+import { Input } from 'components/Form'
+import VerticalSeparator from 'components/Layout/Separator/VerticalSeparator'
+import { SmartFormGroup } from 'components/SmartContainer/SmartContainer'
+import { ContentShell } from 'features/Content'
 import React from 'react'
 import { connect } from 'react-redux'
+import { emptyArray } from 'utils/commonHelper'
 import CourseList from '../containers/Student/CourseList'
 import { USER_ROLES } from '../utils/constants'
 import { getUserRole } from '../utils/userUtils'
@@ -13,19 +18,34 @@ class StudentDetailsPage extends React.Component {
         }
 
         return (
-            <div style={{ padding: '1rem' }}>
-                <h2>Name: {student.firstName} {student.lastName}</h2>
-                <h3>From: {student.country}</h3>
-                <br/>
-                <CourseList student={student} userRole={userRole} studParam={stud}/>
-            </div>
+			<>
+				<VerticalSeparator margin='medium' />
+	            <ContentShell title='Student'>
+					<div style={{ width: '600px' }}>
+						<SmartFormGroup label='Name'>
+							<Input
+								value={`${student.firstName} ${student.lastName}`}
+								disabled
+							/>
+						</SmartFormGroup>
+						<SmartFormGroup label='Country'>
+							<Input
+								value={student.country}
+								disabled
+							/>
+						</SmartFormGroup>
+					</div>
+					<VerticalSeparator margin='xlarge' />
+	                <CourseList student={student} userRole={userRole} studParam={stud}/>
+	            </ContentShell>
+			</>
         )
     }
 }
 
 const mapStateToProps = (state, ownProps) => {
     const userRole = getUserRole(state)
-    const students = state.users.students || []
+    const students = state.users.students || emptyArray
     let student
     if (ownProps.stud) {
         student = students.find(stud => stud.id === ownProps.stud)
