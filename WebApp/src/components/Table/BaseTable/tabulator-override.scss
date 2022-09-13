@@ -1,0 +1,88 @@
+.tabulator {
+	margin-bottom: 0 !important;
+	background: unset !important;
+
+	.tabulator-header {
+		background: var(--tabulator-background) !important;
+		border-bottom-color: var(--table-separator-background) !important;
+
+		.tabulator-col {
+			background: var(--tabulator-background) !important;
+		}
+	}
+
+	.tabulator-tableHolder .tabulator-table {
+		background: unset !important;
+	}
+
+	.tabulator-row {
+		background: var(--tabulator-background) !important;
+	}
+
+	.tabulator-footer {
+		border-top-color: var(--table-separator-background) !important;
+	}
+}
+
+// added div for selector to be more specific than tabulator's
+div.tabulator-row {
+	background: unset !important;
+	border-bottom-color: var(--table-separator-background) !important;
+
+	&.tabulator-selectable:hover {
+		background: var(--table-row-active-background) !important;
+		color: var(--table-row-active-color) !important;
+	}
+
+	&.tabulator-selected {
+		background: var(--table-row-active-background) !important;
+		color: var(--table-row-active-color) !important;
+	}
+}
+
+div.tabulator div.tabulator-footer div.tabulator-calcs-holder div.tabulator-row {
+	background: unset !important;
+}
+
+div.tabulator div.tabulator-footer div.tabulator-calcs-holder {
+	background: unset !important;
+	border-top: unset;
+}
+
+//
+
+.tabulator-headers .tabulator-col:hover {
+	cursor: pointer;
+}
+
+/* this class exist while cell is being edited */
+.tabulator-row .tabulator-cell.tabulator-editing {
+	/* override overflow: hidden used for elipsis, so absolute elements are visible */
+	overflow: initial;
+	/* opened form needs to be shown on top of other rows */
+	z-index: 1;
+	border: 1px solid var(--brand-color);
+}
+
+.tabulator-row .tabulator-cell.tabulator-editing select,
+.tabulator-row .tabulator-cell.tabulator-editing input {
+    color: var(--field-color);
+	background: var(--field-background);
+}
+
+/* this used to be style for editable cells, but issue was when tableColumn.editable returns false and this style remains applied on cell
+.tabulator-cell[tabindex] {
+    color: var(--field-color);
+    background: var(--field-background);
+} */
+
+.tabulator .tabulator-header .tabulator-frozen.tabulator-frozen-left,
+.tabulator-row .tabulator-frozen.tabulator-frozen-left {
+    border-right: 2px solid var(--table-separator-background);
+}
+
+
+.tabulator .tabulator-header .tabulator-frozen.tabulator-frozen-right,
+.tabulator-row .tabulator-frozen.tabulator-frozen-right {
+    border-left: 2px solid var(--table-separator-background);
+}

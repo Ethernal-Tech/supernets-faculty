@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect } from 'react'
-import 'bootstrap/dist/css/bootstrap.min.css'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 

@@ -42,4 +42,13 @@ body {
 	--radio-checked-background: var(--brand-color);
 	--radio-unchecked-background: transparent;
 	--field-dropdown-background: #fff;
+
+	// table
+
+	--table-header-color: #9b9b9b;
+	--table-row-active-background: var(--content-selected-color);
+	--table-row-active-color: #fff;
+	--table-separator-background: var(--content-separator-background);
+	--table-active-color: var(--content-selected-color);
+	--tabulator-background: var(--content-background);
 }

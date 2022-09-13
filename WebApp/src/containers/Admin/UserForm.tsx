@@ -22,7 +22,7 @@ class Model {
 }
 
 type Props = {
-	onSubmit(addr: string, firstName: string, lastName: string, country: string, expertise: string): void
+	onSubmit(values: Model): void
 	onCancel(): void
 	user?: Model
 }
@@ -32,7 +32,7 @@ export const UserForm = ({ onSubmit, onCancel, user }: Props) => {
 
 	const submitCallback = useCallback(
 		async () => {
-			await onSubmit(values.addr, values.firstName, values.lastName, values.country, values.expertise);
+			await onSubmit(values);
 		},
 		[onSubmit, values]
 	)
@@ -43,7 +43,7 @@ export const UserForm = ({ onSubmit, onCancel, user }: Props) => {
 			onChange={setValues}
 			onSubmit={submitCallback}
 			onCancel={onCancel}
-			submitButtonText='Add'
+			submitButtonText='Save'
 			render={() => (
 				<>
 					<InputField

@@ -1,21 +1,38 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-import Pagination from 'components/Pagination'
-import ProfessorRow from '../../RowComponents/ProfessorRow'
-import { addProfessorAction, deleteProfessorAction } from 'actions/userActions'
-import { listStyles } from '../../../styles'
+import { addProfessorAction, deleteProfessorAction, editProfessorAction } from 'actions/userActions'
 import { isEventAdmin } from 'utils/userUtils'
-import { emptyArray, noop } from 'utils/commonHelper'
+import { emptyArray } from 'utils/commonHelper'
 import { ContentShell } from 'features/Content'
 import { Dialog } from 'components/Dialog'
 import { UserForm } from '../UserForm'
+import { LocalTable, BaseColumnModel } from 'components/Table'
+import { ColumnContainer, RowContainer } from 'components/Layout'
+import { Button } from 'components/Button';
+import { Input } from 'components/Form'
+import { useNavigate } from 'react-router-dom';
 
 const keys = ["firstName", "lastName", "id"]
 
+const tableColumns: BaseColumnModel[] = [
+	{
+		field: 'name',
+		title: 'Name',
+		visible: true,
+		formatter: (cell: any) => {
+			const data = cell.getData();
+			return `${data.firstName} ${data.lastName}`
+		}
+	},
+	{
+		field: 'addr',
+		title: 'Address',
+		visible: true
+	}
+]
+
 export const ProfessorList = () => {
+	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const state = useSelector((state: any) => state);
 	const isAdmin = isEventAdmin(state);
@@ -25,9 +42,21 @@ export const ProfessorList = () => {
 
     const [query, setQuery] = useState('');
     const [allProfessors, setAllProfessors] = useState([]);
-	const [searchedProfessors, setSearchedProfessors] = useState([]);
+	const [searchedProfessors, setSearchedProfessors] = useState<any[]>([]);
+	const [selectedProfessor, setSelectedProfessor] = useState<any>({})
 
 	const [isDialogOpen, setIsDialogOpen] = useState(false)
+	const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+
+	const openEditDialogCallback = useCallback(
+		() => setIsEditDialogOpen(true),
+		[]
+	)
+
+	const closeEditDialogCallback = useCallback(
+		() => setIsEditDialogOpen(false),
+		[]
+	)
 
 	const openDialogCallback = useCallback(
 		() => setIsDialogOpen(true),
@@ -56,76 +85,134 @@ export const ProfessorList = () => {
 		[]
 	)
 
-    useEffect(
+	useEffect(
 		() => {
-	        let tempList = professors
-	        setAllProfessors(tempList)
-	        setSearchedProfessors(search(tempList, query))
+			setAllProfessors(professors)
 		},
 		[professors]
 	)
 
+    useEffect(
+		() => {
+			const newProfessors = search(allProfessors, query)
+			const localTableProfessors: any[] = [];
+			for (const professor of newProfessors || []) {
+				localTableProfessors.push({
+					addr: professor[0],
+					firstName: professor.firstName,
+					lastName: professor.lastName,
+					country: professor.country,
+					expertise: professor.expertise,
+					id: professor.id
+				})
+				console.log(professor)
+			}
+	        setSearchedProfessors(localTableProfessors)
+		},
+		[query, search, allProfessors]
+	)
+
 	const onSubmit = useCallback(
-		async (ad, fn, ln, cn, ex) => {
-			addProfessorAction(ad, fn, ln, cn, ex, selectedEvent, selectedAccount, dispatch)
+		async ({ addr, firstName, lastName, country, expertise }) => {
+			addProfessorAction(addr, firstName, lastName, country, expertise, selectedEvent, selectedAccount, dispatch)
 		},
 		[selectedAccount, dispatch, selectedEvent]
 	)
 
-    const onQueryChange = useCallback(
-		({target}) => {
-	        let newProfessors = search(allProfessors, target.value)
-
-	        setQuery(target.value)
-	        setSearchedProfessors(newProfessors)
+    const onDelete = useCallback(
+		async() => {
+			await deleteProfessorAction(selectedProfessor.id, selectedEvent.id, selectedAccount, dispatch)
 		},
-		[allProfessors, search]
+		[selectedProfessor, selectedEvent, selectedAccount, dispatch]
 	)
 
-    const onDelete = useCallback(
-		async(profId) => {
-			await deleteProfessorAction(profId, selectedEvent.id, selectedAccount, dispatch)
+	const onEdit = useCallback(
+		async ({ addr, firstName, lastName, country, expertise }: any) => {
+			await editProfessorAction(addr, firstName, lastName, country, expertise, selectedEvent.id, selectedAccount, dispatch)
 		},
 		[selectedEvent, selectedAccount, dispatch]
 	)
 
-    return (
-        <ContentShell title='Professors'>
-            <input type="text"
-                id="query"
-                placeholder='Search...'
-                className="search"
-                onChange={onQueryChange}
-			/>
-            <Container>
-                <Row style={listStyles.borderBottom}>
-                    <Col>Name</Col>
-                    <Col>Address</Col>
-                    <Col xs={"auto"}> </Col>
-                    <Col xs={"auto"}> </Col>
-                </Row>
-                <Pagination
-                    data={searchedProfessors}
-                    RenderComponent={ProfessorRow}
-                    func={onDelete}
-                    pageLimit={5}
-					dataLimit={5}
-					func1={noop}
-					isAdmin={undefined}
-                />
-            </Container>
-			{isAdmin &&
-				<Dialog
-					title='Add Professor'
-					onClose={closeDialogCallback}
-					open={isDialogOpen}
-				>
-                	<UserForm
-						onSubmit={onSubmit}
-						onCancel={closeDialogCallback}
+	const onView = useCallback(
+		() => {
+			navigate(`/professor?prof=${selectedProfessor.id}`)
+		},
+		[selectedProfessor, navigate]
+	)
+
+	const selectionChangeCallback = useCallback(
+		(data: any[]) => {
+			setSelectedProfessor(data[0] || {});
+		},
+		[]
+	)
+
+	return (
+		<ContentShell title='Professors'>
+			<ColumnContainer margin='medium'>
+				<div style={{ width: '200px'}}>
+					<Input
+						value={query}
+						placeholder='Search...'
+						onChange={setQuery}
 					/>
-				</Dialog>
-            }
+				</div>
+				<RowContainer>
+					<Button
+						text='Create'
+						onClick={openDialogCallback}
+						disabled={!isAdmin}
+					/>
+					{/* <Button
+						text={'View'}
+						disabled={!selectedProfessor?.id}
+						onClick={onView}
+					/> */}
+					<Button
+						text='Change'
+						disabled={!selectedProfessor?.id || !isAdmin}
+						onClick={openEditDialogCallback}
+					/>
+					<Button
+						text='Delete'
+						color='destructive'
+						onClick={onDelete}
+						disabled={!selectedProfessor?.id || !isAdmin}
+					/>
+				</RowContainer>
+				<LocalTable
+					columns={tableColumns}
+					data={searchedProfessors}
+					rowSelectionChanged={selectionChangeCallback}
+					hasPagination
+					limit={5}
+				/>
+				{isAdmin && selectedProfessor?.id &&
+					<Dialog
+						title='Edit Professor'
+						onClose={closeEditDialogCallback}
+						open={isEditDialogOpen}
+					>
+	                	<UserForm
+							user={selectedProfessor}
+							onSubmit={onEdit}
+							onCancel={closeEditDialogCallback}
+						/>
+					</Dialog>
+	            }
+				{isAdmin &&
+					<Dialog
+						title='Add Professor'
+						onClose={closeDialogCallback}
+						open={isDialogOpen}
+					>
+	                	<UserForm
+							onSubmit={onSubmit}
+							onCancel={closeDialogCallback}
+						/>
+					</Dialog>
+	            }
+			</ColumnContainer>
         </ContentShell>
     )
 }
