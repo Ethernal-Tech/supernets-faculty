@@ -75,8 +75,7 @@ export const CourseStudents = ({ courseId, selectedAccount }) => {
 
     useEffect(
 		() => {
-	        let tempList = courseStudents.slice().map(stud => ({...stud, selected: false}))
-	        setStudentsToDisenroll(tempList)
+	        setStudentsToDisenroll(courseStudents)
 		},
 		[courseStudents]
 	)
@@ -109,6 +108,7 @@ export const CourseStudents = ({ courseId, selectedAccount }) => {
 
 	// FIXME:  "Student with grade cannot be disenrolled"
 	// disabled={grade !== "---"}
+	// FIXME: multiselect
 
     const disenrollStudents = useCallback(
 		async() => {
