@@ -1,19 +1,25 @@
-import React, { useEffect, useState } from 'react'
-import { connect } from 'react-redux'
-
+import { useEffect, useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import Button from 'react-bootstrap/Button'
 import { listStyles } from '../../styles'
 import EventListenerService from "../../utils/eventListenerService"
 import { gradeStudentsAction } from '../../actions/coursesActions'
-import LoadingSpinner from '../../components/LoadingSpinner'
-import { generalStyles } from '../../styles'
 import Pagination from '../../components/Pagination'
 import GradeStudentRow from '../RowComponents/GradeStudentRow'
+import { ContentShell } from 'features/Content';
+import { noop } from 'utils/commonHelper';
+import { Button } from 'components/Button';
 
-function GradeStudentsList(props) {
+export const GradeStudentsList = ({ course, selectedAccount }) => {
+	const dispatch = useDispatch()
+	const state = useSelector((state: any) => state)
+	const allStudents = (state.users.students || [])
+    const studentGradesProps = (state.courses.gradesByStudentByCourse[course.id] || [])
+    const studentsToGradeProps = allStudents.filter(stud => studentGradesProps.filter(sg => sg.grade > 5).some(fs => fs.studentId === stud.id))
+    const eventId = state.event.selectedEvent.id
+	const courseId = course.id
 
     const [isWorking, setIsWorking] = useState(false);
     const [query, setQuery] = useState('');
@@ -22,11 +28,14 @@ function GradeStudentsList(props) {
     const [studentGrades, setStudentGrades] = useState([]);
     const [gradeEnabled, setGradeEnabled] = useState(false);
 
-    useEffect(() => {
-        let temp = props.studentsToGrade
-        setStudentsToGrade(temp)
-        setSearchedStudents(search(temp, query))
-    }, [props.studentsToGrade]);
+    useEffect(
+		() => {
+	        let temp = studentsToGradeProps
+	        setStudentsToGrade(temp)
+	        setSearchedStudents(search(temp, query))
+		},
+		[studentsToGradeProps]
+	);
 
     const onQueryChange = ({target}) => {
         let newStudentsToEnroll = search(studentsToGrade, target.value)
@@ -51,7 +60,7 @@ function GradeStudentsList(props) {
     }
 
     const gradeChanged = (e) => {
-        let newGrades = studentGrades
+        let newGrades: any = studentGrades
 
         if (e.target.value == 0) {
             delete newGrades[e.target.id]
@@ -66,22 +75,20 @@ function GradeStudentsList(props) {
     const gradeStudents = async() => {
         if (Object.keys(studentGrades).length !== 0) {
             setIsWorking(true)
-            let grades = []
+            let grades: any[] = []
             Object.entries(studentGrades).forEach(([studentAddress, courseGrade]) => {
                 grades.push({studentAddress, courseGrade})
-            })
-            await props.gradeStudents(props.courseId, grades, props.selectedAccount, props.eventId)
+			})
+			await gradeStudentsAction(courseId, grades, selectedAccount, eventId, dispatch)
             setIsWorking(false)
-            setStudentGrades({})
+            setStudentGrades({} as any)
         } else {
             EventListenerService.notify("error", 'fields not populated!')
         }
     }
 
-    const { course } = props
     return (
-        <div style={{ padding: '1rem' }}>
-            <h4>{course.name}</h4>
+        <ContentShell title={course.name}>
             <input type="text"
                 id="query"
                 placeholder='Search...'
@@ -99,33 +106,17 @@ function GradeStudentsList(props) {
                     RenderComponent={GradeStudentRow}
                     func={gradeChanged}
                     pageLimit={5}
-                    dataLimit={5}
+					dataLimit={5}
+					func1={noop}
+					isAdmin={undefined}
                 />
             </Container>
-            {
-                isWorking ?
-                <Button variant="primary" type="submit" style={generalStyles.button} disabled><LoadingSpinner/></Button> :
-                <Button className="btn btn-primary" onClick={gradeStudents} disabled={!gradeEnabled}>Grade students</Button>
-            }
-
-        </div>
+			<Button
+				text='Grade students'
+				onClick={gradeStudents}
+				disabled={!gradeEnabled}
+				isLoading={isWorking}
+			/>
+        </ContentShell>
     )
 }
-
-const mapStateToProps = (state, ownProps) => {
-    const allStudents = (state.users.students || [])
-    const studentGrades = (state.courses.gradesByStudentByCourse[ownProps.course.id] || [])
-    const studentsToGrade = allStudents.filter(stud => studentGrades.filter(sg => sg.grade > 5).some(fs => fs.studentId === stud.id))
-    return {
-        selectedAccount: state.eth.selectedAccount,
-        studentsToGrade,
-        courseId: ownProps.course.id,
-        eventId: state.event.selectedEvent.id
-    }
-}
-
-const mapDispatchToProps = dispatch => ({
-    gradeStudents: (courseId, studentGrades, selectedAccount, eventId) => gradeStudentsAction(courseId, studentGrades, selectedAccount, eventId, dispatch),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(GradeStudentsList)

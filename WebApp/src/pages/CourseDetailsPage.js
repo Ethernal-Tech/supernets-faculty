@@ -2,12 +2,12 @@ import React from 'react'
 import { Tabs, Tab } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { getUserRole, isEventAdmin } from '../utils/userUtils'
-import withRouter from '../utils/withRouter'
+import withRouter from 'utils/withRouter'
 
-import CourseDetailsComponent from '../components/CourseDetailsComponent'
-import CourseStudents from '../containers/CourseStudents'
-import EnrollStudentsList from '../containers/Admin/EnrollStudentsList'
-import GradeStudentsList from '../containers/Admin/GradeStudentsList'
+import CourseDetailsComponent from 'components/CourseDetailsComponent'
+import { CourseStudents } from 'containers/CourseStudents'
+import { EnrollStudentsList } from 'containers/Admin/EnrollStudentsList'
+import { GradeStudentsList } from 'containers/Admin/GradeStudentsList'
 
 class CourseDetailsPage extends React.Component {
     state = {
@@ -34,13 +34,13 @@ class CourseDetailsPage extends React.Component {
                     <CourseStudents courseId={course.id} userRole={userRole} selectedAccount={selectedAccount}/>
                 </Tab>
                 {
-                    this.props.isAdmin && 
+                    this.props.isAdmin &&
                     <Tab eventKey="notEnrolled" title="Enroll students">
                         <EnrollStudentsList courseId={course.id} selectedAccount={selectedAccount}/>
                     </Tab>
                 }
                 {
-                    this.props.isAdmin && 
+                    this.props.isAdmin &&
                     <Tab eventKey="notGraded" title="Grade students">
                         <GradeStudentsList course={course} selectedAccount={selectedAccount}/>
                     </Tab>

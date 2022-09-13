@@ -1,39 +1,49 @@
 import React, { useEffect, useState } from 'react'
-import { connect } from 'react-redux'
-
+import { useDispatch, useSelector } from 'react-redux'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import Button from 'react-bootstrap/Button'
-import LoadingSpinner from '../components/LoadingSpinner'
+import { Button } from 'components/Button'
 import { listStyles } from '../styles'
-import { generalStyles } from '../styles'
 import { contractToGrade }  from '../utils/userUtils'
 import Pagination from '../components/Pagination'
 import CourseStudentRow from './RowComponents/CourseStudentRow'
 import { disenrollStudentsToCourseAction } from '../actions/coursesActions'
 import EventListenerService from "../utils/eventListenerService"
+import { ContentShell } from 'features/Content';
+import { emptyArray, emptyObject } from 'utils/commonHelper'
 
-function CourseStudents(props) {
+export const CourseStudents = ({ courseId, userRole, selectedAccount }) => {
+	const dispatch = useDispatch()
+	const state = useSelector((state: any) => state)
+    const allStudents = state.users.students || emptyArray
+    const courses = state.courses.allCourses || emptyArray
+    const course = courses.find(x => x.id === courseId)
+    const courseStudents = allStudents.filter(stud => course.students.some(y => y === stud.id))
+    const gradesByStudent = (state.courses.gradesByStudentByCourse || emptyObject)[courseId] || emptyObject
+	const eventId = state.event.selectedEvent.id
 
     const [isWorking, setIsWorking] = useState(false);
     const [query, setQuery] = useState('');
     const [allChecked, setAllChecked] = useState(false);
-    const [studentsToDisenroll, setStudentsToDisenroll] = useState([]);
-    const [searchedStudents, setSearchedStudents] = useState([]);
-    const [selectedStudents, setSelectedStudents] = useState([]);
+    const [studentsToDisenroll, setStudentsToDisenroll] = useState<any[]>([]);
+    const [searchedStudents, setSearchedStudents] = useState<any[]>([]);
+    const [selectedStudents, setSelectedStudents] = useState<any[]>([]);
 
-    useEffect(() => {
-        let tempList = props.courseStudents.slice().map(stud => ({...stud, selected: false}))
-        setStudentsToDisenroll(tempList)
-        setSearchedStudents(search(tempList, query))
-    }, [props.courseStudents])
+    useEffect(
+		() => {
+	        let tempList = courseStudents.slice().map(stud => ({...stud, selected: false}))
+	        setStudentsToDisenroll(tempList)
+	        setSearchedStudents(search(tempList, query))
+		},
+		[courseStudents]
+	)
 
     const getStudentGrade = (studentId) => {
-        return contractToGrade.get((props.gradesByStudent.find(x => x.studentId === studentId) || {}).grade)
+        return contractToGrade.get((gradesByStudent.find(x => x.studentId === studentId) || {}).grade)
     }
 
-    const onCheckAll= (e) => {
+    const onCheckAll = (e) => {
         let tempSearchedList = searchedStudents;
         tempSearchedList.map(user => (user.selected = e.target.checked));
 
@@ -95,8 +105,8 @@ function CourseStudents(props) {
     const disenrollStudents = async() => {
         if (selectedStudents.length !== 0){
             setIsWorking(true)
-            const studentAddrs = selectedStudents.map(stud => stud.id)
-            await props.disenrollStudentsToCourse(props.course.id, studentAddrs, props.selectedAccount, props.eventId)
+			const studentAddrs = selectedStudents.map(stud => stud.id)
+			await disenrollStudentsToCourseAction(course.id, studentAddrs, selectedAccount, eventId, dispatch)
             setIsWorking(false)
             setAllChecked(false)
             setSelectedStudents([])
@@ -106,10 +116,8 @@ function CourseStudents(props) {
         }
     }
 
-    const { course } = props
     return (
-        <div style={{ padding: '1rem' }}>
-            <h4>{course.title}</h4>
+        <ContentShell title={course.title}>
             <input type="text"
                 id="query"
                 placeholder='Search...'
@@ -137,35 +145,16 @@ function CourseStudents(props) {
                     func={getStudentGrade}
                     func1={onItemCheck}
                     pageLimit={5}
-                    dataLimit={5}
+					dataLimit={5}
+					isAdmin={undefined}
                 />
             </Container>
-            {
-                isWorking ?
-                <Button variant="primary" type="submit" style={generalStyles.button} disabled><LoadingSpinner/></Button> :
-                <Button className="btn btn-primary" onClick={disenrollStudents} disabled={selectedStudents.length === 0}>Disenroll {selectedStudents.length} students</Button>
-            }
-        </div>
+			<Button
+				text={`Disenroll ${selectedStudents.length} students`}
+				onClick={disenrollStudents}
+				disabled={selectedStudents.length === 0}
+				isLoading={isWorking}
+			/>
+        </ContentShell>
     )
 }
-
-const mapStateToProps = (state, ownProps) => {
-    const allStudents = (state.users.students || [])
-    const courses = state.courses.allCourses || []
-    const course = courses.find(x => x.id === ownProps.courseId)
-    const courseStudents = allStudents.filter(stud => course.students.some(y => y === stud.id))
-    const gradesByStudent = (state.courses.gradesByStudentByCourse || {})[ownProps.courseId] || {}
-
-    return {
-        courseStudents,
-        gradesByStudent,
-        course,
-        eventId: state.event.selectedEvent.id
-    }
-}
-
-const mapDispatchToProps = dispatch => ({
-    disenrollStudentsToCourse: (courseId, studentAddrs, selectedAccount, eventId) => disenrollStudentsToCourseAction(courseId, studentAddrs, selectedAccount, eventId, dispatch),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(CourseStudents)

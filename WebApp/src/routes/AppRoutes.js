@@ -8,8 +8,6 @@ import LandingPage from '../pages/LandingPage'
 import ProfessorDetailsPage from '../pages/ProfessorDetailsPage'
 import StudentDetailsPage from '../pages/StudentDetailsPage'
 import CourseDetailsPage from '../pages/CourseDetailsPage'
-import EditStudentPage from '../pages/EditStudentPage'
-import EditProfessorPage from '../pages/EditProfessorPage'
 
 class AppRoutes extends React.Component {
     render() {
@@ -22,9 +20,6 @@ class AppRoutes extends React.Component {
                 <Route path="professor" element={<ProfessorDetailsPage />} />
                 <Route path="student" element={<StudentDetailsPage />} />
                 <Route path="certificate" element={<CertificatePage />} />
-
-                <Route path="editStudent" element={<EditStudentPage />} />
-                <Route path="editProfessor" element={<EditProfessorPage />} />
 
                 {/* if page unsupported, go to home */}
                 <Route path="*" element={<LandingPage />}/>

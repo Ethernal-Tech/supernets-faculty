@@ -2,10 +2,11 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addEventAction, loadAllEventsAction, setSelectedEventAction, deleteEventAction } from 'actions/eventActions'
 import { Dialog } from 'components/Dialog'
-import { emptyArray } from 'pages/commonHelper'
+import { emptyArray } from 'utils/commonHelper'
 import { EventComponent } from './EventComponent'
 import { AddEventComponent } from './AddEventComponent'
 import { isEventAdmin } from 'utils/userUtils';
+import { ContentShell } from 'features/Content';
 
 export const EventList = () => {
 	const dispatch = useDispatch();
@@ -66,7 +67,7 @@ export const EventList = () => {
 	)
 
 	return (
-		<div style={{ padding: '1rem' }}>
+		<ContentShell>
 			<div className='container col-md-8'>
 				<h2 className='text-center'>Events</h2>
 				<div className='row hidden-md-up'>
@@ -97,6 +98,6 @@ export const EventList = () => {
 					</>
 				}
 			</div>
-		</div>
+		</ContentShell>
 	)
 }

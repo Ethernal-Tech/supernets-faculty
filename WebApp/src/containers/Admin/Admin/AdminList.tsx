@@ -9,7 +9,7 @@ import Col from 'react-bootstrap/Col'
 import { listStyles } from '../../../styles'
 import Button from 'react-bootstrap/esm/Button'
 import LoadingSpinner from 'components/LoadingSpinner'
-import { emptyArray } from 'pages/commonHelper'
+import { emptyArray } from 'utils/commonHelper'
 import { ContentShell } from 'features/Content';
 import { Dialog } from 'components/Dialog'
 import { AdminForm } from './AdminForm'

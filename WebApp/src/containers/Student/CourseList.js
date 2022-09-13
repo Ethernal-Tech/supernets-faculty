@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
-
-import { loadStudentCoursesAction, generateCertificateAction } from '../../actions/coursesActions'
+import { loadStudentCoursesAction, generateCertificateAction } from 'actions/coursesActions'
 import { listStyles } from '../../styles'
-import { contractToGrade }  from '../../utils/userUtils'
-import { createMetadata, uploadMetadata } from '../../utils/nftUtils'
-import Pagination from '../../components/Pagination'
+import { contractToGrade }  from 'utils/userUtils'
+import { createMetadata, uploadMetadata } from 'utils/nftUtils'
+import Pagination from 'components/Pagination'
 import StudentCourseRow from '../RowComponents/StudentCourseRow'
+import { ContentShell } from 'features/Content';
 
 function CourseList(props) {
 
@@ -58,8 +57,7 @@ function CourseList(props) {
 	const { student } = props
 
     return (
-        <div style={{ padding: '1rem' }}>
-            <h4>{student.name}</h4>
+        <ContentShell title={student.name}>
             <input type="text"
                 id="query"
                 placeholder='Search...'
@@ -67,20 +65,18 @@ function CourseList(props) {
                 onChange={onQueryChange}/>
 
             <Container>
-                {
-                    <Row style={{ padding: '1rem 0' }}>
-                        <Col>
-                            {
-                                // certificateId > 0
-                                // ? userRole === USER_ROLES.ADMIN &&
-                                //     <a href={`https://testnets.opensea.io/assets/rinkeby/${address}/${certificateId}`}>
-                                //         <Button variant="primary" type="button">Certificate</Button>
-                                //     </a>
-                                    <Button variant="primary" type="button" onClick={onGenerateCertificate}>Produce certificate</Button>
-                            }
-                        </Col>
-                    </Row>
-                }
+                <Row style={{ padding: '1rem 0' }}>
+                    <Col>
+                        {
+                            // certificateId > 0
+                            // ? userRole === USER_ROLES.ADMIN &&
+                            //     <a href={`https://testnets.opensea.io/assets/rinkeby/${address}/${certificateId}`}>
+                            //         <Button variant="primary" type="button">Certificate</Button>
+                            //     </a>
+                                <Button variant="primary" type="button" onClick={onGenerateCertificate}>Produce certificate</Button>
+                        }
+                    </Col>
+                </Row>
                 <Row style={listStyles.borderBottom}>
                     <Col>Course Name</Col>
                     <Col>Professor's Name</Col>
@@ -94,7 +90,7 @@ function CourseList(props) {
                     dataLimit={5}
                 />
             </Container>
-        </div>
+        </ContentShell>
     )
 }
 

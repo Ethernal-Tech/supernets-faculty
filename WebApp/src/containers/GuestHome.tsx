@@ -1,7 +1,9 @@
+import { ContentShell } from 'features/Content';
+
 export const GuestHome = () => {
     return (
-        <div style={{ padding: '1rem' }}>
+        <ContentShell>
             <p>Please connect your wallet</p>
-        </div>
+        </ContentShell>
     )
 }

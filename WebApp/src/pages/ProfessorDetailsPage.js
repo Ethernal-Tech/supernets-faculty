@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import ProfessorCourses from '../containers/Professor/ProfessorCourses'
+import { ProfessorCourses } from 'containers/Professor/ProfessorCourses'
 import { USER_ROLES } from '../utils/constants'
 import { getUserRole } from '../utils/userUtils'
 import withRouter from '../utils/withRouter'

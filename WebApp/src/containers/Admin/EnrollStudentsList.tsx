@@ -1,32 +1,40 @@
-import React, {useEffect, useState} from 'react'
-import { connect } from 'react-redux'
-
+import {useEffect, useState} from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import Button from 'react-bootstrap/Button'
 import { listStyles } from '../../styles'
-import EventListenerService from "../../utils/eventListenerService"
-import { enrollStudentsToCourseAction } from '../../actions/coursesActions'
-import LoadingSpinner from '../../components/LoadingSpinner'
-import { generalStyles } from '../../styles'
-import Pagination from '../../components/Pagination'
+import EventListenerService from "utils/eventListenerService"
+import { enrollStudentsToCourseAction } from 'actions/coursesActions'
+import Pagination from 'components/Pagination'
 import EnrollStudentRow from '../RowComponents/EnrollStudentRow'
+import { ContentShell } from 'features/Content';
+import { emptyArray, noop } from 'utils/commonHelper'
+import { Button } from 'components/Button';
 
-function EnrollStudentsList(props) {
+const keys = ["firstName", "lastName", "id"]
+
+export const EnrollStudentsList = ({ courseId, selectedAccount }) => {
+	const dispatch = useDispatch()
+	const state = useSelector((state: any) => state)
+	const allStudents = state.users.students || emptyArray
+    const courses = state.courses.allCourses || emptyArray
+    const course = courses.find(x => x.id === courseId)
+    const studentsToEnrollProps = allStudents.filter(stud => !course.students.some(y => y === stud.id))
+	const eventId = state.event.selectedEvent.id
 
     const [isWorking, setIsWorking] = useState(false);
     const [query, setQuery] = useState('');
     const [allChecked, setAllChecked] = useState(false);
-    const [studentsToEnroll, setStudentsToEnroll] = useState([]);
-    const [searchedStudents, setSearchedStudents] = useState([]);
-    const [selectedStudents, setSelectedStudents] = useState([]);
+    const [studentsToEnroll, setStudentsToEnroll] = useState<any[]>([]);
+    const [searchedStudents, setSearchedStudents] = useState<any[]>([]);
+    const [selectedStudents, setSelectedStudents] = useState<any[]>([]);
 
     useEffect(() => {
-        let tempList = props.studentsToEnroll.slice().map(stud => ({...stud, selected: false}))
+        let tempList = studentsToEnrollProps.slice().map(stud => ({...stud, selected: false}))
         setStudentsToEnroll(tempList)
         setSearchedStudents(search(tempList, query))
-    }, [props.studentsToEnroll]);
+    }, [studentsToEnrollProps]);
 
     const onCheckAll= (e) => {
         let tempSearchedList = searchedStudents;
@@ -73,7 +81,6 @@ function EnrollStudentsList(props) {
         setSearchedStudents(newSearchStudents)
     }
 
-    const keys = ["firstName", "lastName", "id"]
     const search = (data, query) => {
         if (query !== '') {
             let filteredData = data
@@ -91,8 +98,8 @@ function EnrollStudentsList(props) {
     const enrollStudents = async() => {
         if (selectedStudents.length !== 0){
             setIsWorking(true)
-            const studentAddrs = selectedStudents.map(stud => stud.id)
-            await props.enrollStudentsToCourse(props.course.id, studentAddrs, props.selectedAccount, props.eventId)
+			const studentAddrs = selectedStudents.map(stud => stud.id)
+			await enrollStudentsToCourseAction(course.id, studentAddrs, selectedAccount, eventId, dispatch)
             setIsWorking(false)
             setAllChecked(false)
             setSelectedStudents([])
@@ -102,11 +109,8 @@ function EnrollStudentsList(props) {
         }
     }
 
-    const { course } = props
     return (
-        <div style={{ padding: '1rem' }}>
-            <h4>{course.title}</h4>
-
+        <ContentShell title={course.title}>
             <input type="text"
                 id="query"
                 placeholder='Search...'
@@ -127,38 +131,21 @@ function EnrollStudentsList(props) {
                     <Col>Student address</Col>
                 </Row>
                 <Pagination
-                        data={searchedStudents}
-                        RenderComponent={EnrollStudentRow}
-                        func={onItemCheck}
-                        pageLimit={5}
-                        dataLimit={5}
-                    />
+                    data={searchedStudents}
+                    RenderComponent={EnrollStudentRow}
+                    func={onItemCheck}
+                    pageLimit={5}
+					dataLimit={5}
+					func1={noop}
+					isAdmin={undefined}
+                />
             </Container>
-            {
-                isWorking ?
-                <Button variant="primary" type="submit" style={generalStyles.button} disabled><LoadingSpinner/></Button> :
-                <Button className="btn btn-primary" onClick={enrollStudents} disabled={selectedStudents.length === 0}>Enroll {selectedStudents.length} students</Button>
-            }
-
-        </div>
+			<Button
+				text={`Enroll ${selectedStudents.length} students`}
+				onClick={enrollStudents}
+				disabled={selectedStudents.length === 0}
+				isLoading={isWorking}
+			/>
+        </ContentShell>
     )
 }
-
-const mapStateToProps = (state, ownProps) => {
-    const allStudents = (state.users.students || [])
-    const courses = state.courses.allCourses || []
-    const course = courses.find(x => x.id === ownProps.courseId)
-    const studentsToEnroll = allStudents.filter(stud => !course.students.some(y => y === stud.id))
-
-    return {
-        studentsToEnroll,
-        course,
-        eventId: state.event.selectedEvent.id
-    }
-}
-
-const mapDispatchToProps = dispatch => ({
-    enrollStudentsToCourse: (courseId, studentAddrs, selectedAccount, eventId) => enrollStudentsToCourseAction(courseId, studentAddrs, selectedAccount, eventId, dispatch),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(EnrollStudentsList)

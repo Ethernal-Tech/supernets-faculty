@@ -9,15 +9,26 @@ class Model {
 	lastName!: string
 	country!: string
 	expertise!: string
+
+	constructor(model?: Model) {
+		if (model) {
+			this.addr = model.addr;
+			this.firstName = model.firstName;
+			this.lastName = model.lastName;
+			this.country = model.country;
+			this.expertise = model.expertise;
+		}
+	}
 }
 
 type Props = {
 	onSubmit(addr: string, firstName: string, lastName: string, country: string, expertise: string): void
 	onCancel(): void
+	user?: Model
 }
 
-export const UserForm = ({ onSubmit, onCancel }: Props) => {
-	const [values, setValues] = useState(new Model());
+export const UserForm = ({ onSubmit, onCancel, user }: Props) => {
+	const [values, setValues] = useState(new Model(user));
 
 	const submitCallback = useCallback(
 		async () => {

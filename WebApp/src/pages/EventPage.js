@@ -3,8 +3,8 @@ import { connect } from 'react-redux'
 
 import { AdminEventHome } from 'containers/AdminEventHome'
 import { GuestHome } from 'containers/GuestHome'
-import ProfessorEventHome from 'containers/ProfessorEventHome'
-import StudentHome from 'containers/StudentHome'
+import { ProfessorEventHome } from 'containers/ProfessorEventHome'
+import { StudentHome } from 'containers/StudentHome'
 
 import { USER_ROLES } from 'utils/constants'
 import { getUserRole } from 'utils/userUtils'
