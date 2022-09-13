@@ -8,7 +8,7 @@ class Model {
 }
 
 type Props = {
-	onSubmit(addr: string): void
+	onSubmit(values: Model): void
 	onCancel(): void
 }
 
@@ -17,7 +17,7 @@ export const AdminForm = ({ onSubmit, onCancel }: Props) => {
 
 	const submitCallback = useCallback(
 		async () => {
-			await onSubmit(values.addr);
+			await onSubmit(values);
 		},
 		[onSubmit, values]
 	)

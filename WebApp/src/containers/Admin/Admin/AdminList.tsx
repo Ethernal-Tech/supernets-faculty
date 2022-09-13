@@ -1,18 +1,22 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addAdminAction, deleteAdminAction } from 'actions/userActions'
 import { isEventAdmin } from 'utils/userUtils'
-
-import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-import { listStyles } from '../../../styles'
-import Button from 'react-bootstrap/esm/Button'
-import LoadingSpinner from 'components/LoadingSpinner'
 import { emptyArray } from 'utils/commonHelper'
 import { ContentShell } from 'features/Content';
 import { Dialog } from 'components/Dialog'
 import { AdminForm } from './AdminForm'
+import { BaseColumnModel, LocalTable } from 'components/Table'
+import { ColumnContainer, RowContainer } from 'components/Layout'
+import { Button } from 'components/Button';
+
+const tableColumns: BaseColumnModel[] = [
+	{
+		field: 'addr',
+		title: 'Address',
+		visible: true
+	}
+]
 
 export const AdminList = () => {
 	const dispatch = useDispatch()
@@ -22,6 +26,19 @@ export const AdminList = () => {
 	const selectedAccount = state.eth.selectedAccount
 	const selectedEvent = state.event.selectedEvent
 
+	const convertedAdmins = useMemo(
+		() => {
+			return (admins as any[]).map((item) => {
+				return {
+					id: item,
+					addr: item
+				}
+			})
+		},
+		[admins]
+	)
+
+	const [selectedAdmin, setSelectedAdmin] = useState<any>({})
     const [isWorking, setIsWorking] = useState(false)
 
 	const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -37,53 +54,64 @@ export const AdminList = () => {
 	)
 
     const onSubmit = useCallback(
-		async (addr) => {
+		async ({ addr }) => {
 			addAdminAction(selectedEvent.id, addr, selectedAccount, dispatch)
 		},
 		[selectedAccount, dispatch, selectedEvent]
 	)
 
     const onDelete = useCallback(
-		async(adminId) => {
+		async() => {
 			setIsWorking(true)
-			await deleteAdminAction(selectedEvent.id, adminId, selectedAccount, dispatch)
+			await deleteAdminAction(selectedEvent.id, selectedAdmin.id, selectedAccount, dispatch)
 	        setIsWorking(false)
 		},
-		[selectedAccount, dispatch, selectedEvent]
+		[selectedAdmin, selectedAccount, dispatch, selectedEvent]
+	)
+
+	const selectionChangeCallback = useCallback(
+		(data: any[]) => {
+			setSelectedAdmin(data[0] || {});
+		},
+		[]
 	)
 
     return (
         <ContentShell title='Event Admins'>
-            <Container>
-                <Row style={listStyles.borderBottom}>
-                    <Col>Address</Col>
-                    <Col xs={"auto"}> </Col>
-                </Row>
-                {admins.map((admin, ind) => (
-                    <Row key={`prof_${admin}`}
-                        style={ind === admins.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }}>
-                        <Col>{admin}</Col>
-                        {
-                            isWorking ?
-                            <Col xs={"auto"}><Button className="btn btn-danger"><LoadingSpinner/></Button></Col> :
-                            <Col xs={"auto"}><Button className="btn btn-danger" onClick={() => onDelete(admin)}>Delete</Button></Col>
-                        }
-
-                    </Row>
-                ))}
-            </Container>
-			{isAdmin &&
-				<Dialog
-					title='Add Admin'
-					onClose={closeDialogCallback}
-					open={isDialogOpen}
-				>
-                	<AdminForm
-						onSubmit={onSubmit}
-						onCancel={closeDialogCallback}
+			<ColumnContainer margin='medium'>
+				<RowContainer>
+					<Button
+						text='Create'
+						onClick={openDialogCallback}
+						disabled={!isAdmin}
 					/>
-				</Dialog>
-            }
+					<Button
+						text='Delete'
+						color='destructive'
+						onClick={onDelete}
+						disabled={!selectedAdmin?.id || !isAdmin}
+					/>
+				</RowContainer>
+				<LocalTable
+					columns={tableColumns}
+					data={convertedAdmins}
+					rowSelectionChanged={selectionChangeCallback}
+					hasPagination
+					limit={5}
+				/>
+				{isAdmin &&
+					<Dialog
+						title='Add Admin'
+						onClose={closeDialogCallback}
+						open={isDialogOpen}
+					>
+	                	<AdminForm
+							onSubmit={onSubmit}
+							onCancel={closeDialogCallback}
+						/>
+					</Dialog>
+	            }
+			</ColumnContainer>
         </ContentShell>
     )
 }

@@ -163,11 +163,11 @@ export const ProfessorList = () => {
 						onClick={openDialogCallback}
 						disabled={!isAdmin}
 					/>
-					{/* <Button
+					<Button
 						text={'View'}
 						disabled={!selectedProfessor?.id}
 						onClick={onView}
-					/> */}
+					/>
 					<Button
 						text='Change'
 						disabled={!selectedProfessor?.id || !isAdmin}
