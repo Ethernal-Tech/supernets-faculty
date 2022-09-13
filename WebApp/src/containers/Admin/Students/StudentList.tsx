@@ -148,11 +148,13 @@ export const StudentList = () => {
     return (
         <ContentShell title='Students'>
 			<ColumnContainer margin='medium'>
-				<Input
-					value={query}
-					placeholder='Search...'
-					onChange={setQuery}
-				/>
+				<div style={{ width: '200px'}}>
+					<Input
+						value={query}
+						placeholder='Search...'
+						onChange={setQuery}
+					/>
+				</div>
 				<RowContainer>
 					<Button
 						text='Create'

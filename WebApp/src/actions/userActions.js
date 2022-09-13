@@ -30,8 +30,8 @@ const loadStudentGrades = async (students, eventId, dispatch) => {
     const courses = await reader.methods.getAllCourses(eventId).call()
     for (let i = 0; i < courses.length; ++i) {
         gradesByStudentByCourse[courses[i].id] = []
-    }
-    debugger
+	}
+
     for (let i = 0; i < students.length; ++i) {
         const student = students[i]
         const grades = await reader.methods.getStudentGrades(student.id, eventId).call()
@@ -41,7 +41,7 @@ const loadStudentGrades = async (students, eventId, dispatch) => {
             const gradeObj = grades[j]
             // gradesByCourse[gradeObj.courseId] = gradeObj.courseGrade
             gradesByCourse.push({courseId: gradeObj.courseId, grade: gradeObj.courseGrade})
-            
+
             // gradesByStudentByCourse[gradeObj.courseId] = {
             //     ...gradesByStudentByCourse[gradeObj.courseId],
             //     [student.id]: gradeObj.courseGrade
@@ -49,7 +49,7 @@ const loadStudentGrades = async (students, eventId, dispatch) => {
 
             gradesByStudentByCourse[gradeObj.courseId].push({studentId: student.id, grade: gradeObj.courseGrade})
         }
-        
+
         gradesByCourseByStudent[student.id] = gradesByCourse
     }
 

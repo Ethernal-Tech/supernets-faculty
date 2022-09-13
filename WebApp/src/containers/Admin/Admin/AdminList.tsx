@@ -39,7 +39,7 @@ export const AdminList = () => {
 	)
 
 	const [selectedAdmin, setSelectedAdmin] = useState<any>({})
-    const [isWorking, setIsWorking] = useState(false)
+    const [isDeleting, setIsDeleting] = useState(false)
 
 	const [isDialogOpen, setIsDialogOpen] = useState(false)
 
@@ -62,9 +62,9 @@ export const AdminList = () => {
 
     const onDelete = useCallback(
 		async() => {
-			setIsWorking(true)
+			setIsDeleting(true)
 			await deleteAdminAction(selectedEvent.id, selectedAdmin.id, selectedAccount, dispatch)
-	        setIsWorking(false)
+	        setIsDeleting(false)
 		},
 		[selectedAdmin, selectedAccount, dispatch, selectedEvent]
 	)
@@ -90,6 +90,7 @@ export const AdminList = () => {
 						color='destructive'
 						onClick={onDelete}
 						disabled={!selectedAdmin?.id || !isAdmin}
+						isLoading={isDeleting}
 					/>
 				</RowContainer>
 				<LocalTable

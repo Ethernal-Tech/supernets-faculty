@@ -36,7 +36,7 @@ export const ProfessorEventHome = () => {
             onSelect={setSelectedCallback}
             className="mb-3">
             <Tab eventKey="courses" title="My Courses">
-                <ProfessorCourses professor={professor} userRole={userRole} selectedAccount={selectedAccount}/>
+                <ProfessorCourses professor={professor} selectedAccount={selectedAccount}/>
             </Tab>
             <Tab eventKey="eventDetails" title="Event Details">
                 <EventDetails userRole={userRole} />
