@@ -1,9 +1,8 @@
 import React from 'react'
 import { Tabs, Tab } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { getUserRole, isEventAdmin } from '../utils/userUtils'
+import { isEventAdmin } from '../utils/userUtils'
 import withRouter from 'utils/withRouter'
-
 import CourseDetailsComponent from 'components/CourseDetailsComponent'
 import { CourseStudents } from 'containers/CourseStudents'
 import { EnrollStudentsList } from 'containers/Admin/EnrollStudentsList'
@@ -18,7 +17,7 @@ class CourseDetailsPage extends React.Component {
     setSelectedTab = tab => this.setState({ selectedTab: tab })
 
     render() {
-        const { course, userRole, selectedAccount } = this.props
+        const { course, selectedAccount } = this.props
 
         if (!course) {
             return null
@@ -32,7 +31,7 @@ class CourseDetailsPage extends React.Component {
                     <CourseDetailsComponent course={course} />
                 </Tab>
                 <Tab eventKey="enrolled" title="Students on course">
-                    <CourseStudents courseId={course.id} userRole={userRole} selectedAccount={selectedAccount}/>
+                    <CourseStudents courseId={course.id} selectedAccount={selectedAccount}/>
                 </Tab>
                 {
                     this.props.isAdmin &&
@@ -56,7 +55,6 @@ const mapStateToProps = (state, ownProps) => {
     const course = ownProps.courseId ? courses.find(x => x.id === ownProps.courseId) : undefined
     const isAdmin = isEventAdmin(state)
     return {
-        userRole,
         course,
         selectedAccount: state.eth.selectedAccount,
         isAdmin,
