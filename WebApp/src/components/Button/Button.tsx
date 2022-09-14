@@ -9,9 +9,10 @@ interface Props {
 	disabled?: boolean
 	color?: 'primary' | 'secondary' | 'destructive' | 'neutral'
 	onClick(): void
+	tooltip?: string
 }
 
-export const Button = ({ children, text, isLoading, disabled, color = 'primary', onClick }: Props) => {
+export const Button = ({ children, text, isLoading, disabled, color = 'primary', onClick, tooltip }: Props) => {
 	const btnClassName = `${styles.btn} ${styles[`btn-${color}`]} ${disabled ? styles.disabled : ''}`;
 
 	return (
@@ -19,6 +20,7 @@ export const Button = ({ children, text, isLoading, disabled, color = 'primary',
 			className={btnClassName}
 			onClick={onClick}
 			disabled={disabled || isLoading}
+			title={tooltip}
 		>
 			{children || text}
 			{isLoading &&
