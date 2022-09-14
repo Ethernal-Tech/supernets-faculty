@@ -4,6 +4,7 @@ import { DateField, InputField } from 'components/Form';
 import { propertyOf } from 'utils/propertyOf';
 
 class Model {
+	id!: number
 	title!: string
 	startTime!: string
 	venue!: string
@@ -12,8 +13,9 @@ class Model {
 
 	constructor(model?: Model) {
 		if (model) {
+			this.id = model.id;
 			this.title = model.title;
-			this.startTime = model.startTime;
+			//this.startTime = model.startTime;
 			this.venue = model.venue;
 			this.points = model.points;
 			this.description = model.description;

@@ -11,10 +11,19 @@ class Model {
     description!: string
     startDate!: Date
     endDate!: Date
+
+	constructor(model?: Model) {
+		if (model) {
+			this.title = model.title;
+			this.location = model.location;
+			this.venue = model.venue;
+			this.description = model.description;
+		}
+	}
 }
 
-export const EventForm = ({ onSubmit, onCancel }) => {
-	const [values, setValues] = useState(new Model())
+export const EventForm = ({ onSubmit, onCancel, event }) => {
+	const [values, setValues] = useState(new Model(event))
 
 	const submitCallback = useCallback(
 		async () => {
@@ -31,7 +40,7 @@ export const EventForm = ({ onSubmit, onCancel }) => {
 			onChange={setValues}
 			onSubmit={submitCallback}
 			onCancel={onCancel}
-			submitButtonText='Add'
+			submitButtonText='Save'
 			render={() => (
 				<>
 					<InputField

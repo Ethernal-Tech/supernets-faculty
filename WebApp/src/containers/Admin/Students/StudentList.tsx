@@ -5,7 +5,7 @@ import { isEventAdmin } from 'utils/userUtils'
 import { emptyArray } from 'utils/commonHelper'
 import { ContentShell } from 'features/Content';
 import { Dialog } from 'components/Dialog'
-import { UserForm } from '../UserForm'
+import { StudentForm } from '../UserForm'
 import { BaseColumnModel, LocalTable } from 'components/Table'
 import { Input } from 'components/Form'
 import { ColumnContainer, RowContainer } from 'components/Layout';
@@ -167,7 +167,7 @@ export const StudentList = () => {
 						onClick={onView}
 					/>
 					<Button
-						text='Change'
+						text='Edit'
 						disabled={!selectedStudent?.id || !isAdmin}
 						onClick={openEditDialogCallback}
 					/>
@@ -191,7 +191,7 @@ export const StudentList = () => {
 						onClose={closeEditDialogCallback}
 						open={isEditDialogOpen}
 					>
-	                	<UserForm
+	                	<StudentForm
 							user={selectedStudent}
 							onSubmit={onEdit}
 							onCancel={closeEditDialogCallback}
@@ -204,7 +204,7 @@ export const StudentList = () => {
 						onClose={closeDialogCallback}
 						open={isDialogOpen}
 					>
-	                	<UserForm
+	                	<StudentForm
 							onSubmit={onSubmit}
 							onCancel={closeDialogCallback}
 						/>

@@ -37,6 +37,19 @@ export const addCourseAction = async (title, description, startTime, venue, poin
     await loadProfessorCoursesAction(professorAddr, eventId, dispatch)
 }
 
+export const editCourseAction = async (courseId, title, description, startTime, venue, points, professorAddr, eventId, selectedAccount, dispatch) => {
+    try {
+        await faculty.methods.editCourse(courseId, title, description, startTime, venue, points, professorAddr, eventId).send({ from: selectedAccount });
+    }
+    catch (ex) {
+        EventListenerService.notify("error", ex)
+    }
+
+    await loadProfessorsAction(eventId, dispatch)
+    await loadAllCoursesAction(eventId, dispatch)
+    await loadProfessorCoursesAction(professorAddr, eventId, dispatch)
+}
+
 export const deleteCourseAction = async (courseId, eventId, professorAddr, selectedAccount, dispatch) => {
     try {
         await faculty.methods.deleteCourse(courseId, eventId).send({ from: selectedAccount });

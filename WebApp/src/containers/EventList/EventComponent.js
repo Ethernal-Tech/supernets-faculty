@@ -7,8 +7,10 @@ import { RowContainer } from 'components/Layout'
 import VerticalSeparator from 'components/Layout/Separator/VerticalSeparator'
 import { noop } from 'utils/commonHelper'
 import { useNavigate } from 'react-router-dom';
+import { Dialog } from 'components/Dialog'
+import { EventForm } from './EventForm'
 
-export const EventComponent = ({ event, onEventClick, onEventDelete, isAdmin }) => {
+export const EventComponent = ({ event, onEventClick, onEventEdit, onEventDelete, isAdmin }) => {
 	const navigate = useNavigate();
 
     const [isWorking, setIsWorking] = useState(false);
@@ -16,6 +18,23 @@ export const EventComponent = ({ event, onEventClick, onEventDelete, isAdmin }) 
     const formatedStartDate = formatDate(startDate)
     const endDate = new Date(parseInt(event.endDate))
     const formatedEndDate = formatDate(endDate)
+	const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+
+	const openEditDialogCallback = useCallback(
+		() => setIsEditDialogOpen(true),
+		[]
+	)
+
+	const closeEditDialogCallback = useCallback(
+		() => setIsEditDialogOpen(false),
+		[]
+	)
+
+	const onEditSubmit = async (title, location, venue, startDate, endDate, description) => {
+        setIsWorking(true)
+        await onEventEdit(event.id, title, location, venue, startDate, endDate, description)
+        setIsWorking(false)
+    }
 
     const onDeleteClick = async () => {
         setIsWorking(true)
@@ -47,17 +66,36 @@ export const EventComponent = ({ event, onEventClick, onEventDelete, isAdmin }) 
 							onClick={onDetails}
 							isLoading={isWorking}
 						/>
-	                    {isAdmin &&
+	                    {isAdmin &&	
 							<Button
-								text='Delete'
-								color='destructive'
-								tooltip={event.coursesIds.length === 0 ? undefined : 'Event with courses cannot be deleted.'}
-								disabled={event.coursesIds.length !== 0}
-								onClick={onDeleteClick}
-								isLoading={isWorking}
-							/>
-	                    }
+							text='Edit'
+							onClick={openEditDialogCallback}
+						/>
+						}
+						{isAdmin &&					
+							<Button
+									text='Delete'
+									color='destructive'
+									tooltip={event.coursesIds.length === 0 ? undefined : 'Event with courses cannot be deleted.'}
+									disabled={event.coursesIds.length !== 0}
+									onClick={onDeleteClick}
+									isLoading={isWorking}
+								/>
+						}	
 					</RowContainer>
+					{isAdmin &&
+					<Dialog
+						title='Edit Event'
+						onClose={closeEditDialogCallback}
+						open={isEditDialogOpen}
+					>
+	                	<EventForm
+							onSubmit={onEditSubmit}
+							onCancel={closeEditDialogCallback}
+							event={event}
+						/>
+					</Dialog>
+	            }
                 </div>
             </div>
         </div>

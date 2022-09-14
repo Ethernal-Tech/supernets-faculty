@@ -12,6 +12,16 @@ export const addEventAction = async (title, location, venue, startDate, endDate,
     }
 }
 
+export const editEventAction = async (eventId, title, location, venue, startDate, endDate, description, account, dispatch) => {
+    debugger
+    try {
+        await faculty.methods.editEvent(eventId, title, location, venue, startDate, endDate, description).send({ from: account });
+        await loadAllEventsAction(dispatch)
+    } catch (ex) {
+        EventListenerService.notify("error", ex)
+    }
+}
+
 export const deleteEventAction = async(eventId, account, dispatch) => {
     try {
         await faculty.methods.deleteEvent(eventId).send({ from: account });

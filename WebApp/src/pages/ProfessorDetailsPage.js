@@ -29,6 +29,12 @@ class ProfessorDetailsPage extends React.Component {
 								disabled
 							/>
 						</SmartFormGroup>
+						<SmartFormGroup label='Address'>
+							<Input
+								value={`${professor.id}`}
+								disabled
+							/>
+						</SmartFormGroup>
 						<SmartFormGroup label='Country'>
 							<Input
 								value={professor.country}

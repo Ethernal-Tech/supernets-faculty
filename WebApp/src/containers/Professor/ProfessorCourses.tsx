@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEventAdmin } from 'utils/userUtils'
-import { addCourseAction, deleteCourseAction, loadProfessorCoursesAction } from 'actions/coursesActions'
+import { addCourseAction, editCourseAction, deleteCourseAction, loadProfessorCoursesAction } from 'actions/coursesActions'
 import { BaseColumnModel, LocalTable } from 'components/Table'
 import { ColumnContainer, RowContainer } from 'components/Layout'
 import { Button } from 'components/Button';
@@ -46,6 +46,17 @@ export const ProfessorCourses = ({ professor, selectedAccount }) => {
 	const [selectedCourse, setSelectedCourse] = useState<any>({})
 
 	const [isDialogOpen, setIsDialogOpen] = useState(false)
+	const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+
+	const openEditDialogCallback = useCallback(
+		() => setIsEditDialogOpen(true),
+		[]
+	)
+
+	const closeEditDialogCallback = useCallback(
+		() => setIsEditDialogOpen(false),
+		[]
+	)
 
 	const openDialogCallback = useCallback(
 		() => setIsDialogOpen(true),
@@ -86,7 +97,11 @@ export const ProfessorCourses = ({ professor, selectedAccount }) => {
 				localTableCourses.push({
 					title: course.title,
 					numberOfStudents: course.students.length,
-					id: course.id
+					id: course.id,
+					startTime: course.startTime,
+					venue: course.venue,
+					points: course.points,
+					description: course.description
 				})
 			}
 	        setSearchedCourses(localTableCourses)
@@ -122,6 +137,14 @@ export const ProfessorCourses = ({ professor, selectedAccount }) => {
 		},
 		[]
 	)
+	const onEdit = useCallback(
+		async ({ id, title, startTime, venue, points, description }: any) => {
+			debugger
+			const startTimeMs = new Date(startTime).getTime()
+			await editCourseAction(id, title, description, startTimeMs, venue, points, professorAddr, selectedEvent.id, selectedAccount, dispatch)
+		},
+		[selectedEvent, selectedAccount, dispatch]
+	)
 
     return (
 		<ColumnContainer margin='medium'>
@@ -143,6 +166,11 @@ export const ProfessorCourses = ({ professor, selectedAccount }) => {
 					text={'View'}
 					disabled={!selectedCourse?.id}
 					onClick={onView}
+				/>
+				<Button
+					text='Edit'
+					disabled={!selectedCourse?.id || !isAdmin}
+					onClick={openEditDialogCallback}
 				/>
 				<Button
 					text='Delete'
@@ -172,6 +200,20 @@ export const ProfessorCourses = ({ professor, selectedAccount }) => {
 					/>
 				</Dialog>
             }
+
+			{isAdmin && selectedCourse?.id &&
+				<Dialog
+					title='Edit Course'
+					onClose={closeEditDialogCallback}
+					open={isEditDialogOpen}
+				>
+					<CourseForm
+						course={selectedCourse}
+						onSubmit={onEdit}
+						onCancel={closeEditDialogCallback}
+					/>
+				</Dialog>
+			}
 		</ColumnContainer>
     )
 }

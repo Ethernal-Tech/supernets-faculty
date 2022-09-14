@@ -5,7 +5,7 @@ import { isEventAdmin } from 'utils/userUtils'
 import { emptyArray } from 'utils/commonHelper'
 import { ContentShell } from 'features/Content'
 import { Dialog } from 'components/Dialog'
-import { UserForm } from '../UserForm'
+import { ProfessorForm } from '../UserForm'
 import { LocalTable, BaseColumnModel } from 'components/Table'
 import { ColumnContainer, RowContainer } from 'components/Layout'
 import { Button } from 'components/Button';
@@ -113,7 +113,7 @@ export const ProfessorList = () => {
 
 	const onSubmit = useCallback(
 		async ({ addr, firstName, lastName, country, expertise }) => {
-			addProfessorAction(addr, firstName, lastName, country, expertise, selectedEvent, selectedAccount, dispatch)
+			addProfessorAction(addr, firstName, lastName, country, expertise, selectedEvent.id, selectedAccount, dispatch)
 		},
 		[selectedAccount, dispatch, selectedEvent]
 	)
@@ -158,17 +158,17 @@ export const ProfessorList = () => {
 				</div>
 				<RowContainer>
 					<Button
+						text={'Courses'}
+						disabled={!selectedProfessor?.id}
+						onClick={onView}
+					/>
+					<Button
 						text='Create'
 						onClick={openDialogCallback}
 						disabled={!isAdmin}
 					/>
 					<Button
-						text={'View'}
-						disabled={!selectedProfessor?.id}
-						onClick={onView}
-					/>
-					<Button
-						text='Change'
+						text='Edit'
 						disabled={!selectedProfessor?.id || !isAdmin}
 						onClick={openEditDialogCallback}
 					/>
@@ -192,7 +192,7 @@ export const ProfessorList = () => {
 						onClose={closeEditDialogCallback}
 						open={isEditDialogOpen}
 					>
-	                	<UserForm
+	                	<ProfessorForm
 							user={selectedProfessor}
 							onSubmit={onEdit}
 							onCancel={closeEditDialogCallback}
@@ -205,7 +205,7 @@ export const ProfessorList = () => {
 						onClose={closeDialogCallback}
 						open={isDialogOpen}
 					>
-	                	<UserForm
+	                	<ProfessorForm
 							onSubmit={onSubmit}
 							onCancel={closeDialogCallback}
 						/>

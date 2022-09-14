@@ -85,7 +85,11 @@ function CourseList(props) {
 
     return (
 		<ColumnContainer margin='medium'>
-			<h5>Courses</h5>
+			<Button
+				text='Produce certificate'
+				onClick={onGenerateCertificate}
+			/>
+			<h2>Courses</h2>
 			<div style={{ width: '200px'}}>
 				<Input
 					value={query}
@@ -93,10 +97,6 @@ function CourseList(props) {
 					onChange={setQuery}
 				/>
 			</div>
-			<Button
-				text='Produce certificate'
-				onClick={onGenerateCertificate}
-			/>
 			<LocalTable
 				columns={tableColumns}
 				data={searchedCourses}

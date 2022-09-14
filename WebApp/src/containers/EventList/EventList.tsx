@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { addEventAction, loadAllEventsAction, setSelectedEventAction, deleteEventAction } from 'actions/eventActions'
+import { addEventAction, loadAllEventsAction, setSelectedEventAction, editEventAction, deleteEventAction } from 'actions/eventActions'
 import { Dialog } from 'components/Dialog'
 import { emptyArray } from 'utils/commonHelper'
 import { EventComponent } from './EventComponent'
@@ -45,6 +45,13 @@ export const EventList = () => {
 		[dispatch]
 	)
 
+	const onEventEdit = useCallback(
+		async (eventId, title, location, venue, startDate, endDate, description) => {
+			editEventAction(eventId, title, location, venue, startDate, endDate, description, selectedAccount, dispatch)
+		},
+		[selectedAccount, dispatch]
+	)
+
 	const onEventDelete = useCallback(
 		async (eventId) => {
 			deleteEventAction(eventId, selectedAccount, dispatch)
@@ -65,6 +72,7 @@ export const EventList = () => {
 				key={idx}
 				event={event}
 				onEventClick={onEventClick}
+				onEventEdit={onEventEdit}
 				onEventDelete={onEventDelete}
 				isAdmin={isAdmin}
 			/>

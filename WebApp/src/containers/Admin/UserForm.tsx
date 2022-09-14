@@ -27,7 +27,7 @@ type Props = {
 	user?: Model
 }
 
-export const UserForm = ({ onSubmit, onCancel, user }: Props) => {
+export const ProfessorForm = ({ onSubmit, onCancel, user }: Props) => {
 	const [values, setValues] = useState(new Model(user));
 
 	const submitCallback = useCallback(
@@ -69,6 +69,51 @@ export const UserForm = ({ onSubmit, onCancel, user }: Props) => {
 					<InputField
 						id={propertyOf<Model>('expertise')}
 						label='Expertise'
+						isRequired
+					/>
+				</>
+			)}
+		/>
+    )
+}
+
+export const StudentForm = ({ onSubmit, onCancel, user }: Props) => {
+	const [values, setValues] = useState(new Model(user));
+
+	const submitCallback = useCallback(
+		async () => {
+			await onSubmit(values);
+		},
+		[onSubmit, values]
+	)
+
+    return (
+		<Form
+			values={values}
+			onChange={setValues}
+			onSubmit={submitCallback}
+			onCancel={onCancel}
+			submitButtonText='Save'
+			render={() => (
+				<>
+					<InputField
+						id={propertyOf<Model>('addr')}
+						label='Address'
+						isRequired
+					/>
+					<InputField
+						id={propertyOf<Model>('firstName')}
+						label='First name'
+						isRequired
+					/>
+					<InputField
+						id={propertyOf<Model>('lastName')}
+						label='Last name'
+						isRequired
+					/>
+					<InputField
+						id={propertyOf<Model>('country')}
+						label='Country'
 						isRequired
 					/>
 				</>
