@@ -19,6 +19,7 @@ export type LocalTableProps = {
 	data: any[]
 	limit?: number
 	rowSelectionChanged?: (data: any[], selectedRows: Tabulator.RowComponent[]) => void
+	cellEdited?: (cell: any) => void
 	isLoading?: boolean
 	options?: any
 	hasPagination?: boolean
@@ -30,6 +31,7 @@ export const LocalTable = ({
 	data,
 	limit,
 	rowSelectionChanged,
+	cellEdited,
 	isLoading,
 	options,
 	hasPagination,
@@ -101,6 +103,7 @@ export const LocalTable = ({
 			pagination={pagination}
 			rowSelectionChanged={rowSelectionChanged}
 			options={options}
+			cellEdited={cellEdited}
 			compact={compact}
 		/>
 	)

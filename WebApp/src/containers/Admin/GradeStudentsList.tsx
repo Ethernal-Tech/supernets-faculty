@@ -1,71 +1,130 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-import { listStyles } from '../../styles'
-import EventListenerService from "../../utils/eventListenerService"
+import EventListenerService from "utils/eventListenerService"
 import { gradeStudentsAction } from '../../actions/coursesActions'
-import Pagination from '../../components/Pagination'
-import GradeStudentRow from '../RowComponents/GradeStudentRow'
 import { ContentShell } from 'features/Content';
-import { noop } from 'utils/commonHelper';
+import { emptyArray } from 'utils/commonHelper';
 import { Button } from 'components/Button';
+import { ColumnContainer, RowContainer } from 'components/Layout'
+import { Input } from 'components/Form'
+import { useNavigate } from 'react-router-dom';
+import { BaseColumnModel, LocalTable } from 'components/Table';
+import { contractToGrade, gradeToContract } from 'utils/userUtils';
+
+const keys = ["firstName", "lastName", "id"]
+
+const tableColumns: BaseColumnModel[] = [
+	{
+		field: 'name',
+		title: 'Student name',
+		visible: true,
+		formatter: (cell: any) => {
+			const data = cell.getData();
+			return `${data.firstName} ${data.lastName}`
+		}
+	},
+	{
+		field: 'addr',
+		title: 'Student address',
+		visible: true
+	},
+	{
+		field: 'grade',
+		title: 'Grade',
+		formatter: (cell: any) => {
+			const value = cell.getValue();
+			console.log(value)
+			const convertedValue = value ? contractToGrade.get(String(value)) : undefined;
+			console.log(convertedValue)
+			return convertedValue
+		},
+		editor: 'select',
+		editorParams: {
+			values: gradeToContract.map((grade, key) => {
+				return {
+					label: grade.grade,
+					value: grade.contractGrade
+				}
+			})
+		},
+		visible: true
+	}
+]
 
 export const GradeStudentsList = ({ course, selectedAccount }) => {
+	const navigate = useNavigate()
 	const dispatch = useDispatch()
 	const state = useSelector((state: any) => state)
-	const allStudents = (state.users.students || [])
-    const studentGradesProps = (state.courses.gradesByStudentByCourse[course.id] || [])
-    const studentsToGradeProps = allStudents.filter(stud => studentGradesProps.filter(sg => sg.grade > 5).some(fs => fs.studentId === stud.id))
+	const allStudents = state.users.students || emptyArray
+    const studentGradesProps = state.courses.gradesByStudentByCourse[course.id] || emptyArray
+    const studentsToGradeProps = useMemo(
+		() => allStudents.filter(stud => studentGradesProps.filter(sg => sg.grade > 5).some(fs => fs.studentId === stud.id)),
+		[allStudents, studentGradesProps]
+	)
     const eventId = state.event.selectedEvent.id
 	const courseId = course.id
 
     const [isWorking, setIsWorking] = useState(false);
     const [query, setQuery] = useState('');
     const [studentsToGrade, setStudentsToGrade] = useState([]);
-    const [searchedStudents, setSearchedStudents] = useState([]);
-    const [studentGrades, setStudentGrades] = useState([]);
-    const [gradeEnabled, setGradeEnabled] = useState(false);
+    const [searchedStudents, setSearchedStudents] = useState<any[]>([]);
+    const [studentGrades, setStudentGrades] = useState({});
+	const [gradeEnabled, setGradeEnabled] = useState(false);
+	const [selectedStudent, setSelectedStudent] = useState<any>({})
+
+    const search = useCallback(
+		(data, query) => {
+	        if (query !== '') {
+	            let filteredData = data
+	            let multiQuery = query.split(' ')
+	            multiQuery.forEach(mq => { if (mq === '') return
+	                filteredData = filteredData.filter(item => keys.some(key => item[key].toLowerCase().includes(mq.toLowerCase())))
+	            })
+
+	            return filteredData
+	        }
+
+	        return data
+		},
+		[]
+	)
 
     useEffect(
 		() => {
-	        let temp = studentsToGradeProps
-	        setStudentsToGrade(temp)
-	        setSearchedStudents(search(temp, query))
+	        setStudentsToGrade(studentsToGradeProps)
 		},
 		[studentsToGradeProps]
-	);
+	)
 
-    const onQueryChange = ({target}) => {
-        let newStudentsToEnroll = search(studentsToGrade, target.value)
+    useEffect(
+		() => {
+			const newStudents = search(studentsToGrade, query)
+			const localTableStudents: any[] = [];
+			for (const student of newStudents || []) {
+				localTableStudents.push({
+					addr: student[0],
+					firstName: student.firstName,
+					lastName: student.lastName,
+					country: student.country,
+					grade: studentGrades[student.id],
+					id: student.id
+				})
+			}
+	        setSearchedStudents(localTableStudents)
+		},
+		[query, search, studentsToGrade, studentGrades]
+	)
 
-        setQuery(target.value)
-        setSearchedStudents(newStudentsToEnroll)
-    }
+    const cellEditedCallback = (cell: any) => {
+		const data = cell.getData();
+		const value = cell.getValue();
 
-    const keys = ["firstName", "lastName", "id"]
-    const search = (data, query) => {
-        if (query !== '') {
-            let filteredData = data
-            let multiQuery = query.split(' ')
-            multiQuery.forEach(mq => { if (mq === '') return
-                filteredData = filteredData.filter(item => keys.some(key => item[key].toLowerCase().includes(mq.toLowerCase())))
-            })
-
-            return filteredData
-        }
-
-        return data
-    }
-
-    const gradeChanged = (e) => {
         let newGrades: any = studentGrades
 
-        if (e.target.value == 0) {
-            delete newGrades[e.target.id]
+        if (value === 0) {
+            delete newGrades[data.id]
         } else {
-            newGrades[e.target.id] = e.target.value
+            newGrades[data.id] = value
         }
 
         setGradeEnabled(Object.keys(newGrades).length !== 0)
@@ -87,36 +146,58 @@ export const GradeStudentsList = ({ course, selectedAccount }) => {
         }
     }
 
-    return (
-        <ContentShell title={course.name}>
-            <input type="text"
-                id="query"
-                placeholder='Search...'
-                className="search"
-                onChange={onQueryChange}/>
+	const onView = useCallback(
+		() => {
+			navigate(`/student?stud=${selectedStudent.id}`)
+		},
+		[selectedStudent, navigate]
+	)
 
-            <Container>
-                <Row style={listStyles.borderBottom}>
-                    <Col>Student name</Col>
-                    <Col>Student address</Col>
-                    <Col xs={'auto'}>Grade</Col>
-                </Row>
+	const selectionChangeCallback = useCallback(
+		(data: any[]) => {
+			setSelectedStudent(data[0] || []);
+		},
+		[]
+	)
+
+    return (
+        <ContentShell title={`Grade students - ${course.title}`}>
+			<ColumnContainer margin='medium'>
+				<div style={{ width: '200px'}}>
+					<Input
+						value={query}
+						placeholder='Search...'
+						onChange={setQuery}
+					/>
+				</div>
+				<RowContainer>
+					<Button
+						text={'View'}
+						disabled={!selectedStudent.id}
+						onClick={onView}
+					/>
+					<Button
+						text='Grade students'
+						onClick={gradeStudents}
+						disabled={!gradeEnabled}
+						isLoading={isWorking}
+					/>
+				</RowContainer>
+			</ColumnContainer>
+			<LocalTable
+				columns={tableColumns}
+				data={searchedStudents}
+				rowSelectionChanged={selectionChangeCallback}
+				cellEdited={cellEditedCallback}
+				hasPagination
+				limit={5}
+			/>
+            {/*
                 <Pagination
                     data={searchedStudents}
                     RenderComponent={GradeStudentRow}
                     func={gradeChanged}
-                    pageLimit={5}
-					dataLimit={5}
-					func1={noop}
-					isAdmin={undefined}
-                />
-            </Container>
-			<Button
-				text='Grade students'
-				onClick={gradeStudents}
-				disabled={!gradeEnabled}
-				isLoading={isWorking}
-			/>
+            /> */}
         </ContentShell>
     )
 }

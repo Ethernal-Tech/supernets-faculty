@@ -20,6 +20,7 @@ export type BaseColumnModel = {
 	formatterParams?: any
 	notInModel?: boolean // used only to mark client side calculated values for easier search in future
 	editor?: any;
+	editorParams?: any;
 	editable?: any;
 	tooltip?: ((cell: any, formatterParams: any, onRendered: Function) => string | number | undefined | HTMLDivElement) | string | HTMLDivElement // samo as formatter
 	width?: number;

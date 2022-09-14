@@ -31,13 +31,14 @@ type Props = {
 	}
 
 	rowSelectionChanged?: (data: any[], selectedRows: Tabulator.RowComponent[]) => void
+	cellEdited?: (cell: any) => void
 
 	options?: any
 	compact?: boolean
 }
 
 export const BaseTable = ({
-	fetchFunction, isLoading, columns, rowsData, pagination, rowSelectionChanged, options, compact
+	fetchFunction, isLoading, columns, rowsData, pagination, rowSelectionChanged, cellEdited, options, compact
 }: Props) => {
 	const tabulatorRef = useRef<ReactTabulator>(null);
 
@@ -77,6 +78,7 @@ export const BaseTable = ({
 						data={rowsData}
 						rowSelectionChanged={rowSelectionChanged}
 						options={customOptions}
+						cellEdited={cellEdited}
 					/>
 					{pagination &&
 						<Pagination
