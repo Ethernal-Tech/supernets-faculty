@@ -12,6 +12,7 @@ import { ProfessorList } from '../containers/Admin/Proffesors/ProfessorList'
 import { StudentList } from '../containers/Admin/Students/StudentList'
 import { AdminList } from '../containers/Admin/Admin/AdminList';
 import { ProfessorCourses } from '../containers/Professor/ProfessorCourses'
+import { EventCourses } from 'containers/Admin/Courses/EventCourses'
 
 class AppRoutes extends React.Component {
     render() {
@@ -25,6 +26,7 @@ class AppRoutes extends React.Component {
 
                 <Route path="eventDetails" element={<EventDetails/>}/>
                 <Route path="professors" element={<ProfessorList />}/>
+                <Route path="courses" element={<EventCourses />}/>
                 <Route path="students" element={<StudentList />} />
                 <Route path="admins" element={<AdminList />} />
                 <Route path="profCourses" element={<ProfessorCourses />} />

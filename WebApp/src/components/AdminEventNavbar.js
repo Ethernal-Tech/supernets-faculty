@@ -19,6 +19,9 @@ function AdminEventNavbar(props) {
                             <Link to={'professors'} className="nav-link">Professors</Link>
                         </li>
                         <li className="nav-item">
+                            <Link to={'courses'} className="nav-link">Courses</Link>
+                        </li>
+                        <li className="nav-item">
                             <Link to={'students'} className="nav-link">Students</Link>
                         </li>
                         <li className="nav-item">
