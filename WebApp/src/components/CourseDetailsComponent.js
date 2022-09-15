@@ -19,31 +19,26 @@ class CourseDetailsComponent extends React.Component {
 					<SmartFormGroup label='Name'>
 						<Input
 							value={title}
-							disabled
 						/>
 					</SmartFormGroup>
 					<SmartFormGroup label='Description'>
 						<Textarea
 							value={description}
-							disabled
 						/>
 					</SmartFormGroup>
 					<SmartFormGroup label='Start time'>
 						<Input
 							value={this.formatedStartDate}
-							disabled
 						/>
 					</SmartFormGroup>
 					<SmartFormGroup label='Venue'>
 						<Input
 							value={venue}
-							disabled
 						/>
 					</SmartFormGroup>
 					<SmartFormGroup label='Points'>
 						<Input
 							value={points}
-							disabled
 						/>
 					</SmartFormGroup>
 				</div>

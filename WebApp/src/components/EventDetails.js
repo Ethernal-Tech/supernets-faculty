@@ -23,31 +23,26 @@ class EventDetails extends React.Component {
 					<SmartFormGroup label='Name'>
 						<Input
 							value={title}
-							disabled
 						/>
 					</SmartFormGroup>
 					<SmartFormGroup label='Description'>
 						<Textarea
 							value={description}
-							disabled
 						/>
 					</SmartFormGroup>
 					<SmartFormGroup label='Venue'>
 						<Input
 							value={venue}
-							disabled
 						/>
 					</SmartFormGroup>
 					<SmartFormGroup label='Location'>
 						<Input
 							value={location}
-							disabled
 						/>
 					</SmartFormGroup>
 					<SmartFormGroup label='Period'>
 						<Input
 							value={`${this.formatedDateStart} - ${this.formatedDateEnd}`}
-							disabled
 						/>
 					</SmartFormGroup>
 				</div>

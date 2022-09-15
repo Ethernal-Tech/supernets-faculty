@@ -61,10 +61,12 @@ function CourseList(props) {
 		() => {
 			const newCourses = search(courses, query)
 			const localTableCourses: any[] = [];
+			debugger
 			for (const course of newCourses || []) {
+				let prof = props.professors.find(p => p.id === course.professor)
 				localTableCourses.push({
 					title: course.title,
-					professorName: course.professorName,
+					professorName: `${prof.firstName} ${prof.lastName}`,
 					grade: contractToGrade.get(course.grade.grade),
 					id: course.id
 				})
@@ -122,6 +124,7 @@ const mapStateToProps = (state, ownProps) => {
         selectedAccount: state.eth.selectedAccount,
         selectedEvent: state.event.selectedEvent,
         studentCourses: studentCourses,
+		professors: state.users.professors,
     }
 }
 

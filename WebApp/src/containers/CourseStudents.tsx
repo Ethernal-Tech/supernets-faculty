@@ -161,7 +161,7 @@ export const CourseStudents = ({ courseId, selectedAccount }) => {
 					<Button
 						text={`Disenroll ${selectedStudents.length} students`}
 						onClick={disenrollStudents}
-						disabled={selectedStudents.length === 0}
+						disabled={selectedStudents.filter(s => s.grade === '---').length === 0}
 						isLoading={isWorking}
 					/>
 				</RowContainer>

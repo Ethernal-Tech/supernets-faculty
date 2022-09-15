@@ -25,19 +25,16 @@ class StudentDetailsPage extends React.Component {
 						<SmartFormGroup label='Name'>
 							<Input
 								value={`${student.firstName} ${student.lastName}`}
-								disabled
 							/>
 						</SmartFormGroup>
                         <SmartFormGroup label='Address'>
 							<Input
 								value={`${student.id}`}
-								disabled
 							/>
 						</SmartFormGroup>
 						<SmartFormGroup label='Country'>
 							<Input
 								value={student.country}
-								disabled
 							/>
 						</SmartFormGroup>
 					</div>
