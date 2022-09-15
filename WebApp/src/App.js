@@ -6,6 +6,7 @@ import Navbar from './components/Navbar'
 import AppRoutes from './routes/AppRoutes'
 import { initializeEthAction } from './actions/appActions'
 import { loadAdminAccountAction } from './actions/userActions'
+import { Container } from 'react-bootstrap'
 
 function App() {
     const dispatch = useDispatch()
@@ -25,7 +26,9 @@ function App() {
     return (
         <>
             <Navbar />
-            <AppRoutes/>
+            <Container>
+                <AppRoutes/>
+            </Container>
         </>
     )
 }

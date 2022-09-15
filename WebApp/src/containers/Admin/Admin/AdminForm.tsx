@@ -18,6 +18,7 @@ export const AdminForm = ({ onSubmit, onCancel }: Props) => {
 	const submitCallback = useCallback(
 		async () => {
 			await onSubmit(values);
+			setValues(new Model())
 		},
 		[onSubmit, values]
 	)

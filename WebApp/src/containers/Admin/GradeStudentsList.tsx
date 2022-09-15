@@ -163,14 +163,14 @@ export const GradeStudentsList = ({ course, selectedAccount }) => {
     return (
         <ContentShell title={`Grade students - ${course.title}`}>
 			<ColumnContainer margin='medium'>
-				<div style={{ width: '200px'}}>
-					<Input
-						value={query}
-						placeholder='Search...'
-						onChange={setQuery}
-					/>
-				</div>
 				<RowContainer>
+					<div style={{ width: '200px'}}>
+						<Input
+							value={query}
+							placeholder='Search...'
+							onChange={setQuery}
+						/>
+					</div>
 					<Button
 						text={'View'}
 						disabled={!selectedStudent.id}

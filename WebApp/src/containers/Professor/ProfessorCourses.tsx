@@ -149,14 +149,14 @@ export const ProfessorCourses = ({ professor, selectedAccount }) => {
     return (
 		<ColumnContainer margin='medium'>
 			<h5>Courses</h5>
-			<div style={{ width: '200px'}}>
-				<Input
-					value={query}
-					placeholder='Search...'
-					onChange={setQuery}
-				/>
-			</div>
 			<RowContainer>
+				<div style={{ width: '200px'}}>
+					<Input
+						value={query}
+						placeholder='Search...'
+						onChange={setQuery}
+					/>
+				</div>
 				<Button
 					text='Create'
 					onClick={openDialogCallback}

@@ -148,16 +148,16 @@ export const StudentList = () => {
     return (
         <ContentShell title='Students'>
 			<ColumnContainer margin='medium'>
-				<div style={{ width: '200px'}}>
-					<Input
-						value={query}
-						placeholder='Search...'
-						onChange={setQuery}
-					/>
-				</div>
 				<RowContainer>
+					<div style={{ width: '200px'}}>
+						<Input
+							value={query}
+							placeholder='Search...'
+							onChange={setQuery}
+						/>
+					</div>
 					<Button
-						text='Create'
+						text='Add'
 						onClick={openDialogCallback}
 						disabled={!isAdmin}
 					/>

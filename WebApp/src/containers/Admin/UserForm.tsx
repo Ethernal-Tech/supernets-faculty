@@ -33,6 +33,7 @@ export const ProfessorForm = ({ onSubmit, onCancel, user }: Props) => {
 	const submitCallback = useCallback(
 		async () => {
 			await onSubmit(values);
+			setValues(new Model(user));
 		},
 		[onSubmit, values]
 	)

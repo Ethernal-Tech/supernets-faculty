@@ -30,6 +30,7 @@ export const EventForm = ({ onSubmit, onCancel, event }) => {
             const timeStartMs = values.startDate.getTime()
             const timeEndMs = values.endDate.getTime()
             await onSubmit(values.title, values.location, values.venue, timeStartMs, timeEndMs, values.description)
+			setValues(new Model())
 		},
 		[onSubmit, values]
 	)
