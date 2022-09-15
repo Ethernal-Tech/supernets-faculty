@@ -1,13 +1,12 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
-import CertificatePage from '../pages/CertificatePage'
-
 import { EventList } from 'containers/EventList/EventList'
-import EventPage from '../pages/EventPage'
-import LandingPage from '../pages/LandingPage'
-import ProfessorDetailsPage from '../pages/ProfessorDetailsPage'
-import StudentDetailsPage from '../pages/StudentDetailsPage'
-import CourseDetailsPage from '../pages/CourseDetailsPage'
+import { EventPage } from 'pages/EventPage'
+import LandingPage from 'pages/LandingPage'
+import ProfessorDetailsPage from 'pages/ProfessorDetailsPage'
+import StudentDetailsPage from 'pages/StudentDetailsPage'
+import { CourseDetailsPage } from 'pages/CourseDetailsPage'
+import CertificatePage from 'pages/CertificatePage'
 
 class AppRoutes extends React.Component {
     render() {

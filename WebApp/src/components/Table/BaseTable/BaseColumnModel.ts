@@ -11,7 +11,7 @@ export enum FieldTypeEnum {
 export type BaseColumnModel = {
 	field: string
 	fieldType?: FieldTypeEnum
-	visible?: boolean // TODO: prebaciti u TabulatorColumnModel, samo mora prvo da se sredi useVisibleColumns // problem je export
+	visible?: boolean
 	title: string
 	align?: 'left' | 'center' | 'right'
 	disableSort?: boolean
@@ -24,9 +24,6 @@ export type BaseColumnModel = {
 	editable?: any;
 	tooltip?: ((cell: any, formatterParams: any, onRendered: Function) => string | number | undefined | HTMLDivElement) | string | HTMLDivElement // samo as formatter
 	width?: number;
-	// FIXME: CSS za frozen ne valja, posto je background za header celije override-ovan da bude unset i onda se header-i vide "ispod" frozen header-a nakon sto se horizontalno skroluje
-	// moras napraviti content-background bez transparency i onda setovati tu boju za header tabele
-	frozen?: boolean; // freeze the column so it is always visible while horizontal scrolling
 
 	bottomCalc?: any
 	bottomCalcFormatter?: (cell: any) => string | number | undefined

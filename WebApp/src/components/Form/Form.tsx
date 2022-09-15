@@ -10,7 +10,6 @@ export const globalErrorKey = '';
 export type ValidatorFunctionType = (value: any, values: any, id: string) => any;
 
 export interface IFormContext {
-	// TODO: try to set type to those two any's, also on errors in Form -> useState
 	values?: any
 	errors?: any
 	onFieldChange?: (id: string, value: any) => void
@@ -33,7 +32,6 @@ type Props = {
 	render(): any
 	disabled?: boolean
 
-	// TODO: onSubmit can have better return type, more strict type
 	onSubmit?(): KeyValue
 	submitButtonText?: string
 	hideSubmitButton?: boolean
@@ -63,7 +61,6 @@ export const Form = ({
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [registeredValidators, dispatchRegisteredValidators] = useRegisteredValidatorsReducer();
 
-	// TODO: try to improve it, so there is undefined (or no property at all) instead of ''
 	const haveErrorsCallback = useCallback(
 		() => {
 			let haveError: boolean = false;

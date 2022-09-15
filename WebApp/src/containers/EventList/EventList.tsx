@@ -77,7 +77,7 @@ export const EventList = () => {
 				isAdmin={isAdmin}
 			/>
 		)),
-		[events, onEventClick, onEventDelete, isAdmin]
+		[events, onEventClick, onEventEdit, onEventDelete, isAdmin]
 	)
 
 	return (

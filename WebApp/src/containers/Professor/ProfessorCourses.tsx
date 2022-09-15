@@ -143,7 +143,7 @@ export const ProfessorCourses = ({ professor, selectedAccount }) => {
 			const startTimeMs = new Date(startTime).getTime()
 			await editCourseAction(id, title, description, startTimeMs, venue, points, professorAddr, selectedEvent.id, selectedAccount, dispatch)
 		},
-		[selectedEvent, selectedAccount, dispatch]
+		[selectedEvent, selectedAccount, professorAddr, dispatch]
 	)
 
     return (
