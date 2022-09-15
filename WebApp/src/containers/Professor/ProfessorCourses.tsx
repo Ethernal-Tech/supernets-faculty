@@ -26,10 +26,13 @@ const tableColumns: BaseColumnModel[] = [
 	}
 ]
 
-export const ProfessorCourses = ({ professor, selectedAccount }) => {
+export const ProfessorCourses = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch()
 	const state = useSelector((state: any) => state)
+	const professors = state.users.professors || emptyArray
+	const selectedAccount = state.eth.selectedAccount
+	const professor = professors.find(x => x.id === selectedAccount)
 	const professorAddr = professor?.id
     const allCourses = state.courses.allCourses || emptyArray
     const professorCoursesIds = (professorAddr ? state.courses.coursesByProfessorAddr[professorAddr] : undefined) || emptyArray
