@@ -33,6 +33,7 @@ export const EventList = () => {
 
 	useEffect(
 		() => {
+			setSelectedEventAction(null, dispatch)
 			loadAllEventsAction(dispatch)
 		},
 		[dispatch]

@@ -145,14 +145,14 @@ export const CourseStudents = ({ courseId, selectedAccount }) => {
     return (
         <ContentShell title={`Students on course - ${course.title}`}>
 			<ColumnContainer margin='medium'>
-				<div style={{ width: '200px'}}>
-					<Input
-						value={query}
-						placeholder='Search...'
-						onChange={setQuery}
-					/>
-				</div>
 				<RowContainer>
+					<div style={{ width: '200px'}}>
+						<Input
+							value={query}
+							placeholder='Search...'
+							onChange={setQuery}
+						/>
+					</div>
 					<Button
 						text='View'
 						disabled={selectedStudents.length !== 1}
@@ -161,7 +161,7 @@ export const CourseStudents = ({ courseId, selectedAccount }) => {
 					<Button
 						text={`Disenroll ${selectedStudents.length} students`}
 						onClick={disenrollStudents}
-						disabled={selectedStudents.length === 0}
+						disabled={selectedStudents.filter(s => s.grade === '---').length === 0}
 						isLoading={isWorking}
 					/>
 				</RowContainer>

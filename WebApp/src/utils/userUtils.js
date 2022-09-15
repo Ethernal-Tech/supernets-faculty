@@ -9,7 +9,7 @@ export const isEventAdmin = state => {
 }
 
 export const gradeToContract = [
-    { grade: '', contractGrade: 0 },
+    { grade: 'Select grade', contractGrade: 0 },
     { grade: '10', contractGrade: 5 },
     { grade: '9', contractGrade: 4 }, 
     { grade: '8', contractGrade: 3 },

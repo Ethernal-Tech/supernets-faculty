@@ -26,10 +26,13 @@ const tableColumns: BaseColumnModel[] = [
 	}
 ]
 
-export const ProfessorCourses = ({ professor, selectedAccount }) => {
+export const ProfessorCourses = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch()
 	const state = useSelector((state: any) => state)
+	const professors = state.users.professors || emptyArray
+	const selectedAccount = state.eth.selectedAccount
+	const professor = professors.find(x => x.id === selectedAccount)
 	const professorAddr = professor?.id
     const allCourses = state.courses.allCourses || emptyArray
     const professorCoursesIds = (professorAddr ? state.courses.coursesByProfessorAddr[professorAddr] : undefined) || emptyArray
@@ -101,7 +104,8 @@ export const ProfessorCourses = ({ professor, selectedAccount }) => {
 					startTime: course.startTime,
 					venue: course.venue,
 					points: course.points,
-					description: course.description
+					description: course.description,
+					professor: course.professor,
 				})
 			}
 	        setSearchedCourses(localTableCourses)
@@ -149,14 +153,14 @@ export const ProfessorCourses = ({ professor, selectedAccount }) => {
     return (
 		<ColumnContainer margin='medium'>
 			<h5>Courses</h5>
-			<div style={{ width: '200px'}}>
-				<Input
-					value={query}
-					placeholder='Search...'
-					onChange={setQuery}
-				/>
-			</div>
 			<RowContainer>
+				<div style={{ width: '200px'}}>
+					<Input
+						value={query}
+						placeholder='Search...'
+						onChange={setQuery}
+					/>
+				</div>
 				<Button
 					text='Create'
 					onClick={openDialogCallback}

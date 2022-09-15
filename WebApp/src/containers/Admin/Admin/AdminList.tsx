@@ -81,7 +81,7 @@ export const AdminList = () => {
 			<ColumnContainer margin='medium'>
 				<RowContainer>
 					<Button
-						text='Create'
+						text='Add'
 						onClick={openDialogCallback}
 						disabled={!isAdmin}
 					/>

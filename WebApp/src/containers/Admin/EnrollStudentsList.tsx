@@ -125,14 +125,14 @@ export const EnrollStudentsList = ({ courseId, selectedAccount }) => {
     return (
         <ContentShell title={`Enroll students - ${course.title}`}>
 			<ColumnContainer margin='medium'>
-				<div style={{ width: '200px'}}>
-					<Input
-						value={query}
-						placeholder='Search...'
-						onChange={setQuery}
-					/>
-				</div>
 				<RowContainer>
+					<div style={{ width: '200px', textAlign: 'end'}}>
+						<Input
+							value={query}
+							placeholder='Search...'
+							onChange={setQuery}
+						/>
+					</div>
 					<Button
 						text={'View'}
 						disabled={selectedStudents.length !== 1}
