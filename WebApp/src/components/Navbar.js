@@ -45,11 +45,14 @@ class Navbar extends React.Component {
 							/>
                         </Link>
                         <Link to={'/'} className="navbar-brand">Faculty of blockchain</Link>
-                        {/* <ul className="navbar-nav">
+                        <ul className="navbar-nav">
                             <li className="nav-item">
-                                <Link to={'/'} className="nav-link">Home</Link>
+                                <Link to={'/events'} className="nav-link">Events</Link>
                             </li>
-                        </ul> */}
+                            <li className="nav-item">
+                                <Link to={'/'} className="nav-link">About</Link>
+                            </li>
+                        </ul>
                     </div>
                     {
                         !!selectedAccount &&

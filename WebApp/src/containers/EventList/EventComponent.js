@@ -44,7 +44,7 @@ export const EventComponent = ({ event, onEventClick, onEventEdit, onEventDelete
 
 	const onDetails = useCallback(
 		() => {
-			navigate(`/event`)
+			navigate(`/eventDetails`)
 			onEventClick(event)
 		},
 		[navigate, event, onEventClick]
