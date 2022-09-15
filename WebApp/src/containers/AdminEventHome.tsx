@@ -4,6 +4,7 @@ import EventDetails from '../components/EventDetails'
 import { ProfessorList } from './Admin/Proffesors/ProfessorList'
 import { StudentList } from './Admin/Students/StudentList'
 import { AdminList } from './Admin/Admin/AdminList';
+import { EventCourses } from './Admin/Courses/EventCourses'
 
 type Props = {
 	userRole: any
@@ -29,6 +30,9 @@ export const AdminEventHome = ({ userRole }: Props) => {
             </Tab>
             <Tab eventKey="professors" title="Professors">
                 <ProfessorList />
+            </Tab>
+            <Tab eventKey="courses" title="Courses">
+                <EventCourses />
             </Tab>
             <Tab eventKey="students" title="Students">
                 <StudentList />

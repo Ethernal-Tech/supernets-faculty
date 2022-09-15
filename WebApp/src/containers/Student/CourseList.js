@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { connect } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import { loadStudentCoursesAction, generateCertificateAction } from 'actions/coursesActions'
 import { contractToGrade }  from 'utils/userUtils'
 import { createMetadata, uploadMetadata } from 'utils/nftUtils'
@@ -33,6 +33,8 @@ function CourseList(props) {
     const [query, setQuery] = useState('');
     const [courses, setCourses] = useState([]);
     const [searchedCourses, setSearchedCourses] = useState([]);
+	const state = useSelector((state: any) => state);
+	const professors = state.users.professors || emptyArray;
 
     useEffect(
 		() => {
@@ -61,9 +63,8 @@ function CourseList(props) {
 		() => {
 			const newCourses = search(courses, query)
 			const localTableCourses: any[] = [];
-			debugger
 			for (const course of newCourses || []) {
-				let prof = props.professors.find(p => p.id === course.professor)
+				let prof = professors.find(p => p.id === course.professor)
 				localTableCourses.push({
 					title: course.title,
 					professorName: `${prof.firstName} ${prof.lastName}`,
@@ -124,7 +125,6 @@ const mapStateToProps = (state, ownProps) => {
         selectedAccount: state.eth.selectedAccount,
         selectedEvent: state.event.selectedEvent,
         studentCourses: studentCourses,
-		professors: state.users.professors,
     }
 }
 

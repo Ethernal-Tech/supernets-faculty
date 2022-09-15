@@ -60,7 +60,9 @@ export const deleteCourseAction = async (courseId, eventId, professorAddr, selec
 
     await loadProfessorsAction(eventId, dispatch)
     await loadAllCoursesAction(eventId, dispatch)
-    await loadProfessorCoursesAction(professorAddr, eventId, dispatch)
+    if (professorAddr){
+        await loadProfessorCoursesAction(professorAddr, eventId, dispatch)
+    }
 }
 
 export const generateCertificateAction = async (studentAddr, selectedAccount, ipfsURI, eventId) => {

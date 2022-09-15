@@ -10,6 +10,7 @@ class Model {
 	venue!: string
 	points!: number
 	description!: string
+	professor!: string
 
 	constructor(model?: Model) {
 		if (model) {
@@ -19,6 +20,7 @@ class Model {
 			this.venue = model.venue;
 			this.points = model.points;
 			this.description = model.description;
+			this.professor = model.professor
 		}
 	}
 }
@@ -35,6 +37,7 @@ export const CourseForm = ({ onSubmit, onCancel, course }: Props) => {
 	const submitCallback = useCallback(
 		async () => {
 			await onSubmit(values);
+			setValues(new Model(course))
 		},
 		[onSubmit, values]
 	)
@@ -48,6 +51,11 @@ export const CourseForm = ({ onSubmit, onCancel, course }: Props) => {
 			submitButtonText='Save'
 			render={() => (
 				<>
+					<InputField
+						id={propertyOf<Model>('professor')}
+						label='Professor address'
+						isRequired
+					/>
 					<InputField
 						id={propertyOf<Model>('title')}
 						label='Name'

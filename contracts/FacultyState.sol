@@ -100,9 +100,11 @@ contract FacultyState {
 
         courses[courseId].exist = false;
 
-        bytes memory professorKey = getKey(courses[courseId].professor, eventId);
-        deleteUintFromArray(professors[professorKey].eventCourses, courseId);
-        deleteUintFromArray(events[eventId].coursesIds, courseId);
+        if (courses[couseId].professor != address(0)) {
+            bytes memory professorKey = getKey(courses[courseId].professor, eventId);
+            deleteUintFromArray(professors[professorKey].eventCourses, courseId);
+            deleteUintFromArray(events[eventId].coursesIds, courseId);
+        }
     }
 
     //Event admins

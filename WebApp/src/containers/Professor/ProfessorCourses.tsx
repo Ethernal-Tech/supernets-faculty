@@ -101,7 +101,8 @@ export const ProfessorCourses = ({ professor, selectedAccount }) => {
 					startTime: course.startTime,
 					venue: course.venue,
 					points: course.points,
-					description: course.description
+					description: course.description,
+					professor: course.professor,
 				})
 			}
 	        setSearchedCourses(localTableCourses)
