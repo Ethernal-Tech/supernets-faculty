@@ -33,9 +33,7 @@ const tableColumns: BaseColumnModel[] = [
 		title: 'Grade',
 		formatter: (cell: any) => {
 			const value = cell.getValue();
-			console.log(value)
 			const convertedValue = value ? contractToGrade.get(String(value)) : undefined;
-			console.log(convertedValue)
 			return convertedValue
 		},
 		editor: 'select',

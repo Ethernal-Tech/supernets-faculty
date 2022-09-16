@@ -154,7 +154,7 @@ export const CourseStudents = ({ courseId, selectedAccount }) => {
 						/>
 					</div>
 					<Button
-						text={'View'}
+						text='View'
 						disabled={selectedStudents.length !== 1}
 						onClick={onView}
 					/>

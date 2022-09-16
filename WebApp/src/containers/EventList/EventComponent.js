@@ -1,11 +1,8 @@
 import React, { useCallback, useState } from 'react'
 import { formatDate } from 'utils/utils'
 import { Button } from 'components/Button'
-import Tooltip from 'react-bootstrap/Tooltip'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import { RowContainer } from 'components/Layout'
 import VerticalSeparator from 'components/Layout/Separator/VerticalSeparator'
-import { noop } from 'utils/commonHelper'
 import { useNavigate } from 'react-router-dom';
 import { Dialog } from 'components/Dialog'
 import { EventForm } from './EventForm'
@@ -66,13 +63,13 @@ export const EventComponent = ({ event, onEventClick, onEventEdit, onEventDelete
 							onClick={onDetails}
 							isLoading={isWorking}
 						/>
-	                    {isAdmin &&	
+	                    {isAdmin &&
 							<Button
 							text='Edit'
 							onClick={openEditDialogCallback}
 						/>
 						}
-						{isAdmin &&					
+						{isAdmin &&
 							<Button
 									text='Delete'
 									color='destructive'
@@ -81,7 +78,7 @@ export const EventComponent = ({ event, onEventClick, onEventEdit, onEventDelete
 									onClick={onDeleteClick}
 									isLoading={isWorking}
 								/>
-						}	
+						}
 					</RowContainer>
 					{isAdmin &&
 					<Dialog
