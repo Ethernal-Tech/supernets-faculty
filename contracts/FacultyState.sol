@@ -100,7 +100,7 @@ contract FacultyState {
 
         courses[courseId].exist = false;
 
-        if (courses[couseId].professor != address(0)) {
+        if (courses[courseId].professor != address(0)) {
             bytes memory professorKey = getKey(courses[courseId].professor, eventId);
             deleteUintFromArray(professors[professorKey].eventCourses, courseId);
             deleteUintFromArray(events[eventId].coursesIds, courseId);
@@ -144,6 +144,7 @@ contract FacultyState {
 
         deleteAddressFromArray(events[eventId].professorsAddresses, profAddress);
         professors[profKey].exist = false;
+        delete professors[profKey].eventCourses;
     }
 
     //Students
@@ -169,6 +170,7 @@ contract FacultyState {
 
         deleteAddressFromArray(events[eventId].studentsAddresses, studentAddress);
         students[studentKey].exist = false;
+        delete students[studentKey].eventCourses;
     }
 
     function enrollCourseMultiple(uint courseId, address[] calldata studAddresses, uint eventId) external eventAdmin(eventId) eventExists(eventId) {
@@ -354,8 +356,7 @@ contract FacultyState {
     }
 
     function populateCourse(uint courseId, string calldata title, string calldata description, uint256 startTime, string calldata venue, uint points, address professor, uint eventId) private {
-        bytes memory professorKey = getKey(professor, eventId);
-        
+                
         courses[courseId].title = title;
         courses[courseId].description = description;
         courses[courseId].startTime = startTime;
@@ -364,12 +365,15 @@ contract FacultyState {
         courses[courseId].exist = true;
 
         if (courses[courseId].professor != professor) {
+            bytes memory professorKey = getKey(professor, eventId);
+
             if (courses[courseId].professor != address(0)) {
-                deleteUintFromArray(professors[professorKey].eventCourses, courseId);
+                bytes memory oldProfessorKey = getKey(courses[courseId].professor, eventId);
+                deleteUintFromArray(professors[oldProfessorKey].eventCourses, courseId);
             }
             
-            courses[maxCourseId].professor = professor;         
-            professors[professorKey].eventCourses.push(maxCourseId);
+            courses[courseId].professor = professor;         
+            professors[professorKey].eventCourses.push(courseId);
         }
     }
 
