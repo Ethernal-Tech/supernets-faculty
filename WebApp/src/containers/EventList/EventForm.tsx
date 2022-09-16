@@ -12,12 +12,14 @@ class Model {
     startDate!: Date
     endDate!: Date
 
-	constructor(model?: Model) {
+	constructor(model?) {
 		if (model) {
 			this.title = model.title;
 			this.location = model.location;
 			this.venue = model.venue;
 			this.description = model.description;
+			this.startDate = new Date(parseInt(model.startDate));
+			this.endDate = new Date(parseInt(model.endDate));
 		}
 	}
 }
@@ -27,9 +29,7 @@ export const EventForm = ({ onSubmit, onCancel, event }) => {
 
 	const submitCallback = useCallback(
 		async () => {
-            const timeStartMs = values.startDate.getTime()
-            const timeEndMs = values.endDate.getTime()
-            await onSubmit(values.title, values.location, values.venue, timeStartMs, timeEndMs, values.description)
+            await onSubmit(values)
 			setValues(new Model())
 		},
 		[onSubmit, values]

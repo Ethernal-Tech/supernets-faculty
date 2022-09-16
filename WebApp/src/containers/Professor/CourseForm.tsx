@@ -6,17 +6,17 @@ import { propertyOf } from 'utils/propertyOf';
 class Model {
 	id!: number
 	title!: string
-	startTime!: string
+	startTime!: Date
 	venue!: string
 	points!: number
 	description!: string
 	professor!: string
 
-	constructor(model?: Model) {
+	constructor(model?) {
 		if (model) {
 			this.id = model.id;
 			this.title = model.title;
-			//this.startTime = model.startTime;
+			this.startTime = new Date(parseInt(model.startTime));
 			this.venue = model.venue;
 			this.points = model.points;
 			this.description = model.description;
@@ -37,7 +37,7 @@ export const CourseForm = ({ onSubmit, onCancel, course }: Props) => {
 	const submitCallback = useCallback(
 		async () => {
 			await onSubmit(values);
-			setValues(new Model(course))
+			setValues(new Model())
 		},
 		[onSubmit, values]
 	)

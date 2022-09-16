@@ -61,8 +61,10 @@ export const EventList = () => {
 	)
 
 	const onSubmit = useCallback(
-		async (title, location, venue, startDate, endDate, description) => {
-			await addEventAction(title, location, venue, startDate, endDate, description, selectedAccount, dispatch)
+		async ({ title, location, venue, startDate, endDate, description }) => {
+            const timeStartMs = startDate.getTime()
+            const timeEndMs = endDate.getTime()
+			await addEventAction(title, location, venue, timeStartMs, timeEndMs, description, selectedAccount, dispatch)
 		},
 		[selectedAccount, dispatch]
 	)
@@ -101,6 +103,7 @@ export const EventList = () => {
 									<EventForm
 										onSubmit={onSubmit}
 										onCancel={closeDialogCallback}
+										event={undefined}
 									/>
 								</Dialog>
 							}

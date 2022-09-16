@@ -1,11 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { addProfessorAction, deleteProfessorAction, editProfessorAction } from 'actions/userActions'
 import { isEventAdmin } from 'utils/userUtils'
 import { emptyArray } from 'utils/commonHelper'
 import { ContentShell } from 'features/Content'
 import { Dialog } from 'components/Dialog'
-import { ProfessorForm } from '../UserForm'
 import { LocalTable, BaseColumnModel } from 'components/Table'
 import { ColumnContainer, RowContainer } from 'components/Layout'
 import { Button } from 'components/Button';
@@ -120,8 +118,10 @@ export const EventCourses = () => {
 	)
 
 	const onSubmit = useCallback(
-		async ({ title, description, startTime, venue, points, professor  }) => {
-			addCourseAction(title, description, startTime, venue, points, professor, selectedEvent.id, selectedAccount, dispatch)
+		async ({ title, description, startTime, venue, points, professor }) => {
+			debugger
+            const timeStartMs = startTime.getTime()
+			addCourseAction(title, description, timeStartMs, venue, points, professor, selectedEvent.id, selectedAccount, dispatch)
 		},
 		[selectedAccount, dispatch, selectedEvent]
 	)
@@ -134,8 +134,10 @@ export const EventCourses = () => {
 	)
 
 	const onEdit = useCallback(
-		async ({ id, title, startTime, venue, points, description, professor }: any) => {
-			await editCourseAction(id, title, description, startTime, venue, points, professor, selectedEvent.id, selectedAccount, dispatch)
+		async ({ id, title, startTime, venue, points, description, professor }) => {
+			debugger
+            const timeStartMs = startTime.getTime()
+			await editCourseAction(id, title, description, timeStartMs, venue, points, professor, selectedEvent.id, selectedAccount, dispatch)
 		},
 		[selectedEvent, selectedAccount, dispatch]
 	)
@@ -202,8 +204,8 @@ export const EventCourses = () => {
 					>
 	                	<CourseForm
 							course={selectedCourse}
-							onSubmit={onSubmit}
-							onCancel={closeDialogCallback}
+							onSubmit={onEdit}
+							onCancel={closeEditDialogCallback}
 						/>
 					</Dialog>
 	            }
@@ -214,8 +216,8 @@ export const EventCourses = () => {
 						open={isDialogOpen}
 					>
 	                	<CourseForm
-							onSubmit={onEdit}
-							onCancel={closeEditDialogCallback}
+							onSubmit={onSubmit}
+							onCancel={closeDialogCallback}
 						/>
 					</Dialog>
 	            }
