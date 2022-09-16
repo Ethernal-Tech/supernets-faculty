@@ -25,8 +25,7 @@ export const loadProfessorCoursesAction = async (professorAddr, eventId, dispatc
 }
 
 export const addCourseAction = async (title, description, startTime, venue, points, professorAddr, eventId, selectedAccount, dispatch) => {
-    try {
-        debugger
+    try {        
         await faculty.methods.addCourse(title, description, startTime, venue, points, professorAddr, eventId).send({ from: selectedAccount });
     }
     catch (ex) {
@@ -40,7 +39,6 @@ export const addCourseAction = async (title, description, startTime, venue, poin
 
 export const editCourseAction = async (courseId, title, description, startTime, venue, points, professorAddr, eventId, selectedAccount, dispatch) => {
     try {
-        debugger
         await faculty.methods.editCourse(courseId, title, description, startTime, venue, points, professorAddr, eventId).send({ from: selectedAccount });
     }
     catch (ex) {

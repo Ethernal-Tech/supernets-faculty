@@ -143,7 +143,6 @@ export const ProfessorCourses = () => {
 	)
 	const onEdit = useCallback(
 		async ({ id, title, startTime, venue, points, description }: any) => {
-			debugger
 			const startTimeMs = new Date(startTime).getTime()
 			await editCourseAction(id, title, description, startTimeMs, venue, points, professorAddr, selectedEvent.id, selectedAccount, dispatch)
 		},

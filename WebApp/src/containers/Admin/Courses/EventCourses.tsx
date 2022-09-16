@@ -119,7 +119,6 @@ export const EventCourses = () => {
 
 	const onSubmit = useCallback(
 		async ({ title, description, startTime, venue, points, professor }) => {
-			debugger
             const timeStartMs = startTime.getTime()
 			addCourseAction(title, description, timeStartMs, venue, points, professor, selectedEvent.id, selectedAccount, dispatch)
 		},
@@ -135,7 +134,6 @@ export const EventCourses = () => {
 
 	const onEdit = useCallback(
 		async ({ id, title, startTime, venue, points, description, professor }) => {
-			debugger
             const timeStartMs = startTime.getTime()
 			await editCourseAction(id, title, description, timeStartMs, venue, points, professor, selectedEvent.id, selectedAccount, dispatch)
 		},
