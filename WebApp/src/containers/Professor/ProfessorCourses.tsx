@@ -8,7 +8,7 @@ import { Button } from 'components/Button';
 import { Dialog } from 'components/Dialog'
 import { Input } from 'components/Form'
 import { CourseForm } from './CourseForm'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { emptyArray } from 'utils/commonHelper';
 
 const keys = ["title"]
@@ -26,13 +26,14 @@ const tableColumns: BaseColumnModel[] = [
 	}
 ]
 
-export const ProfessorCourses = () => {
+export const ProfessorCourses = ({professor}) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch()
 	const state = useSelector((state: any) => state)
 	const professors = state.users.professors || emptyArray
 	const selectedAccount = state.eth.selectedAccount
-	const professor = professors.find(x => x.id === selectedAccount)
+
+	professor = professor || professors.find(x => x.id === selectedAccount)
 	const professorAddr = professor?.id
     const allCourses = state.courses.allCourses || emptyArray
     const professorCoursesIds = (professorAddr ? state.courses.coursesByProfessorAddr[professorAddr] : undefined) || emptyArray

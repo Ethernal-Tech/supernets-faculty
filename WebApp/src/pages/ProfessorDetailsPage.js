@@ -45,7 +45,7 @@ class ProfessorDetailsPage extends React.Component {
 						</SmartFormGroup>
 					</div>
 					<VerticalSeparator margin='xlarge' />
-	                <ProfessorCourses professor={professor} userRole={userRole} selectedAccount={selectedAccount}/>
+	                <ProfessorCourses professor={professor}/>
 	            </ContentShell>
 			</>
         )
