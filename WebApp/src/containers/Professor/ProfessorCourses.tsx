@@ -8,7 +8,7 @@ import { Button } from 'components/Button';
 import { Dialog } from 'components/Dialog'
 import { Input } from 'components/Form'
 import { CourseForm } from './CourseForm'
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { emptyArray } from 'utils/commonHelper';
 
 const keys = ["title"]

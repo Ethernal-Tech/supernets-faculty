@@ -12,7 +12,7 @@ import { emptyArray } from 'utils/commonHelper'
 
 class ProfessorDetailsPage extends React.Component {
     render() {
-        const { professor, userRole, selectedAccount } = this.props
+        const { professor } = this.props
 
         if (!professor) {
             return null
