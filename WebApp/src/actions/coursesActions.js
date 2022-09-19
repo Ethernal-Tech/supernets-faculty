@@ -65,16 +65,6 @@ export const deleteCourseAction = async (courseId, eventId, professorAddr, selec
     }
 }
 
-export const generateCertificateAction = async (studentAddr, selectedAccount, ipfsURI, eventId) => {
-
-    try {
-        await faculty.methods.generateCertificate(studentAddr, ipfsURI, eventId).send({ from: selectedAccount });
-    }
-    catch (ex) {
-        EventListenerService.notify("error", ex)
-    }
-}
-
 export const loadStudentCoursesAction = async (accountAddress, eventId, dispatch) => {
     try {
         const courses = await reader.methods.getStudentCourses(accountAddress, eventId).call();

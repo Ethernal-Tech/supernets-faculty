@@ -17,6 +17,11 @@ contract PlanBCertificate is ERC721, ERC721URIStorage {
         mapping(address => uint256) ownerToToken;
     }
 
+    struct CertificateData {
+        uint256 tokenId;
+        string tokenURI;
+    }
+
     address private admin;
     Counters.Counter private _tokenIdCounter;
     mapping(uint => Event) private events;
@@ -70,6 +75,16 @@ contract PlanBCertificate is ERC721, ERC721URIStorage {
     function getTokenForOwner(address owner, uint eventId) external view returns (uint256 tokenId) {
         tokenId = events[eventId].ownerToToken[owner];
         require(tokenId > 0);
+    }
+
+    function getCertificateData(address owner, uint eventId) external view returns (CertificateData memory certificateData) {
+        uint256 tokenId = events[eventId].ownerToToken[owner];
+        require(tokenId > 0);
+
+        string memory tokenUri = super.tokenURI(tokenId);
+        require(bytes(tokenUri).length > 0);
+
+        return CertificateData(tokenId, tokenUri);
     }
 
     // Private functions
