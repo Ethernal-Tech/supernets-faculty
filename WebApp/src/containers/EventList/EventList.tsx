@@ -48,7 +48,9 @@ export const EventList = () => {
 
 	const onEventEdit = useCallback(
 		async (eventId, title, location, venue, startDate, endDate, description) => {
-			editEventAction(eventId, title, location, venue, startDate, endDate, description, selectedAccount, dispatch)
+            const timeStartMs = startDate.getTime()
+            const timeEndMs = endDate.getTime()
+			await editEventAction(eventId, title, location, venue, timeStartMs, timeEndMs, description, selectedAccount, dispatch)
 		},
 		[selectedAccount, dispatch]
 	)

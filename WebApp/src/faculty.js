@@ -1,6 +1,6 @@
 import web3 from './web3';
 
-export const address = '0xC1324C36A38046A04225d83216D4E070b6b79066';
+export const address = '0x7C3d882103c8FB9046E4Cc06061435BE175F7FB3';
 const abi = [
 	{
 		"inputs": [
@@ -15,6 +15,11 @@ const abi = [
 	},
 	{
 		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "courseId",
+				"type": "uint256"
+			},
 			{
 				"internalType": "string",
 				"name": "title",
@@ -51,13 +56,18 @@ const abi = [
 				"type": "uint256"
 			}
 		],
-		"name": "addCourse",
+		"name": "addEditCourse",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "eventId",
+				"type": "uint256"
+			},
 			{
 				"internalType": "string",
 				"name": "title",
@@ -89,25 +99,7 @@ const abi = [
 				"type": "string"
 			}
 		],
-		"name": "addEvent",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "eventId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "adminAddress",
-				"type": "address"
-			}
-		],
-		"name": "addEventAdmin",
+		"name": "addEditEvent",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -145,7 +137,7 @@ const abi = [
 				"type": "uint256"
 			}
 		],
-		"name": "addProfessor",
+		"name": "addEditProfessor",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -178,7 +170,25 @@ const abi = [
 				"type": "uint256"
 			}
 		],
-		"name": "addStudent",
+		"name": "addEditStudent",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "eventId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "adminAddress",
+				"type": "address"
+			}
+		],
+		"name": "addEventAdmin",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -300,168 +310,6 @@ const abi = [
 			}
 		],
 		"name": "disenrollCourseMultiple",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "courseId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "title",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "description",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "startTime",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "venue",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "points",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "professor",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "eventId",
-				"type": "uint256"
-			}
-		],
-		"name": "editCourse",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "eventId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "title",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "location",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "venue",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "startDate",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "endDate",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "description",
-				"type": "string"
-			}
-		],
-		"name": "editEvent",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "profAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "firstName",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "lastName",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "country",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "expertise",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "eventId",
-				"type": "uint256"
-			}
-		],
-		"name": "editProfessor",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "studentAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "firstName",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "lastName",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "country",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "eventId",
-				"type": "uint256"
-			}
-		],
-		"name": "editStudent",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"

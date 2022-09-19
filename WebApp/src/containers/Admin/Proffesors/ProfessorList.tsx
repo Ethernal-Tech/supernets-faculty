@@ -113,7 +113,7 @@ export const ProfessorList = () => {
 
 	const onSubmit = useCallback(
 		async ({ addr, firstName, lastName, country, expertise }) => {
-			addProfessorAction(addr, firstName, lastName, country, expertise, selectedEvent.id, selectedAccount, dispatch)
+			await addProfessorAction(addr, firstName, lastName, country, expertise, selectedEvent.id, selectedAccount, dispatch)
 		},
 		[selectedAccount, dispatch, selectedEvent]
 	)
