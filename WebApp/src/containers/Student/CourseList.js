@@ -38,11 +38,9 @@ function CourseList(props) {
 
     useEffect(
 		() => {
-			if (courses.length === 0) {
-				props.loadStudentCourses(props.student.id, props.selectedEvent.id)
-			}
+			props.loadStudentCourses(props.student.id, props.selectedEvent.id)
 		},
-		[courses, props.student, props.selectedEvent]
+		[props.student, props.selectedEvent]
 	);
 
     useEffect(

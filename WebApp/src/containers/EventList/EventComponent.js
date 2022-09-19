@@ -27,7 +27,7 @@ export const EventComponent = ({ event, onEventClick, onEventEdit, onEventDelete
 		[]
 	)
 
-	const onEditSubmit = async (title, location, venue, startDate, endDate, description) => {
+	const onEditSubmit = async ({title, location, venue, startDate, endDate, description}) => {
         setIsWorking(true)
         await onEventEdit(event.id, title, location, venue, startDate, endDate, description)
         setIsWorking(false)

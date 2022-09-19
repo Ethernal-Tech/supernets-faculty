@@ -5,7 +5,7 @@ import EventListenerService from "../utils/eventListenerService"
 
 export const addEventAction = async (title, location, venue, startDate, endDate, description, account, dispatch) => {
     try {
-        await faculty.methods.addEvent(title, location, venue, startDate, endDate, description).send({ from: account });
+        await faculty.methods.addEditEvent(0, title, location, venue, startDate, endDate, description).send({ from: account });
         await loadAllEventsAction(dispatch)
     } catch (ex) {
         EventListenerService.notify("error", ex)
@@ -14,7 +14,7 @@ export const addEventAction = async (title, location, venue, startDate, endDate,
 
 export const editEventAction = async (eventId, title, location, venue, startDate, endDate, description, account, dispatch) => {
     try {
-        await faculty.methods.editEvent(eventId, title, location, venue, startDate, endDate, description).send({ from: account });
+        await faculty.methods.addEditEvent(eventId, title, location, venue, startDate, endDate, description).send({ from: account });
         await loadAllEventsAction(dispatch)
     } catch (ex) {
         EventListenerService.notify("error", ex)

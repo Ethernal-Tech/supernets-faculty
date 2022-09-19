@@ -1,6 +1,6 @@
 import web3 from './web3';
 
-export const address = '0xC1324C36A38046A04225d83216D4E070b6b79066';
+export const address = '0x7C3d882103c8FB9046E4Cc06061435BE175F7FB3';
 const abi = [
 	{
 		"inputs": [

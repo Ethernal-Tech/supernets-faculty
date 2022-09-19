@@ -112,7 +112,7 @@ export const StudentList = () => {
 
     const onSubmit = useCallback(
 		async ({ addr, firstName, lastName, country }) => {
-			addStudentAction(addr, firstName, lastName, country, selectedEvent.id, selectedAccount, dispatch)
+			await addStudentAction(addr, firstName, lastName, country, selectedEvent.id, selectedAccount, dispatch)
 		},
 		[selectedEvent, selectedAccount, dispatch]
 	)
