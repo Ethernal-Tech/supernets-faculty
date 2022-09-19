@@ -1,5 +1,5 @@
 import React from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Switch, Route } from 'react-router-dom'
 import { EventList } from 'containers/EventList/EventList'
 import LandingPage from 'pages/LandingPage'
 import ProfessorDetailsPage from 'pages/ProfessorDetailsPage'
@@ -13,29 +13,27 @@ import { ProfessorCourses } from '../containers/Professor/ProfessorCourses'
 import { EventCourses } from 'containers/Admin/Courses/EventCourses'
 import EventDetails from 'components/EventDetails'
 
-class AppRoutes extends React.Component {
-    render() {
-        return (
-            <Routes>
-                <Route path="events" element={<EventList />}/>
-                <Route path="course" element={<CourseDetailsPage />} />
-                <Route path="professor" element={<ProfessorDetailsPage />} />
-                <Route path="student" element={<StudentDetailsPage />} />
-                <Route path="certificate" element={<CertificatePage />} />
+const AppRoutes = () => {
+    return (
+        <Switch>
+            <Route path="/events" render={() => <EventList />}/>
+            <Route path="/course" render={() => <CourseDetailsPage />} />
+            <Route path="/professor" render={() => <ProfessorDetailsPage />} />
+            <Route path="/student" render={() => <StudentDetailsPage />} />
+            <Route path="/certificate" render={() => <CertificatePage />} />
 
-                <Route path="eventDetails" element={<EventDetails />}/>
-                <Route path="professors" element={<ProfessorList />}/>
-                <Route path="courses" element={<EventCourses />}/>
-                <Route path="students" element={<StudentList />} />
-                <Route path="admins" element={<AdminList />} />
-                <Route path="profCourses" element={<ProfessorCourses />} />
+            <Route path="/eventDetails" render={() => <EventDetails />}/>
+            <Route path="/professors" render={() => <ProfessorList />}/>
+            <Route path="/courses" render={() => <EventCourses />}/>
+            <Route path="/students" render={() => <StudentList />} />
+            <Route path="/admins" render={() => <AdminList />} />
+            <Route path="/profCourses" render={() => <ProfessorCourses />} />
 
-                {/* if page unsupported, go to home */}
-                <Route path="*" element={<LandingPage />}/>
-                {/* <Route path="home" element={<HomePage />}/> */}
-            </Routes>
-        )
-    }
+            {/* if page unsupported, go to home */}
+            <Route render={() => <LandingPage />}/>
+            {/* <Route path="home" render={() => <HomePage />}/> */}
+        </Switch>
+    )
 }
 
 export default AppRoutes

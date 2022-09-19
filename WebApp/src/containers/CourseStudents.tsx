@@ -10,7 +10,7 @@ import { BaseColumnModel, LocalTable } from 'components/Table'
 import { ColumnContainer, RowContainer } from 'components/Layout'
 import { Input } from 'components/Form'
 import { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const keys = ["firstName", "lastName", "id"]
 
@@ -37,7 +37,7 @@ const tableColumns: BaseColumnModel[] = [
 ]
 
 export const CourseStudents = ({ courseId, selectedAccount }) => {
-	const navigate = useNavigate()
+	const history = useHistory()
 	const dispatch = useDispatch()
 	const state = useSelector((state: any) => state)
     const allStudents = state.users.students || emptyArray
@@ -129,10 +129,10 @@ export const CourseStudents = ({ courseId, selectedAccount }) => {
 	const onView = useCallback(
 		() => {
 			if (selectedStudents.length === 1) {
-				navigate(`/student?stud=${selectedStudents[0].id}`)
+				history.push(`/student?stud=${selectedStudents[0].id}`)
 			}
 		},
-		[selectedStudents, navigate]
+		[selectedStudents, history]
 	)
 
 	const selectionChangeCallback = useCallback(

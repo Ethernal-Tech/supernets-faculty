@@ -10,7 +10,7 @@ import { LocalTable, BaseColumnModel } from 'components/Table'
 import { ColumnContainer, RowContainer } from 'components/Layout'
 import { Button } from 'components/Button';
 import { Input } from 'components/Form'
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const keys = ["firstName", "lastName", "id"]
 
@@ -32,7 +32,7 @@ const tableColumns: BaseColumnModel[] = [
 ]
 
 export const ProfessorList = () => {
-	const navigate = useNavigate();
+	const history = useHistory();
 	const dispatch = useDispatch();
 	const state = useSelector((state: any) => state);
 	const isAdmin = isEventAdmin(state);
@@ -134,9 +134,9 @@ export const ProfessorList = () => {
 
 	const onView = useCallback(
 		() => {
-			navigate(`/professor?prof=${selectedProfessor.id}`)
+			history.push(`/professor?prof=${selectedProfessor.id}`)
 		},
-		[selectedProfessor, navigate]
+		[selectedProfessor, history]
 	)
 
 	const selectionChangeCallback = useCallback(

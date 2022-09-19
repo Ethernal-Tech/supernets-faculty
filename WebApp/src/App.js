@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 import Navbar from './components/Navbar'
 import AppRoutes from './routes/AppRoutes'
@@ -16,13 +16,16 @@ import { USER_ROLES } from 'utils/constants'
 
 function App(props) {
     const dispatch = useDispatch()
-    const navigate = useNavigate()
+    const history = useHistory()
 
-    const initCallback = useCallback(async () => {
-        await initializeEthAction(navigate, dispatch)
-        await loadAdminAccountAction(dispatch)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    const initCallback = useCallback(
+		async () => {
+	        await initializeEthAction(history, dispatch)
+	        await loadAdminAccountAction(dispatch)
+	        // eslint-disable-next-line react-hooks/exhaustive-deps
+		},
+		[dispatch, history]
+	)
 
     useEffect(() => {
         initCallback()

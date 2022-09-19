@@ -8,7 +8,7 @@ import { Button } from 'components/Button';
 import { Dialog } from 'components/Dialog'
 import { Input } from 'components/Form'
 import { CourseForm } from './CourseForm'
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { emptyArray } from 'utils/commonHelper';
 
 const keys = ["title"]
@@ -27,7 +27,7 @@ const tableColumns: BaseColumnModel[] = [
 ]
 
 export const ProfessorCourses = ({professor}) => {
-	const navigate = useNavigate();
+	const history = useHistory();
 	const dispatch = useDispatch()
 	const state = useSelector((state: any) => state)
 	const professors = state.users.professors || emptyArray
@@ -131,9 +131,9 @@ export const ProfessorCourses = ({professor}) => {
 
 	const onView = useCallback(
 		() => {
-			navigate(`/course?courseId=${selectedCourse.id}`)
+			history.push(`/course?courseId=${selectedCourse.id}`)
 		},
-		[selectedCourse, navigate]
+		[selectedCourse, history]
 	)
 
 	const selectionChangeCallback = useCallback(

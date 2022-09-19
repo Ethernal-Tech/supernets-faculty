@@ -8,7 +8,7 @@ import { LocalTable, BaseColumnModel } from 'components/Table'
 import { ColumnContainer, RowContainer } from 'components/Layout'
 import { Button } from 'components/Button';
 import { Input } from 'components/Form'
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { addCourseAction, deleteCourseAction, editCourseAction } from 'actions/coursesActions'
 import { CourseForm } from 'containers/Professor/CourseForm'
 
@@ -33,7 +33,7 @@ const tableColumns: BaseColumnModel[] = [
 ]
 
 export const EventCourses = () => {
-	const navigate = useNavigate();
+	const history = useHistory();
 	const dispatch = useDispatch();
 	const state = useSelector((state: any) => state);
 	const isAdmin = isEventAdmin(state);
@@ -142,9 +142,9 @@ export const EventCourses = () => {
 
 	const onView = useCallback(
 		() => {
-			navigate(`/course?courseId=${selectedCourse.id}`)
+			history.push(`/course?courseId=${selectedCourse.id}`)
 		},
-		[selectedCourse, navigate]
+		[selectedCourse, history]
 	)
 
 	const selectionChangeCallback = useCallback(

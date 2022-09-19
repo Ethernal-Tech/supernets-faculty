@@ -2,7 +2,7 @@ import { setSelectedAccount, setGasPrice } from '../state/ethReducer'
 import web3 from '../web3'
 import EventListenerService from "../utils/eventListenerService"
 
-export const initializeEthAction = async (navigate, dispatch) => {
+export const initializeEthAction = async (history, dispatch) => {
     window.ethereum.on('accountsChanged', async _ => {
         // Handle the new accounts, or lack thereof.
         // "accounts" will always be an array, but it can be empty.
@@ -12,8 +12,8 @@ export const initializeEthAction = async (navigate, dispatch) => {
         dispatch(setSelectedAccount(accounts.length > 0 ? accounts[0] : undefined))
         const pathname = window.location ? window.location.pathname  : ''
         if (pathname !== '/' && pathname !== '') {
-            navigate('/')
-        }        
+            history.push('/')
+        }
     })
 
     try {
@@ -36,5 +36,5 @@ export const initializeEthAction = async (navigate, dispatch) => {
         dispatch(setGasPrice(gasPrice))
     } catch (ex) {
         EventListenerService.notify("error", ex)
-    }    
+    }
 }
