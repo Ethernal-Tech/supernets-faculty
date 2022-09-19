@@ -55,15 +55,16 @@ contract FacultyState {
 
     //Events
 
-    function addEvent(string calldata title, string calldata location, string calldata venue, uint256 startDate, uint256 endDate, string calldata description) external onlyAdmin {
-        maxEventId ++;
-        events[maxEventId].id = maxEventId;
+    function addEditEvent(uint eventId, string calldata title, string calldata location, string calldata venue, uint256 startDate, uint256 endDate, string calldata description) external onlyAdmin {
+        if (eventId == 0) {
+            maxEventId ++;
+            events[maxEventId].id = maxEventId;
+            eventId = maxEventId;
+            eventCount ++;
+        } else {
+            require(events[eventId].exist);
+        }
 
-        populateEvent(maxEventId, title, location, venue, startDate, endDate, description);
-        eventCount ++;
-    }
-
-    function editEvent(uint eventId, string calldata title, string calldata location, string calldata venue, uint256 startDate, uint256 endDate, string calldata description) external onlyAdmin eventExists(eventId) {
         populateEvent(eventId, title, location, venue, startDate, endDate, description);
     }
 
@@ -75,23 +76,20 @@ contract FacultyState {
 
     //Courses
 
-    function addCourse(string calldata title, string calldata description, uint256 startTime, string calldata venue, uint points, address professor, uint eventId) external eventAdmin(eventId) eventExists(eventId) {
+    function addEditCourse(uint courseId, string calldata title, string calldata description, uint256 startTime, string calldata venue, uint points, address professor, uint eventId) external eventAdmin(eventId) eventExists(eventId) {
         require(professors[getKey(professor, eventId)].exist);
-
-        maxCourseId ++;
-        courses[maxCourseId].id = maxCourseId;
-
-        populateCourse(maxCourseId, title, description, startTime, venue, points, professor, eventId);
-        events[eventId].coursesIds.push(maxCourseId);
-    }
-
-    function editCourse(uint courseId, string calldata title, string calldata description, uint256 startTime, string calldata venue, uint points, address professor, uint eventId) external eventAdmin(eventId) eventExists(eventId) {
-        require(courses[courseId].exist);
-        require(professors[getKey(professor, eventId)].exist);
-        require(uintExistsInArray(events[eventId].coursesIds, courseId));
+       
+        if (courseId == 0) {
+            maxCourseId ++;
+            courses[maxCourseId].id = maxCourseId;
+            events[eventId].coursesIds.push(maxCourseId);
+            courseId = maxCourseId;
+        } else {
+            require(courses[courseId].exist);
+            require(uintExistsInArray(events[eventId].coursesIds, courseId));
+        }
 
         populateCourse(courseId, title, description, startTime, venue, points, professor, eventId);
-        
     }
 
     function deleteCourse(uint courseId, uint eventId) external eventAdmin(eventId) eventExists(eventId) {
@@ -123,13 +121,14 @@ contract FacultyState {
 
     //Professors
 
-    function addProfessor(address profAddress, string calldata firstName, string calldata lastName, string calldata country, string calldata expertise, uint eventId) external eventAdmin(eventId) eventExists(eventId) canAddAddress(eventId, profAddress) {
-        populateProfessor(profAddress, firstName, lastName, country, expertise, eventId);
-        events[eventId].professorsAddresses.push(profAddress);
-    }
+    function addEditProfessor(address profAddress, string calldata firstName, string calldata lastName, string calldata country, string calldata expertise, uint eventId) external eventAdmin(eventId) eventExists(eventId) {
+        require(!addressExistsInArray(events[eventId].adminsAddresses, profAddress));
+        require(!students[getKey(profAddress, eventId)].exist);
 
-    function editProfessor(address profAddress, string calldata firstName, string calldata lastName, string calldata country, string calldata expertise, uint eventId) external eventAdmin(eventId) eventExists(eventId) {
-        require(professors[getKey(profAddress, eventId)].exist);
+        if (!professors[getKey(profAddress, eventId)].exist)
+        {
+            events[eventId].professorsAddresses.push(profAddress);
+        }
         populateProfessor(profAddress, firstName, lastName, country, expertise, eventId);
     }
 
@@ -149,13 +148,13 @@ contract FacultyState {
 
     //Students
 
-    function addStudent(address studentAddress, string calldata firstName, string calldata lastName, string calldata country, uint eventId) external eventAdmin(eventId) eventExists(eventId) canAddAddress(eventId, studentAddress) {
-        populateStudent(studentAddress, firstName, lastName, country, eventId);
-        events[eventId].studentsAddresses.push(studentAddress);
-    }
-
-    function editStudent(address studentAddress, string calldata firstName, string calldata lastName, string calldata country, uint eventId) external eventAdmin(eventId) eventExists(eventId) {
-        require(students[getKey(studentAddress, eventId)].exist);
+    function addEditStudent(address studentAddress, string calldata firstName, string calldata lastName, string calldata country, uint eventId) external eventAdmin(eventId) eventExists(eventId) {
+        require(!addressExistsInArray(events[eventId].adminsAddresses, studentAddress));
+        require(!professors[getKey(studentAddress, eventId)].exist);
+     
+        if (!students[getKey(studentAddress, eventId)].exist) {
+            events[eventId].studentsAddresses.push(studentAddress);
+        }
         populateStudent(studentAddress, firstName, lastName, country, eventId);
     }
 
@@ -225,7 +224,14 @@ contract FacultyState {
     //Certificates
 
     function generateCertificate(address studentAddress, string memory uri, uint eventId) external eventAdmin(eventId) eventExists(eventId) {
-        require(students[getKey(studentAddress, eventId)].exist);
+        bytes memory studentKey = getKey(studentAddress, eventId);
+        require(students[studentKey].exist);
+
+        for (uint i = 0; i < students[studentKey].eventCourses.length; i++) {
+            FacultyStructs.CourseGrade grade = grades[getKey(studentAddress, students[studentKey].eventCourses[i])];
+            require(grade >= FacultyStructs.CourseGrade.GRADE1 && grade <= FacultyStructs.CourseGrade.GRADE5);
+        }
+        
         planBCertificate.safeMint(studentAddress, uri, eventId);
     }
 
