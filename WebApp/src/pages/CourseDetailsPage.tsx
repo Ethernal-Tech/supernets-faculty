@@ -1,7 +1,7 @@
 import { Tabs, TabType } from 'components/Tabs'
 import { useSelector } from 'react-redux'
 import { isEventAdmin } from '../utils/userUtils'
-import CourseDetailsComponent from 'components/CourseDetailsComponent'
+import CourseDetailsComponent from 'containers/CourseDetailsComponent'
 import { CourseStudents } from 'containers/CourseStudents'
 import { EnrollStudentsList } from 'containers/Admin/EnrollStudentsList'
 import { GradeStudentsList } from 'containers/Admin/GradeStudentsList'

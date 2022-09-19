@@ -1,4 +1,3 @@
-import React from 'react'
 import { Switch, Route } from 'react-router-dom'
 import { EventList } from 'containers/EventList/EventList'
 import LandingPage from 'pages/LandingPage'
@@ -6,12 +5,12 @@ import ProfessorDetailsPage from 'pages/ProfessorDetailsPage'
 import StudentDetailsPage from 'pages/StudentDetailsPage'
 import { CourseDetailsPage } from 'pages/CourseDetailsPage'
 import CertificatePage from 'pages/CertificatePage'
-import { ProfessorList } from '../containers/Admin/Proffesors/ProfessorList'
-import { StudentList } from '../containers/Admin/Students/StudentList'
-import { AdminList } from '../containers/Admin/Admin/AdminList';
-import { ProfessorCourses } from '../containers/Professor/ProfessorCourses'
+import { ProfessorList } from 'containers/Admin/Proffesors/ProfessorList'
+import { StudentList } from 'containers/Admin/Students/StudentList'
+import { AdminList } from 'containers/Admin/Admin/AdminList';
+import { ProfessorCourses } from 'containers/Professor/ProfessorCourses'
 import { EventCourses } from 'containers/Admin/Courses/EventCourses'
-import EventDetails from 'components/EventDetails'
+import EventDetails from 'containers/EventDetails'
 
 const AppRoutes = () => {
     return (

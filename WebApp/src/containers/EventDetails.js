@@ -1,9 +1,9 @@
 import { ContentShell } from 'features/Content'
 import { useEffect } from 'react'
 import { connect } from 'react-redux'
-import { formatDate } from '../utils/utils'
-import { Input, Textarea } from './Form'
-import { SmartFormGroup } from './SmartContainer/SmartContainer'
+import { formatDate } from 'utils/utils'
+import { Input, Textarea } from 'components/Form'
+import { SmartFormGroup } from 'components/SmartContainer/SmartContainer'
 import { loadUsersAction } from 'actions/userActions'
 import { loadAllCoursesAction } from 'actions/coursesActions'
 

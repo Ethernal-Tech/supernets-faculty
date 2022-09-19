@@ -1,7 +1,7 @@
 import { ContentShell } from 'features/Content'
 import React from 'react'
-import { Input, Textarea } from './Form'
-import { SmartFormGroup } from './SmartContainer/SmartContainer'
+import { Input, Textarea } from 'components/Form'
+import { SmartFormGroup } from 'components/SmartContainer/SmartContainer'
 
 class CourseDetailsComponent extends React.Component {
     constructor(props) {
