@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react'
-import { Button, Container } from 'react-bootstrap'
+import { Container } from 'react-bootstrap'
+import { Button } from 'components/Button'
 import { Link } from "react-router-dom"
 import { connect } from 'react-redux'
 import { setSelectedEventAction } from 'actions/eventActions'
+import { noop } from 'utils/commonHelper'
 
 function LandingPage(props){
 
@@ -14,7 +16,7 @@ function LandingPage(props){
         <Container style={styles.container}>
             <div style={styles.homeHeader}>
                 <img style={{ marginRight: 30 }} src={`${process.env.PUBLIC_URL}/logoplan.png`}  alt="logoplan" />
-                <h2 style={{ marginBottom: 0 }}>Welcome to Faculty of Blockchain</h2>
+                <h1 style={{ marginBottom: 0 }}>Welcome to Faculty of Blockchain</h1>
             </div>
             <div style={styles.homeText}>
                 This is a show case platform tailored made for the purpose of Lugano PlanB Summer School. <br />
@@ -22,9 +24,10 @@ function LandingPage(props){
             </div>
 
             <Link style={styles.enterButtonContainer} to={'/events'}>
-                <Button style={styles.enterButton}>
-                    ENTER
-                </Button>
+				<Button
+					text='Enter'
+					onClick={noop}
+				/>
             </Link>
         </Container>
     )

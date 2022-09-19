@@ -1,14 +1,19 @@
+@import url("https://fonts.googleapis.com/css?family=Mada:400,500,600");
+
 body {
+    font-family: "Mada",sans-serif;
 	margin: 0;
-	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-	'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-	sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 
-	--brand-color: #3D8EEF;
 	font-size: 14px;
-	color: #4d4d4f;
+	background: var(--content-background);
+	color: var(--content-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+	line-height: 1.2;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -18,31 +23,44 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 {
 	font-size: 24px;
-    margin-bottom: 32px;
+	font-weight: bold;
+	color: var(--h1-color);
+	margin-bottom: 32px;
 }
 
 h2 {
 	font-size: 20px;
 	font-weight: bold;
+	color: var(--h2-color);
 	margin-bottom: 28px;
 }
 
 h3 {
 	font-size: 16px;
 	font-weight: bold;
+	color: var(--h3-color);
 	margin-bottom: 24px;
 }
 
 h4 {
 	font-size: 16px;
 	font-weight: bold;
+	color: var(--h4-color);
 	margin-bottom: 20px;
 }
 
 h5 {
     font-size: 14px;
 	font-weight: 500;
+	color: var(--h5-color);
 	margin-bottom: 16px;
+}
+
+h6 {
+    font-size: 14px;
+	font-weight: 500;
+	color: var(--h6-color);
+	margin-bottom: 8px;
 }
 
 a {

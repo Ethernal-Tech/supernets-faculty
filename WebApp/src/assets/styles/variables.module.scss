@@ -1,5 +1,6 @@
 body {
 	// brand
+	--brand-color: #329239;
 	--primary-color: var(--brand-color);
 	--secondary-color: #0F996D;
 	--neutral-color: #aaaaaa;
@@ -11,23 +12,23 @@ body {
 	--h1-color: var(--brand-color);
 	--h2-color: var(--brand-color);
 	--h3-color: var(--brand-color);
-	--h4-color: #D6D6D6;
+	--h4-color: var(--content-color);
 	--h5-color: var(--brand-color);
-	--h6-color: #D6D6D6;
-	--scroll-bar-background: #cccfd4;
+	--h6-color: var(--content-color);
+	--scroll-bar-background: #616161;
 
 	// shell
 
-	--content-background: #ffffff;
-	--content-color: #4d4d4f;
+	--content-background: #3c3c3d;
+	--content-color: #d8d8d8;
 	--content-title-color: var(--brand-color);
 	--content-subtitle-color: var(--brand-color);
-	--content-separator-background: #eff3f6;
+	--content-separator-background: #545454;
 	--content-selected-color: var(--brand-color);
 
 	// components
-	--field-background: #fff;
-	--field-color: #4d4d4f;
+	--field-background: #212529;
+	--field-color: white;
 	--field-border-color: rgba(77,77,79,0.2);
 	--field-disabled-background: rgba(77, 77, 79, .06);
 	--field-disabled-color: rgba(77, 77, 79, .45);
@@ -51,4 +52,10 @@ body {
 	--table-separator-background: var(--content-separator-background);
 	--table-active-color: var(--content-selected-color);
 	--tabulator-background: var(--content-background);
+
+	// tabs
+
+	--tab-active-color: #fff;
+	--tab-active-background: var(--brand-color);
+	--tab-separator-background: var(--content-separator-background);
 }

@@ -152,7 +152,7 @@ export const ProfessorCourses = ({professor}) => {
 
     return (
 		<ColumnContainer margin='medium'>
-			<h5>Courses</h5>
+			<h3>Courses</h3>
 			<RowContainer>
 				<div style={{ width: '200px'}}>
 					<Input
