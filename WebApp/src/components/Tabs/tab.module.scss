@@ -1,0 +1,34 @@
+.navigation {
+	display: flex;
+    flex-wrap: wrap;
+    padding-left: 0;
+    margin-bottom: -1px;
+	border-bottom: 1px solid var(--tab-separator-background);
+}
+
+.tab {
+    display: block;
+    padding: .5rem 1rem;
+    border: none;
+    cursor: pointer;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+	text-transform: uppercase;
+
+	&.active {
+		border: none;
+		color: var(--tab-active-color);
+		box-shadow: unset;
+		background: var(--tab-active-background);
+	}
+
+	&.disabled {
+		cursor: not-allowed;
+		opacity: .55;
+	}
+}
+
+.content {
+	padding: 20px;
+    box-shadow: 0 0 0 1px var(--tab-separator-background);
+}

@@ -1,5 +1,4 @@
-import { useCallback, useState } from 'react'
-import { Tabs, Tab } from 'react-bootstrap'
+import { Tabs, TabType } from 'components/Tabs'
 import { useSelector } from 'react-redux'
 import { isEventAdmin } from '../utils/userUtils'
 import CourseDetailsComponent from 'components/CourseDetailsComponent'
@@ -9,6 +8,42 @@ import { GradeStudentsList } from 'containers/Admin/GradeStudentsList'
 import { emptyArray } from 'utils/commonHelper'
 import { useQuery } from 'features/Router/useQuery'
 
+const tabs: TabType[] = [
+	{
+		id: 'courseDetails',
+		title: 'Course Details',
+		route: 'courseDetails',
+		component: CourseDetailsComponent,
+	},
+	{
+		id: 'enrolled',
+		title: 'Students on course',
+		route: 'enrolled',
+		component: CourseStudents
+	}
+];
+
+const adminTabs: TabType[] = [
+	...tabs,
+	{
+		id: 'notEnrolled',
+		title: 'Enroll students',
+		route: 'notEnrolled',
+		component: EnrollStudentsList,
+	},
+	{
+		id: 'notGraded',
+		title: 'Grade students',
+		route: 'notGraded',
+		component: GradeStudentsList
+	}
+]
+
+export type TabProps = {
+	course: any
+	selectedAccount: any
+}
+
 export const CourseDetailsPage = () => {
 	const query = useQuery();
 	const courseId = query.courseId;
@@ -17,40 +52,18 @@ export const CourseDetailsPage = () => {
     const course = courseId ? courses.find(x => x.id === courseId) : undefined
 	const isAdmin = isEventAdmin(state)
 	const selectedAccount = state.eth.selectedAccount
-	const [selectedTab, setSelectedTab] = useState('couseDetails')
-
-	const setSelectedCallback = useCallback(
-		(eventKey: string | null) => {
-			setSelectedTab(eventKey || '')
-		},
-		[]
-	)
 
     if (!course) {
         return <></>
 	}
 
     return (
-        <Tabs
-            activeKey={selectedTab}
-            onSelect={setSelectedCallback}
-            className="mb-3">
-            <Tab eventKey="couseDetails" title="Course Details">
-                <CourseDetailsComponent course={course} />
-            </Tab>
-            <Tab eventKey="enrolled" title="Students on course">
-                <CourseStudents courseId={course.id} selectedAccount={selectedAccount}/>
-            </Tab>
-            {isAdmin &&
-                <Tab eventKey="notEnrolled" title="Enroll students">
-                    <EnrollStudentsList courseId={course.id} selectedAccount={selectedAccount}/>
-                </Tab>
-            }
-            { isAdmin &&
-                <Tab eventKey="notGraded" title="Grade students">
-                    <GradeStudentsList course={course} selectedAccount={selectedAccount}/>
-                </Tab>
-            }
-        </Tabs>
+		<Tabs
+			tabs={isAdmin ? adminTabs : tabs}
+			tabComponentProps={{
+				course,
+				selectedAccount
+			} as TabProps}
+		/>
     )
 }
