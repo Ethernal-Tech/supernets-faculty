@@ -10,7 +10,7 @@ import { Button } from 'components/Button';
 import { Input } from 'components/Form'
 import { useHistory } from 'react-router-dom';
 import { addCourseAction, deleteCourseAction, editCourseAction } from 'actions/coursesActions'
-import { CourseForm } from 'containers/Professor/CourseForm'
+import { CourseForm } from 'containers/ProfessorCourses/CourseForm'
 
 const keys = ["firstName", "lastName", "id"]
 

@@ -48,12 +48,16 @@ export const EventRouter = () => {
             {userRole === USER_ROLES.PROFESSOR && <ProfessorEventNavbar />}
             {userRole === USER_ROLES.STUDENT && <StudentEventNavbar />}
 	        <Switch>
-	            <Route path={`${path}/professors`} render={() => <ProfessorsRouter event={event} />}/>
-	            <Route path={`${path}/courses`} render={() => <Courses event={event} />}/>
-	            <Route path={`${path}/students`} render={() => <StudentsRouter event={event} />}/>
-	            <Route path={`${path}/admins`} render={() => <Admins event={event} />}/>
+				{userRole === USER_ROLES.ADMIN &&
+					<>
+			            <Route path={`${path}/professors`} render={() => <ProfessorsRouter event={event} />}/>
+			            <Route path={`${path}/courses`} render={() => <Courses event={event} />}/>
+			            <Route path={`${path}/students`} render={() => <StudentsRouter event={event} />}/>
+			            <Route path={`${path}/admins`} render={() => <Admins event={event} />}/>
+					</>
+				}
 
-	            {/* <Route path={`${path}/eventDetails`} render={() => <Details event={event} />}/> */}
+	            <Route path={`${path}/eventDetails`} render={() => <Details event={event} />}/>
 	            <Route render={() => <Details event={event} />}/>
 			</Switch>
 		</>

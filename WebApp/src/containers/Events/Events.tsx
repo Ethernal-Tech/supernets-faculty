@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom';
-import { addEventAction, loadAllEventsAction, editEventAction, deleteEventAction, setSelectedEventAction } from 'actions/eventActions'
+import { addEventAction, loadAllEventsAction, editEventAction, deleteEventAction } from 'actions/eventActions'
 import { Dialog } from 'components/Dialog'
 import { EventComponent } from './EventComponent'
 import { EventForm } from './EventForm'
@@ -51,10 +51,9 @@ export const Events = () => {
 
 	const onEventClick = useCallback(
 		(event) => {
-			setSelectedEventAction(event, dispatch)
 			history.push(`/events/read/${event.id}`)
 		},
-		[dispatch, history]
+		[history]
 	)
 
 	const onEventEdit = useCallback(

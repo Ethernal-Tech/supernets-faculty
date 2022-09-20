@@ -10,6 +10,7 @@ import { Input } from 'components/Form'
 import { useHistory } from 'react-router-dom';
 import { BaseColumnModel, LocalTable } from 'components/Table';
 import { contractToGrade, gradeToContract } from 'utils/userUtils';
+import { CoursesTabProps } from './Courses';
 
 const keys = ["firstName", "lastName", "id"]
 
@@ -49,7 +50,7 @@ const tableColumns: BaseColumnModel[] = [
 	}
 ]
 
-export const GradeStudentsList = ({ course, selectedAccount }) => {
+export const GradeStudentsList = ({ course, event, selectedAccount }: CoursesTabProps) => {
 	const history = useHistory()
 	const dispatch = useDispatch()
 	const state = useSelector((state: any) => state)
@@ -59,7 +60,6 @@ export const GradeStudentsList = ({ course, selectedAccount }) => {
 		() => allStudents.filter(stud => studentGradesProps.filter(sg => sg.grade > 5).some(fs => fs.studentId === stud.id)),
 		[allStudents, studentGradesProps]
 	)
-    const eventId = state.event.selectedEvent.id
 	const courseId = course.id
 
     const [isWorking, setIsWorking] = useState(false);
@@ -136,7 +136,7 @@ export const GradeStudentsList = ({ course, selectedAccount }) => {
             Object.entries(studentGrades).forEach(([studentAddress, courseGrade]) => {
                 grades.push({studentAddress, courseGrade})
 			})
-			await gradeStudentsAction(courseId, grades, selectedAccount, eventId, dispatch)
+			await gradeStudentsAction(courseId, grades, selectedAccount, event.id, dispatch)
             setIsWorking(false)
             setStudentGrades({} as any)
         } else {

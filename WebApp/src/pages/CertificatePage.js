@@ -1,10 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { emptyArray } from 'utils/commonHelper'
-import StudentCertificate from '../containers/Student/StudentCertificate'
-import { USER_ROLES } from '../utils/constants'
-import { getUserRole } from '../utils/userUtils'
-import withRouter from '../utils/withRouter'
+import StudentCertificate from 'containers/StudentCourses/StudentCertificate'
+import { USER_ROLES } from 'utils/constants'
+import { getUserRole } from 'utils/userUtils'
+import withRouter from 'utils/withRouter'
 
 class CertificatePage extends React.Component {
     render() {

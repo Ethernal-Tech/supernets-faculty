@@ -1,13 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
-
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
-import { loadStudentCoursesAction } from '../../actions/coursesActions'
+import { loadStudentCoursesAction } from 'actions/coursesActions'
 import { listStyles } from '../../styles'
-import { formatDate } from '../../utils/utils'
+import { formatDate } from 'utils/utils'
 import { emptyArray, emptyObject } from 'utils/commonHelper'
 
 class StudentCertificate extends React.Component {
@@ -18,6 +17,7 @@ class StudentCertificate extends React.Component {
     }
 
     componentDidMount() {
+		// TODO: selectedEvent is not existing anymore
         this.props.loadStudentCourses(this.props.student.id, this.props.selectedEvent.id)
     }
 

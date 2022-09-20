@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button } from 'components/Button'
-import { contractToGrade }  from '../utils/userUtils'
-import { disenrollStudentsToCourseAction } from '../actions/coursesActions'
-import EventListenerService from "../utils/eventListenerService"
+import { contractToGrade }  from '../../utils/userUtils'
+import { disenrollStudentsToCourseAction } from '../../actions/coursesActions'
+import EventListenerService from "../../utils/eventListenerService"
 import { ContentShell } from 'features/Content';
 import { emptyArray, emptyObject } from 'utils/commonHelper'
 import { BaseColumnModel, LocalTable } from 'components/Table'
@@ -11,6 +11,7 @@ import { ColumnContainer, RowContainer } from 'components/Layout'
 import { Input } from 'components/Form'
 import { useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
+import { CoursesTabProps } from './Courses'
 
 const keys = ["firstName", "lastName", "id"]
 
@@ -36,19 +37,16 @@ const tableColumns: BaseColumnModel[] = [
 	}
 ]
 
-export const CourseStudents = ({ courseId, selectedAccount }) => {
+export const CourseStudents = ({ course, event, selectedAccount }: CoursesTabProps) => {
 	const history = useHistory()
 	const dispatch = useDispatch()
 	const state = useSelector((state: any) => state)
     const allStudents = state.users.students || emptyArray
-    const courses = state.courses.allCourses || emptyArray
-    const course = courses.find(x => x.id === courseId)
     const courseStudents = useMemo(
 		() => allStudents.filter(stud => course.students.some(y => y === stud.id)),
 		[allStudents, course]
 	)
-    const gradesByStudent = (state.courses.gradesByStudentByCourse || emptyObject)[courseId] || emptyObject
-	const eventId = state.event.selectedEvent.id
+    const gradesByStudent = (state.courses.gradesByStudentByCourse || emptyObject)[course.id] || emptyObject
 
     const [isWorking, setIsWorking] = useState(false);
     const [query, setQuery] = useState('');
@@ -115,7 +113,7 @@ export const CourseStudents = ({ courseId, selectedAccount }) => {
 	        if (selectedStudents.length !== 0){
 	            setIsWorking(true)
 				const studentAddrs = selectedStudents.map(stud => stud.id)
-				await disenrollStudentsToCourseAction(course.id, studentAddrs, selectedAccount, eventId, dispatch)
+				await disenrollStudentsToCourseAction(course.id, studentAddrs, selectedAccount, event.id, dispatch)
 	            setIsWorking(false)
 	            setSelectedStudents([])
 	        }
@@ -123,7 +121,7 @@ export const CourseStudents = ({ courseId, selectedAccount }) => {
 	            EventListenerService.notify("error", 'fields not populated!')
 	        }
 		},
-		[course.id, dispatch, eventId, selectedAccount, selectedStudents]
+		[course.id, dispatch, event.id, selectedAccount, selectedStudents]
 	)
 
 	const onView = useCallback(

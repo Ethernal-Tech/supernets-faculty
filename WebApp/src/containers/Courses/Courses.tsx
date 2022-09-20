@@ -1,19 +1,19 @@
 import { Tabs, TabType } from 'components/Tabs'
 import { useSelector } from 'react-redux'
-import { isEventAdmin } from '../utils/userUtils'
-import CourseDetailsComponent from 'containers/CourseDetailsComponent'
-import { CourseStudents } from 'containers/CourseStudents'
-import { EnrollStudentsList } from 'containers/Admin/EnrollStudentsList'
-import { GradeStudentsList } from 'containers/Admin/GradeStudentsList'
+import { isEventAdmin } from 'utils/userUtils'
 import { emptyArray } from 'utils/commonHelper'
 import { useQuery } from 'features/Router/useQuery'
+import { CourseDetails } from './CourseDetails'
+import { CourseStudents } from './CourseStudents'
+import { EnrollStudentsList } from './EnrollStudentsList'
+import { GradeStudentsList } from './GradeStudentsList'
 
 const tabs: TabType[] = [
 	{
 		id: 'courseDetails',
 		title: 'Course Details',
 		route: 'courseDetails',
-		component: CourseDetailsComponent,
+		component: CourseDetails,
 	},
 	{
 		id: 'enrolled',
@@ -39,12 +39,13 @@ const adminTabs: TabType[] = [
 	}
 ]
 
-export type TabProps = {
+export type CoursesTabProps = {
 	course: any
 	selectedAccount: any
+	event: any
 }
 
-export const CourseDetailsPage = () => {
+export const Courses = ({ event }) => {
 	const query = useQuery();
 	const courseId = query.courseId;
 	const state = useSelector((state: any) => state)
@@ -62,8 +63,9 @@ export const CourseDetailsPage = () => {
 			tabs={isAdmin ? adminTabs : tabs}
 			tabComponentProps={{
 				course,
+				event,
 				selectedAccount
-			} as TabProps}
+			} as CoursesTabProps}
 		/>
     )
 }

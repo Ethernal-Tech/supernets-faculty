@@ -9,6 +9,7 @@ import { Input } from 'components/Form'
 import { ColumnContainer, RowContainer } from 'components/Layout'
 import { useHistory } from 'react-router-dom';
 import { BaseColumnModel, LocalTable } from 'components/Table'
+import { CoursesTabProps } from './Courses';
 
 const keys = ["firstName", "lastName", "id"]
 
@@ -29,18 +30,15 @@ const tableColumns: BaseColumnModel[] = [
 	}
 ]
 
-export const EnrollStudentsList = ({ courseId, selectedAccount }) => {
+export const EnrollStudentsList = ({ course, event, selectedAccount }: CoursesTabProps) => {
 	const history = useHistory()
 	const dispatch = useDispatch()
 	const state = useSelector((state: any) => state)
 	const allStudents = state.users.students || emptyArray
-    const courses = state.courses.allCourses || emptyArray
-    const course = courses.find(x => x.id === courseId)
     const studentsToEnrollProps = useMemo(
 		() => allStudents.filter(stud => !course.students.some(y => y === stud.id)),
 		[allStudents, course]
 	)
-	const eventId = state.event.selectedEvent.id
 
     const [isWorking, setIsWorking] = useState(false);
     const [query, setQuery] = useState('');
@@ -95,7 +93,7 @@ export const EnrollStudentsList = ({ courseId, selectedAccount }) => {
 	        if (selectedStudents.length !== 0){
 	            setIsWorking(true)
 				const studentAddrs = selectedStudents.map(stud => stud.id)
-				await enrollStudentsToCourseAction(course.id, studentAddrs, selectedAccount, eventId, dispatch)
+				await enrollStudentsToCourseAction(course.id, studentAddrs, selectedAccount, event.id, dispatch)
 	            setIsWorking(false)
 	            setSelectedStudents([])
 	        }
@@ -103,7 +101,7 @@ export const EnrollStudentsList = ({ courseId, selectedAccount }) => {
 	            EventListenerService.notify("error", 'fields not populated!')
 	        }
 		},
-		[course.id, dispatch, eventId, selectedAccount, selectedStudents]
+		[course.id, dispatch, event.id, selectedAccount, selectedStudents]
 	)
 
 	const onView = useCallback(

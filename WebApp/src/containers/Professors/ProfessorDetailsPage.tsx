@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux'
-import { ProfessorCourses } from 'containers/Professor/ProfessorCourses'
+import { ProfessorCourses } from 'containers/ProfessorCourses/ProfessorCourses'
 import { ContentShell } from 'features/Content'
 import { Input } from 'components/Form'
 import { SmartFormGroup } from 'components/SmartContainer/SmartContainer'

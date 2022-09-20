@@ -1,7 +1,6 @@
 import faculty from '../faculty'
 import reader from '../facultyReader'
 import EventListenerService from "utils/eventListenerService"
-import { setSelectedEvent } from 'state/eventReducer';
 
 export const getEventAction = () => {
 	const event: any = [
@@ -91,15 +90,6 @@ export const deleteEventAction = async (eventId, account, dispatch) => {
 export const loadAllEventsAction = async () => {
     try {
         return await reader.methods.getAllEvents().call();
-    }
-    catch (ex) {
-        EventListenerService.notify("error", ex)
-    }
-}
-
-export const setSelectedEventAction = async (event, dispatch) => {
-    try {
-        await dispatch(setSelectedEvent(event))
     }
     catch (ex) {
         EventListenerService.notify("error", ex)
