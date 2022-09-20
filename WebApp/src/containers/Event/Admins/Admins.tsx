@@ -18,13 +18,12 @@ const tableColumns: BaseColumnModel[] = [
 	}
 ]
 
-export const AdminList = () => {
+export const Admins = ({ event }) => {
 	const dispatch = useDispatch()
 	const state = useSelector((state: any) => state)
 	const isAdmin = isEventAdmin(state)
     const admins = state.users.admins || emptyArray
 	const selectedAccount = state.eth.selectedAccount
-	const selectedEvent = state.event.selectedEvent
 
 	const convertedAdmins = useMemo(
 		() => {
@@ -55,18 +54,18 @@ export const AdminList = () => {
 
     const onSubmit = useCallback(
 		async ({ addr }) => {
-			addAdminAction(selectedEvent.id, addr, selectedAccount, dispatch)
+			addAdminAction(event.id, addr, selectedAccount, dispatch)
 		},
-		[selectedAccount, dispatch, selectedEvent]
+		[selectedAccount, dispatch, event]
 	)
 
     const onDelete = useCallback(
 		async() => {
 			setIsDeleting(true)
-			await deleteAdminAction(selectedEvent.id, selectedAdmin.id, selectedAccount, dispatch)
+			await deleteAdminAction(event.id, selectedAdmin.id, selectedAccount, dispatch)
 	        setIsDeleting(false)
 		},
-		[selectedAdmin, selectedAccount, dispatch, selectedEvent]
+		[selectedAdmin, selectedAccount, dispatch, event]
 	)
 
 	const selectionChangeCallback = useCallback(

@@ -26,7 +26,7 @@ const tableColumns: BaseColumnModel[] = [
 	}
 ]
 
-export const ProfessorCourses = ({professor}) => {
+export const ProfessorCourses = ({ professor, event }) => {
 	const history = useHistory();
 	const dispatch = useDispatch()
 	const state = useSelector((state: any) => state)
@@ -42,7 +42,6 @@ export const ProfessorCourses = ({professor}) => {
 		[allCourses, professorCoursesIds]
 	)
     const isAdmin = isEventAdmin(state)
-	const selectedEvent = state.event.selectedEvent
 
     const [query, setQuery] = useState('');
     const [courses, setCourses] = useState([]);
@@ -81,9 +80,9 @@ export const ProfessorCourses = ({professor}) => {
 
     useEffect(
 		() => {
-			loadProfessorCoursesAction(professor.id, selectedEvent.id, dispatch)
+			loadProfessorCoursesAction(professor.id, event.id, dispatch)
 		},
-		[professor.id, selectedEvent.id, dispatch]
+		[professor.id, event.id, dispatch]
 	);
 
 	useEffect(
@@ -117,16 +116,16 @@ export const ProfessorCourses = ({professor}) => {
     const onSubmit = useCallback(
 		async ({ title, description, startTime, venue, points }) => {
             const startTimeMs = new Date(startTime).getTime()
-			await addCourseAction(title, description, startTimeMs, venue, points, professor.id, selectedEvent.id, selectedAccount, dispatch)
+			await addCourseAction(title, description, startTimeMs, venue, points, professor.id, event.id, selectedAccount, dispatch)
 		},
-		[dispatch, professor, selectedAccount, selectedEvent.id]
+		[dispatch, professor, selectedAccount, event.id]
 	)
 
 	const onDelete = useCallback(
 		async () => {
-			await deleteCourseAction(selectedCourse.id, selectedEvent.id, professor.id, selectedAccount, dispatch)
+			await deleteCourseAction(selectedCourse.id, event.id, professor.id, selectedAccount, dispatch)
 		},
-		[selectedCourse, selectedEvent, professor, selectedAccount, dispatch]
+		[selectedCourse, event, professor, selectedAccount, dispatch]
 	)
 
 	const onView = useCallback(
@@ -145,9 +144,9 @@ export const ProfessorCourses = ({professor}) => {
 	const onEdit = useCallback(
 		async ({ id, title, startTime, venue, points, description }: any) => {
 			const startTimeMs = new Date(startTime).getTime()
-			await editCourseAction(id, title, description, startTimeMs, venue, points, professorAddr, selectedEvent.id, selectedAccount, dispatch)
+			await editCourseAction(id, title, description, startTimeMs, venue, points, professorAddr, event.id, selectedAccount, dispatch)
 		},
-		[selectedEvent, selectedAccount, professorAddr, dispatch]
+		[event, selectedAccount, professorAddr, dispatch]
 	)
 
     return (

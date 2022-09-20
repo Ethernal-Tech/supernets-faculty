@@ -1,17 +1,9 @@
-import React, { useEffect } from 'react'
 import { Container } from 'react-bootstrap'
 import { Button } from 'components/Button'
 import { Link } from "react-router-dom"
-import { connect } from 'react-redux'
-import { setSelectedEventAction } from 'actions/eventActions'
 import { noop } from 'utils/commonHelper'
 
-function LandingPage(props){
-
-    useEffect(() => {
-        props.setSelectedEvent(null)
-    }, [])
-
+export const LandingPage = () => {
     return (
         <Container style={styles.container}>
             <div style={styles.homeHeader}>
@@ -32,14 +24,6 @@ function LandingPage(props){
         </Container>
     )
 }
-
-const mapStateToProps = state => ({})
-
-const mapDispatchToProps = dispatch => ({
-    setSelectedEvent: (event) => setSelectedEventAction(event, dispatch)
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(LandingPage)
 
 const styles = {
     container: {

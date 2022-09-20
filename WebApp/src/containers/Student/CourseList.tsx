@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { connect, useSelector } from 'react-redux'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { loadStudentCoursesAction, generateCertificateAction } from 'actions/coursesActions'
 import { contractToGrade }  from 'utils/userUtils'
 import { createMetadata, uploadMetadata } from 'utils/nftUtils'
@@ -29,25 +29,41 @@ const tableColumns: BaseColumnModel[] = [
 	}
 ]
 
-function CourseList(props) {
+export const CourseList = ({ student, userRole, event }) => {
+	const dispatch = useDispatch()
+	const state = useSelector((state: any) => state)
+	const allCourses = state.courses.allCourses || emptyArray
+    const gradesByCourse = (state.courses.gradesByCourseByStudent || emptyObject)[student.id] || emptyArray
+    const studentCourses = useMemo(
+		() => ((state.courses.studentCourses || emptyObject)[student.id] || emptyArray).map(x => {
+	        const course = allCourses.find(y => y.id === x)
+	        const grade = gradesByCourse.find(y => y.courseId === x)
+	        return {
+	            ...course,
+	            grade
+	        }
+		}),
+		[allCourses, gradesByCourse, state.courses.studentCourses, student]
+	)
+	const selectedAccount = state.eth.selectedAccount;
+
     const [query, setQuery] = useState('');
     const [courses, setCourses] = useState([]);
-    const [searchedCourses, setSearchedCourses] = useState([]);
-	const state = useSelector((state: any) => state);
+    const [searchedCourses, setSearchedCourses] = useState<any[]>([]);
 	const professors = state.users.professors || emptyArray;
 
     useEffect(
 		() => {
-			props.loadStudentCourses(props.student.id, props.selectedEvent.id)
+			loadStudentCoursesAction(student.id, event.id, dispatch)
 		},
-		[props.student, props.selectedEvent]
+		[student, event, dispatch]
 	);
 
     useEffect(
 		() => {
-            setCourses(props.studentCourses)
+            setCourses(studentCourses)
 		},
-		[props.studentCourses]
+		[studentCourses]
 	);
 
     const search = useCallback(
@@ -72,17 +88,20 @@ function CourseList(props) {
 			}
 	        setSearchedCourses(localTableCourses)
 		},
-		[query, search, courses]
+		[query, search, courses, professors]
 	)
 
-    const onGenerateCertificate = async evt => {
-        const metadata = createMetadata(props.student, props.studentCourses)
-        console.log(metadata)
-        const ipfsUri = await uploadMetadata(metadata);
+    const onGenerateCertificate = useCallback(
+		async () => {
+	        const metadata = createMetadata(student, studentCourses)
+	        console.log(metadata)
+	        const ipfsUri = await uploadMetadata(metadata);
 
-        console.log(ipfsUri)
-        await props.generateCertificate(props.student.id, props.selectedAccount, ipfsUri, props.selectedEvent.id)
-    }
+			console.log(ipfsUri)
+	        await generateCertificateAction(student.id, selectedAccount, ipfsUri, event.id)
+		},
+		[event.id, selectedAccount, student, studentCourses]
+	)
 
     return (
 		<ColumnContainer margin='medium'>
@@ -107,28 +126,3 @@ function CourseList(props) {
 		</ColumnContainer>
     )
 }
-
-const mapStateToProps = (state, ownProps) => {
-    const allCourses = state.courses.allCourses || emptyArray
-    const gradesByCourse = (state.courses.gradesByCourseByStudent || {})[ownProps.student.id] || emptyObject
-    const studentCourses = ((state.courses.studentCourses || {})[ownProps.student.id] || emptyArray).map(x => {
-        const course = allCourses.find(y => y.id === x)
-        const grade = gradesByCourse.find(y => y.courseId === x)
-        return {
-            ...course,
-            grade
-        }
-    })
-    return {
-        selectedAccount: state.eth.selectedAccount,
-        selectedEvent: state.event.selectedEvent,
-        studentCourses: studentCourses,
-    }
-}
-
-const mapDispatchToProps = dispatch => ({
-    loadStudentCourses: (accountAddress, eventId) => loadStudentCoursesAction(accountAddress, eventId, dispatch),
-    generateCertificate: (studentAddr, selectedAccount, ipfsURI, eventId) => generateCertificateAction(studentAddr, selectedAccount, ipfsURI, eventId)
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(CourseList)

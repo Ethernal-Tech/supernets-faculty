@@ -1,3 +1,5 @@
+import path from 'path';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addProfessorAction, deleteProfessorAction, editProfessorAction } from 'actions/userActions'
@@ -5,12 +7,11 @@ import { isEventAdmin } from 'utils/userUtils'
 import { emptyArray } from 'utils/commonHelper'
 import { ContentShell } from 'features/Content'
 import { Dialog } from 'components/Dialog'
-import { ProfessorForm } from '../UserForm'
+import { ProfessorForm } from './ProfessorForm'
 import { LocalTable, BaseColumnModel } from 'components/Table'
 import { ColumnContainer, RowContainer } from 'components/Layout'
 import { Button } from 'components/Button';
 import { Input } from 'components/Form'
-import { useHistory } from 'react-router-dom';
 
 const keys = ["firstName", "lastName", "id"]
 
@@ -31,14 +32,14 @@ const tableColumns: BaseColumnModel[] = [
 	}
 ]
 
-export const ProfessorList = () => {
+export const Professors = ({ event }) => {
+	const routematch = useRouteMatch()
 	const history = useHistory();
 	const dispatch = useDispatch();
 	const state = useSelector((state: any) => state);
 	const isAdmin = isEventAdmin(state);
 	const professors = state.users.professors || emptyArray;
     const selectedAccount = state.eth.selectedAccount;
-    const selectedEvent = state.event.selectedEvent;
 
     const [query, setQuery] = useState('');
     const [allProfessors, setAllProfessors] = useState([]);
@@ -113,30 +114,30 @@ export const ProfessorList = () => {
 
 	const onSubmit = useCallback(
 		async ({ addr, firstName, lastName, country, expertise }) => {
-			await addProfessorAction(addr, firstName, lastName, country, expertise, selectedEvent.id, selectedAccount, dispatch)
+			await addProfessorAction(addr, firstName, lastName, country, expertise, event.id, selectedAccount, dispatch)
 		},
-		[selectedAccount, dispatch, selectedEvent]
+		[selectedAccount, dispatch, event]
 	)
 
     const onDelete = useCallback(
 		async() => {
-			await deleteProfessorAction(selectedProfessor.id, selectedEvent.id, selectedAccount, dispatch)
+			await deleteProfessorAction(selectedProfessor.id, event.id, selectedAccount, dispatch)
 		},
-		[selectedProfessor, selectedEvent, selectedAccount, dispatch]
+		[selectedProfessor, event, selectedAccount, dispatch]
 	)
 
 	const onEdit = useCallback(
 		async ({ addr, firstName, lastName, country, expertise }: any) => {
-			await editProfessorAction(addr, firstName, lastName, country, expertise, selectedEvent.id, selectedAccount, dispatch)
+			await editProfessorAction(addr, firstName, lastName, country, expertise, event.id, selectedAccount, dispatch)
 		},
-		[selectedEvent, selectedAccount, dispatch]
+		[event, selectedAccount, dispatch]
 	)
 
 	const onView = useCallback(
 		() => {
-			history.push(`/professor?prof=${selectedProfessor.id}`)
+			history.push(path.join(routematch.url, 'read', selectedProfessor.id));
 		},
-		[selectedProfessor, history]
+		[selectedProfessor, history, routematch]
 	)
 
 	const selectionChangeCallback = useCallback(

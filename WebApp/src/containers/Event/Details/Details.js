@@ -1,28 +1,16 @@
 import { ContentShell } from 'features/Content'
-import { useEffect } from 'react'
-import { connect } from 'react-redux'
 import { formatDate } from 'utils/utils'
 import { Input, Textarea } from 'components/Form'
 import { SmartFormGroup } from 'components/SmartContainer/SmartContainer'
-import { loadUsersAction } from 'actions/userActions'
-import { loadAllCoursesAction } from 'actions/coursesActions'
 
-function EventDetails(props) {
-    const startDate = new Date(parseInt(props.selectedEvent.startDate))
+export const Details = ({ event }) => {
+
+    const startDate = new Date(parseInt(event.startDate))
     const formatedDateStart = formatDate(startDate)
-    const endDate = new Date(parseInt(props.selectedEvent.endDate))
+    const endDate = new Date(parseInt(event.endDate))
     const formatedDateEnd = formatDate(endDate)
 
-	useEffect(() => {
-        loadData()
-    }, [])
-
-    const loadData = async () => {
-        await props.loadUsers(props.selectedEvent.id)
-        await props.loadAllCourse(props.selectedEvent.id)
-    }
-
-	const { title, description, venue, location } = props.selectedEvent
+	const { title, description, venue, location } = event
 
 	return (
 		<ContentShell title='Event Details'>
@@ -56,14 +44,3 @@ function EventDetails(props) {
 		</ContentShell>
 	)
 }
-
-const mapStateToProps = state => ({
-    selectedEvent: state.event.selectedEvent
-})
-
-const mapDispatchToProps = dispatch => ({
-    loadUsers: (eventId) => loadUsersAction(eventId, dispatch),
-    loadAllCourse: (eventId) => loadAllCoursesAction(eventId, dispatch)
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(EventDetails)

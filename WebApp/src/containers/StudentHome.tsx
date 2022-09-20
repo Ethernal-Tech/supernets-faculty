@@ -4,7 +4,7 @@ import { USER_ROLES } from '../utils/constants'
 import { getUserRole } from '../utils/userUtils'
 import { Tabs, Tab } from 'react-bootstrap'
 import CourseList from './Student/CourseList'
-import EventDetails from 'containers/EventDetails'
+import EventDetails from 'containers/Event/Details/Details'
 import { emptyArray } from 'utils/commonHelper'
 
 export const StudentHome = () => {

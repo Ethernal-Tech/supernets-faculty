@@ -32,7 +32,7 @@ const tableColumns: BaseColumnModel[] = [
 	},
 ]
 
-export const EventCourses = () => {
+export const Courses = ({ event }) => {
 	const history = useHistory();
 	const dispatch = useDispatch();
 	const state = useSelector((state: any) => state);
@@ -40,7 +40,6 @@ export const EventCourses = () => {
     const courses = state.courses.allCourses || emptyArray
 	const professors = state.users.professors || emptyArray;
     const selectedAccount = state.eth.selectedAccount;
-    const selectedEvent = state.event.selectedEvent;
 
     const [query, setQuery] = useState('');
     const [allCourses, setAllCourses] = useState([]);
@@ -120,24 +119,24 @@ export const EventCourses = () => {
 	const onSubmit = useCallback(
 		async ({ title, description, startTime, venue, points, professor }) => {
             const timeStartMs = startTime.getTime()
-			addCourseAction(title, description, timeStartMs, venue, points, professor, selectedEvent.id, selectedAccount, dispatch)
+			addCourseAction(title, description, timeStartMs, venue, points, professor, event.id, selectedAccount, dispatch)
 		},
-		[selectedAccount, dispatch, selectedEvent]
+		[selectedAccount, dispatch, event]
 	)
 
     const onDelete = useCallback(
 		async() => {
-			await deleteCourseAction(selectedCourse.id, selectedEvent.id, selectedCourse.professor, selectedAccount, dispatch)
+			await deleteCourseAction(selectedCourse.id, event.id, selectedCourse.professor, selectedAccount, dispatch)
 		},
-		[selectedCourse, selectedEvent, selectedAccount, dispatch]
+		[selectedCourse, event, selectedAccount, dispatch]
 	)
 
 	const onEdit = useCallback(
 		async ({ id, title, startTime, venue, points, description, professor }) => {
             const timeStartMs = startTime.getTime()
-			await editCourseAction(id, title, description, timeStartMs, venue, points, professor, selectedEvent.id, selectedAccount, dispatch)
+			await editCourseAction(id, title, description, timeStartMs, venue, points, professor, event.id, selectedAccount, dispatch)
 		},
-		[selectedEvent, selectedAccount, dispatch]
+		[event, selectedAccount, dispatch]
 	)
 
 	const onView = useCallback(
