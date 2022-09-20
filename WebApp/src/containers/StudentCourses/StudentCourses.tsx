@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { loadStudentCoursesAction, generateCertificateAction } from 'actions/coursesActions'
+import { loadStudentCoursesAction } from 'actions/coursesActions'
+import { generateCertificateAction } from 'actions/certificateActions'
 import { contractToGrade }  from 'utils/userUtils'
 import { createMetadata, uploadMetadata } from 'utils/nftUtils'
 import { BaseColumnModel, LocalTable } from 'components/Table';

@@ -235,10 +235,6 @@ contract FacultyState {
         planBCertificate.safeMint(studentAddress, uri, eventId);
     }
 
-    function getCertificateId(address studentAddress, uint eventId) external view returns (uint256) {
-        return planBCertificate.getTokenForOwner(studentAddress, eventId);
-    }
-
     //Getters
 
     function getEvent(uint eventId) external view returns(FacultyStructs.Event memory) {

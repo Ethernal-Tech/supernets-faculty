@@ -1,83 +1,101 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import { connect } from 'react-redux'
-import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-
+import withRouter from 'utils/withRouter'
+import { getUserRole } from 'utils/userUtils'
+import { USER_ROLES } from 'utils/constants'
 import { loadStudentCoursesAction } from 'actions/coursesActions'
-import { listStyles } from '../../styles'
-import { formatDate } from 'utils/utils'
-import { emptyArray, emptyObject } from 'utils/commonHelper'
+import { loadStudentCertificateAction } from 'actions/certificateActions'
+import { emptyArray } from 'utils/commonHelper'
 
-class StudentCertificate extends React.Component {
-    constructor(props) {
-        super(props)
-        const now = new Date()
-        this.dateNow = formatDate(now)
+function StudentCertificate(props) {
+    const now = new Date()
+    //const dateNow = formatDate(now)
+    const [metadata, setMetadata] = useState({})
+
+    useEffect(() => {
+        if (!props.certificateData) {
+            loadData()
+        } else {
+            loadMetadata(props.certificateData.tokenURI)
+        }
+    }, [props.certificateData])
+
+    const loadData = async () => {
+        await props.loadStudentCertificate(props.student.id, props.selectedEvent.id)
     }
 
-    componentDidMount() {
-		// TODO: selectedEvent is not existing anymore
-        this.props.loadStudentCourses(this.props.student.id, this.props.selectedEvent.id)
+    const loadMetadata = async (uri) => {
+        const response = await fetch(uri)
+        const metadata = await response.json()
+        setMetadata(metadata)
     }
 
-    render() {
-        const { student, studentCourses } = this.props
-        return (
-            <div style={{ padding: '20px' }}>
-                <h4>Official certificated made in blockchain</h4>
-                <div style={{position: 'fixed', bottom: '10px', left: '20px', zIndex: '20'}}>
-                    <img src={`${process.env.PUBLIC_URL}/logoplan.png`} height={45} alt="logoplan" />
-                </div>
-                <Container>
-                    <Row style={listStyles.paddingTop10}>Issued to: {student.name}</Row>
-                    <Row>Issued by: Faculty of Blockchain</Row>
-                    <Row>Event type: PlanB Summer School</Row>
-                    <Row>Location: Lugano</Row>
-                    <Row>Date: {this.dateNow}</Row>
+    if (!props.student) {
+        return null;
+    }
 
-                    <Row style={{ ...listStyles.borderBottom, ...listStyles.paddingTop10 }}>
-                        <Col>Course Name</Col>
-                        <Col>Professor's Name</Col>
-                        <Col>Grade</Col>
-                    </Row>
-                    {
-                        studentCourses.map((course, ind) => (
-                            <Row
-                                key={`course_${ind}`}
-                                style={ind === studentCourses.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }}>
-                                <Col>{course.name}</Col>
-                                <Col>{course.professorName}</Col>
-                                <Col>{course.grade}</Col>
-                            </Row>
-                        ))
-                    }
-                </Container>
+    return (
+        <div style={{ padding: '20px' }}>
+            <h4>Official certificated made in blockchain</h4>
+            <p>Token id: {props.certificateData ? props.certificateData.tokenId : 'tokenId'} Uri: {props.certificateData ? props.certificateData.tokenURI : 'uri'}</p>
+            { metadata &&  <p>Metadata name: { metadata.name }</p> }
+            {/* <div style={{position: 'fixed', bottom: '10px', left: '20px', zIndex: '20'}}>
+                <img src={`${process.env.PUBLIC_URL}/logoplan.png`} height={45} alt="logoplan" />
             </div>
-        )
-    }
+            <Container>
+                <Row style={listStyles.paddingTop10}>Issued to: {student.name}</Row>
+                <Row>Issued by: Faculty of Blockchain</Row>
+                <Row>Event type: PlanB Summer School</Row>
+                <Row>Location: Lugano</Row>
+                <Row>Date: {this.dateNow}</Row>
+
+                <Row style={{ ...listStyles.borderBottom, ...listStyles.paddingTop10 }}>
+                    <Col>Course Name</Col>
+                    <Col>Professor's Name</Col>
+                    <Col>Grade</Col>
+                </Row>
+                {
+                    studentCourses.map((course, ind) => (
+                        <Row
+                            key={`course_${ind}`}
+                            style={ind === studentCourses.length - 1 ? listStyles.row : { ...listStyles.row, ...listStyles.borderBottomThin }}>
+                            <Col>{course.name}</Col>
+                            <Col>{course.professorName}</Col>
+                            <Col>{course.grade}</Col>
+                        </Row>
+                    ))
+                }
+            </Container> */}
+        </div>
+    )
 }
 
 
 const mapStateToProps = (state, ownProps) => {
-    const allCourses = state.courses.allCourses || emptyArray
-    const gradesByCourse = (state.courses.gradesByCourseByStudent || emptyObject)[ownProps.student.id] || emptyObject
-    const studentCourses = ((state.courses.studentCourses || emptyObject)[ownProps.student.id] || emptyArray).map(x => {
-        const course = allCourses.find(y => y.id === x)
-        const grade = gradesByCourse[x]
-        return {
-            ...course,
-            grade
-        }
-    }).filter(x => parseInt(x.grade) > 5)
+    const userRole = getUserRole(state)
+    const students = state.users.students || emptyArray
+
+    let student
+    let certificateData
+    if (ownProps.stud) {
+        student = students.find(stud => stud.id === ownProps.stud)
+        certificateData = state.certificates.studentCertificates[ownProps.stud] || undefined
+    }
+    else if (userRole === USER_ROLES.STUDENT) {
+        student = students.find(x => x.id === state.eth.selectedAccount)
+        certificateData = state.certificates.studentCertificates[state.eth.selectedAccount] || undefined
+    }
+
     return {
-        studentCourses,
+        certificateData,
+        student,
         selectedEvent: state.event.selectedEvent,
     }
 }
 
 const mapDispatchToProps = dispatch => ({
-    loadStudentCourses: (accountAddress, eventId) => loadStudentCoursesAction(accountAddress, eventId, dispatch)
+    loadStudentCourses: (accountAddress, eventId) => loadStudentCoursesAction(accountAddress, eventId, dispatch),
+    loadStudentCertificate: (studentId, eventId) => loadStudentCertificateAction(studentId, eventId, dispatch)
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(StudentCertificate)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(StudentCertificate))

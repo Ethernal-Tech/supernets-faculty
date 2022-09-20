@@ -24,12 +24,17 @@ contract FacultyReader {
 
         for (uint i = 1; i <= faculty.maxEventId(); i++) {
             FacultyStructs.Event memory ev = faculty.getEvent(i);
-            if (ev.exist == true){
+            if (ev.exist){
                 eventsArray[count++] = ev;
             }
         }
 
         return eventsArray;
+    }
+
+    function getEvent(uint eventId) external view returns(FacultyStructs.Event memory ev) {
+        ev = faculty.getEvent(eventId);
+        require(ev.exist);
     }
 
     function getAllCourses(uint eventId) external view returns(FacultyStructs.Course[] memory) {

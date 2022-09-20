@@ -95,3 +95,12 @@ export const loadAllEventsAction = async () => {
         EventListenerService.notify("error", ex)
     }
 }
+
+export const loadEvent =async (eventId) => {
+	try {
+        return await reader.methods.getEvent(eventId).call();
+    }
+    catch (ex) {
+        EventListenerService.notify("error", ex)
+    }
+}

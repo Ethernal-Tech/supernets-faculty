@@ -2,7 +2,6 @@ import { ReactTabulator } from 'react-tabulator';
 import { ColumnContainer } from 'components/Layout';
 import Pagination from './Pagination/Pagination';
 import { useMemo, useRef } from 'react';
-import styles from './baseTable.module.scss';
 import { BaseColumnModel, TabulatorColumnModel } from './BaseColumnModel';
 import 'react-tabulator/lib/styles.css';
 import 'react-tabulator/css/bootstrap/tabulator_bootstrap.min.css';
