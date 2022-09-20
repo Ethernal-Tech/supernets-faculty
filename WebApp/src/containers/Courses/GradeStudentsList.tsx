@@ -1,8 +1,7 @@
 import { useEffect, useState, useMemo, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import EventListenerService from "utils/eventListenerService"
-import { gradeStudentsAction } from '../../actions/coursesActions'
-import { ContentShell } from 'features/Content';
+import { gradeStudentsAction } from 'actions/coursesActions'
 import { emptyArray } from 'utils/commonHelper';
 import { Button } from 'components/Button';
 import { ColumnContainer, RowContainer } from 'components/Layout'
@@ -159,29 +158,27 @@ export const GradeStudentsList = ({ course, event, selectedAccount }: CoursesTab
 	)
 
     return (
-        <ContentShell title={`Grade students - ${course.title}`}>
-			<ColumnContainer margin='medium'>
-				<RowContainer>
-					<div style={{ width: '200px'}}>
-						<Input
-							value={query}
-							placeholder='Search...'
-							onChange={setQuery}
-						/>
-					</div>
-					<Button
-						text={'View'}
-						disabled={!selectedStudent.id}
-						onClick={onView}
+		<ColumnContainer margin='medium'>
+			<RowContainer>
+				<div style={{ width: '200px'}}>
+					<Input
+						value={query}
+						placeholder='Search...'
+						onChange={setQuery}
 					/>
-					<Button
-						text='Grade students'
-						onClick={gradeStudents}
-						disabled={!gradeEnabled}
-						isLoading={isWorking}
-					/>
-				</RowContainer>
-			</ColumnContainer>
+				</div>
+				<Button
+					text={'View'}
+					disabled={!selectedStudent.id}
+					onClick={onView}
+				/>
+				<Button
+					text='Grade students'
+					onClick={gradeStudents}
+					disabled={!gradeEnabled}
+					isLoading={isWorking}
+				/>
+			</RowContainer>
 			<LocalTable
 				columns={tableColumns}
 				data={searchedStudents}
@@ -190,12 +187,6 @@ export const GradeStudentsList = ({ course, event, selectedAccount }: CoursesTab
 				hasPagination
 				limit={5}
 			/>
-            {/*
-                <Pagination
-                    data={searchedStudents}
-                    RenderComponent={GradeStudentRow}
-                    func={gradeChanged}
-            /> */}
-        </ContentShell>
+		</ColumnContainer>
     )
 }

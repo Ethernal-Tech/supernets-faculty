@@ -2,11 +2,12 @@ import { Tabs, TabType } from 'components/Tabs'
 import { useSelector } from 'react-redux'
 import { isEventAdmin } from 'utils/userUtils'
 import { emptyArray } from 'utils/commonHelper'
-import { useQuery } from 'features/Router/useQuery'
 import { CourseDetails } from './CourseDetails'
 import { CourseStudents } from './CourseStudents'
 import { EnrollStudentsList } from './EnrollStudentsList'
 import { GradeStudentsList } from './GradeStudentsList'
+import { useParams } from 'react-router-dom';
+import { ContentShell } from 'features/Content'
 
 const tabs: TabType[] = [
 	{
@@ -46,8 +47,9 @@ export type CoursesTabProps = {
 }
 
 export const Courses = ({ event }) => {
-	const query = useQuery();
-	const courseId = query.courseId;
+	const params: any = useParams()
+	const courseId = params.courseId
+
 	const state = useSelector((state: any) => state)
     const courses = state.courses.allCourses || emptyArray
     const course = courseId ? courses.find(x => x.id === courseId) : undefined
@@ -59,13 +61,15 @@ export const Courses = ({ event }) => {
 	}
 
     return (
-		<Tabs
-			tabs={isAdmin ? adminTabs : tabs}
-			tabComponentProps={{
-				course,
-				event,
-				selectedAccount
-			} as CoursesTabProps}
-		/>
+		<ContentShell title={course.title}>
+			<Tabs
+				tabs={isAdmin ? adminTabs : tabs}
+				tabComponentProps={{
+					course,
+					event,
+					selectedAccount
+				} as CoursesTabProps}
+			/>
+		</ContentShell>
     )
 }

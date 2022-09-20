@@ -1,5 +1,9 @@
 @import url("https://fonts.googleapis.com/css?family=Mada:400,500,600");
 
+html, body, #root {
+	height: 100%;
+}
+
 body {
     font-family: "Mada",sans-serif;
 	margin: 0;

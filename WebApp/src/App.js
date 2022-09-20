@@ -1,7 +1,6 @@
 import { useCallback, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { Container } from 'react-bootstrap'
 import { initializeEthAction } from 'actions/appActions'
 import { loadAdminAccountAction } from 'actions/userActions'
 import Navbar from 'containers/Navbar'
@@ -30,9 +29,7 @@ export const App = () => {
     return (
         <>
             <Navbar />
-            <Container>
-				<ContentRouter />
-            </Container>
+			<ContentRouter />
         </>
     )
 }

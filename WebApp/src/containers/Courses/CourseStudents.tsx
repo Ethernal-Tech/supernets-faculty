@@ -2,9 +2,8 @@ import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button } from 'components/Button'
 import { contractToGrade }  from '../../utils/userUtils'
-import { disenrollStudentsToCourseAction } from '../../actions/coursesActions'
+import { disenrollStudentsToCourseAction } from 'actions/coursesActions'
 import EventListenerService from "../../utils/eventListenerService"
-import { ContentShell } from 'features/Content';
 import { emptyArray, emptyObject } from 'utils/commonHelper'
 import { BaseColumnModel, LocalTable } from 'components/Table'
 import { ColumnContainer, RowContainer } from 'components/Layout'
@@ -141,36 +140,34 @@ export const CourseStudents = ({ course, event, selectedAccount }: CoursesTabPro
 	)
 
     return (
-        <ContentShell title={`Students on course - ${course.title}`}>
-			<ColumnContainer margin='medium'>
-				<RowContainer>
-					<div style={{ width: '200px'}}>
-						<Input
-							value={query}
-							placeholder='Search...'
-							onChange={setQuery}
-						/>
-					</div>
-					<Button
-						text='View'
-						disabled={selectedStudents.length !== 1}
-						onClick={onView}
+		<ColumnContainer margin='medium'>
+			<RowContainer>
+				<div style={{ width: '200px'}}>
+					<Input
+						value={query}
+						placeholder='Search...'
+						onChange={setQuery}
 					/>
-					<Button
-						text={`Disenroll ${selectedStudents.length} students`}
-						onClick={disenrollStudents}
-						disabled={selectedStudents.filter(s => s.grade === '---').length === 0}
-						isLoading={isWorking}
-					/>
-				</RowContainer>
-				<LocalTable
-					columns={tableColumns}
-					data={searchedStudents}
-					rowSelectionChanged={selectionChangeCallback}
-					hasPagination
-					limit={5}
+				</div>
+				<Button
+					text='View'
+					disabled={selectedStudents.length !== 1}
+					onClick={onView}
 				/>
-			</ColumnContainer>
-        </ContentShell>
+				<Button
+					text={`Disenroll ${selectedStudents.length} students`}
+					onClick={disenrollStudents}
+					disabled={selectedStudents.filter(s => s.grade === '---').length === 0}
+					isLoading={isWorking}
+				/>
+			</RowContainer>
+			<LocalTable
+				columns={tableColumns}
+				data={searchedStudents}
+				rowSelectionChanged={selectionChangeCallback}
+				hasPagination
+				limit={5}
+			/>
+		</ColumnContainer>
     )
 }

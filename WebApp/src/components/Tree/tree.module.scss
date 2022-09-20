@@ -1,0 +1,20 @@
+.item {
+	display: flex;
+	align-items: center;
+	margin-bottom: 16px;
+
+	.item_content {
+		cursor: pointer;
+		flex: 1 1;
+		overflow: hidden;
+		display: flex;
+		align-items: center;
+		padding: 2px 0 2px 4px;
+		border-radius: calc(var(--border-radius) / 2);
+	}
+
+	.selected {
+		background: var(--primary-color);
+		color: white;
+	}
+}

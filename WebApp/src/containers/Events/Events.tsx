@@ -1,6 +1,7 @@
+import path from 'path';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom';
 import { addEventAction, loadAllEventsAction, editEventAction, deleteEventAction } from 'actions/eventActions'
 import { Dialog } from 'components/Dialog'
 import { EventComponent } from './EventComponent'
@@ -11,6 +12,7 @@ import { Button } from 'components/Button';
 import { ColumnContainer, RowContainer } from 'components/Layout'
 
 export const Events = () => {
+	const routematch = useRouteMatch()
 	const history = useHistory()
 	const dispatch = useDispatch();
 	// TODO:mika create RootState instead of any on all places where useSelector is used
@@ -51,9 +53,9 @@ export const Events = () => {
 
 	const onEventClick = useCallback(
 		(event) => {
-			history.push(`/events/read/${event.id}`)
+			history.push(path.join(routematch.url, 'read', event.id));
 		},
-		[history]
+		[history, routematch]
 	)
 
 	const onEventEdit = useCallback(

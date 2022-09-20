@@ -1,3 +1,5 @@
+import path from 'path';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEventAdmin } from 'utils/userUtils'
@@ -8,7 +10,6 @@ import { LocalTable, BaseColumnModel } from 'components/Table'
 import { ColumnContainer, RowContainer } from 'components/Layout'
 import { Button } from 'components/Button';
 import { Input } from 'components/Form'
-import { useHistory } from 'react-router-dom';
 import { addCourseAction, deleteCourseAction, editCourseAction } from 'actions/coursesActions'
 import { CourseForm } from 'containers/ProfessorCourses/CourseForm'
 
@@ -32,7 +33,8 @@ const tableColumns: BaseColumnModel[] = [
 	},
 ]
 
-export const Courses = ({ event }) => {
+export const EventCourses = ({ event }) => {
+	const routematch = useRouteMatch()
 	const history = useHistory();
 	const dispatch = useDispatch();
 	const state = useSelector((state: any) => state);
@@ -113,7 +115,7 @@ export const Courses = ({ event }) => {
 			}
 	        setSearchedCourses(localTableCourses)
 		},
-		[query, search, allCourses]
+		[query, search, allCourses, professors]
 	)
 
 	const onSubmit = useCallback(
@@ -141,9 +143,9 @@ export const Courses = ({ event }) => {
 
 	const onView = useCallback(
 		() => {
-			history.push(`/course?courseId=${selectedCourse.id}`)
+			history.push(path.join(routematch.url, 'read', selectedCourse.id));
 		},
-		[selectedCourse, history]
+		[selectedCourse, history, routematch]
 	)
 
 	const selectionChangeCallback = useCallback(

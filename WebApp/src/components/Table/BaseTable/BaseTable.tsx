@@ -70,27 +70,25 @@ export const BaseTable = ({
 
 	return (
 		<WithFetch fetchFunction={fetchFunction} refetching={isLoading}>
-			<div className={styles.container}>
-				<ColumnContainer margin='small'>
-					<ReactTabulator
-						ref={tabulatorRef}
-						columns={columnsConverted}
-						data={rowsData}
-						rowSelectionChanged={rowSelectionChanged}
-						options={customOptions}
-						cellEdited={cellEdited}
+			<ColumnContainer margin='small'>
+				<ReactTabulator
+					ref={tabulatorRef}
+					columns={columnsConverted}
+					data={rowsData}
+					rowSelectionChanged={rowSelectionChanged}
+					options={customOptions}
+					cellEdited={cellEdited}
+				/>
+				{pagination &&
+					<Pagination
+						offset={pagination.offset || 0}
+						limit={pagination.limit || defaultPaginationSize}
+						count={pagination.count}
+						onChange={pagination.onChange}
+						compact={compact}
 					/>
-					{pagination &&
-						<Pagination
-							offset={pagination.offset || 0}
-							limit={pagination.limit || defaultPaginationSize}
-							count={pagination.count}
-							onChange={pagination.onChange}
-							compact={compact}
-						/>
-					}
-				</ColumnContainer>
-			</div>
+				}
+			</ColumnContainer>
 		</WithFetch>
 	)
 }

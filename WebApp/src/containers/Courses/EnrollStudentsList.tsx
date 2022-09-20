@@ -2,7 +2,6 @@ import { useMemo, useEffect, useState, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import EventListenerService from "utils/eventListenerService"
 import { enrollStudentsToCourseAction } from 'actions/coursesActions'
-import { ContentShell } from 'features/Content';
 import { emptyArray } from 'utils/commonHelper'
 import { Button } from 'components/Button';
 import { Input } from 'components/Form'
@@ -121,29 +120,27 @@ export const EnrollStudentsList = ({ course, event, selectedAccount }: CoursesTa
 	)
 
     return (
-        <ContentShell title={`Enroll students - ${course.title}`}>
-			<ColumnContainer margin='medium'>
-				<RowContainer>
-					<div style={{ width: '200px', textAlign: 'end'}}>
-						<Input
-							value={query}
-							placeholder='Search...'
-							onChange={setQuery}
-						/>
-					</div>
-					<Button
-						text={'View'}
-						disabled={selectedStudents.length !== 1}
-						onClick={onView}
+		<ColumnContainer margin='medium'>
+			<RowContainer>
+				<div style={{ width: '200px', textAlign: 'end'}}>
+					<Input
+						value={query}
+						placeholder='Search...'
+						onChange={setQuery}
 					/>
-					<Button
-						text={`Enroll ${selectedStudents.length} students`}
-						onClick={enrollStudents}
-						disabled={selectedStudents.length === 0}
-						isLoading={isWorking}
-					/>
-				</RowContainer>
-			</ColumnContainer>
+				</div>
+				<Button
+					text={'View'}
+					disabled={selectedStudents.length !== 1}
+					onClick={onView}
+				/>
+				<Button
+					text={`Enroll ${selectedStudents.length} students`}
+					onClick={enrollStudents}
+					disabled={selectedStudents.length === 0}
+					isLoading={isWorking}
+				/>
+			</RowContainer>
 			<LocalTable
 				columns={tableColumns}
 				data={searchedStudents}
@@ -151,6 +148,6 @@ export const EnrollStudentsList = ({ course, event, selectedAccount }: CoursesTa
 				hasPagination
 				limit={5}
 			/>
-        </ContentShell>
+		</ColumnContainer>
     )
 }

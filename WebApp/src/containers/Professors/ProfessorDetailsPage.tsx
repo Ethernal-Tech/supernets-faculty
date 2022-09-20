@@ -20,34 +20,31 @@ export const ProfessorDetailsPage = ({ event }) => {
     }
 
     return (
-		<>
-			<VerticalSeparator margin='medium' />
-            <ContentShell title='Professor'>
-				<div style={{ width: '600px' }}>
-					<SmartFormGroup label='Name'>
-						<Input
-							value={`${professor.firstName} ${professor.lastName}`}
-						/>
-					</SmartFormGroup>
-					<SmartFormGroup label='Address'>
-						<Input
-							value={`${professor.id}`}
-						/>
-					</SmartFormGroup>
-					<SmartFormGroup label='Country'>
-						<Input
-							value={professor.country}
-						/>
-					</SmartFormGroup>
-					<SmartFormGroup label='Expertise'>
-						<Input
-							value={professor.expertise}
-						/>
-					</SmartFormGroup>
-				</div>
-				<VerticalSeparator margin='xlarge' />
-                <ProfessorCourses professor={professor} event={event} />
-            </ContentShell>
-		</>
+        <ContentShell title='Professor'>
+			<div style={{ width: '600px' }}>
+				<SmartFormGroup label='Name'>
+					<Input
+						value={`${professor.firstName} ${professor.lastName}`}
+					/>
+				</SmartFormGroup>
+				<SmartFormGroup label='Address'>
+					<Input
+						value={`${professor.id}`}
+					/>
+				</SmartFormGroup>
+				<SmartFormGroup label='Country'>
+					<Input
+						value={professor.country}
+					/>
+				</SmartFormGroup>
+				<SmartFormGroup label='Expertise'>
+					<Input
+						value={professor.expertise}
+					/>
+				</SmartFormGroup>
+			</div>
+			<VerticalSeparator margin='xlarge' />
+            <ProfessorCourses professor={professor} event={event} />
+        </ContentShell>
     )
 }

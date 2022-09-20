@@ -1,4 +1,3 @@
-import { ContentShell } from 'features/Content'
 import { useMemo } from 'react'
 import { Input, Textarea } from 'components/Form'
 import { SmartFormGroup } from 'components/SmartContainer/SmartContainer'
@@ -16,34 +15,32 @@ export const CourseDetails = ({ course }: CoursesTabProps) => {
 	)
 
     return (
-        <ContentShell title='Course Details'>
-			<div style={{ width: '600px' }}>
-				<SmartFormGroup label='Name'>
-					<Input
-						value={title}
-					/>
-				</SmartFormGroup>
-				<SmartFormGroup label='Description'>
-					<Textarea
-						value={description}
-					/>
-				</SmartFormGroup>
-				<SmartFormGroup label='Start time'>
-					<Input
-						value={formattedStartDate}
-					/>
-				</SmartFormGroup>
-				<SmartFormGroup label='Venue'>
-					<Input
-						value={venue}
-					/>
-				</SmartFormGroup>
-				<SmartFormGroup label='Points'>
-					<Input
-						value={points}
-					/>
-				</SmartFormGroup>
-			</div>
-        </ContentShell>
+		<div style={{ width: '600px' }}>
+			<SmartFormGroup label='Name'>
+				<Input
+					value={title}
+				/>
+			</SmartFormGroup>
+			<SmartFormGroup label='Description'>
+				<Textarea
+					value={description}
+				/>
+			</SmartFormGroup>
+			<SmartFormGroup label='Start time'>
+				<Input
+					value={formattedStartDate}
+				/>
+			</SmartFormGroup>
+			<SmartFormGroup label='Venue'>
+				<Input
+					value={venue}
+				/>
+			</SmartFormGroup>
+			<SmartFormGroup label='Points'>
+				<Input
+					value={points}
+				/>
+			</SmartFormGroup>
+		</div>
     )
 }

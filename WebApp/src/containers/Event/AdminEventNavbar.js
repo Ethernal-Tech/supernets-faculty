@@ -1,31 +1,45 @@
-import { Link, useRouteMatch } from 'react-router-dom'
+import path from 'path'
+import { Tree } from 'components/Tree/Tree'
+import { useCallback, useState } from 'react'
+import { useHistory, useRouteMatch } from 'react-router-dom'
 
-export const AdminEventNavbar = () => {
+export const AdminEventNavbar = ({ event }) => {
 	const { url } = useRouteMatch()
+	const history = useHistory();
 
-    return (
-        <>
-            <nav className="navbar navbar-expand-lg navbar-light bg-white" style={{ padding: '0.5rem' }}>
-                <div style={{ display: 'flex', flex: 1, justifyContent: 'flex-start', alignItems: 'center' }}>
-                    <ul className="navbar-nav">
-                        <li className="nav-item">
-                            <Link to={`${url}/eventDetails`} className="nav-link">Event Details</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link to={`${url}/professors`} className="nav-link">Professors</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link to={`${url}/courses`} className="nav-link">Courses</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link to={`${url}/students`} className="nav-link">Students</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link to={`${url}/admins`} className="nav-link">Event Admins</Link>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </>
+	const [selected, setSelected] = useState('')
+
+	const selectCallback = useCallback(
+		(id: string) => {
+			setSelected(id);
+			history.push(path.join(url, id));
+		},
+		[history, url]
+	)
+
+	return (
+		<Tree
+			title={event.title}
+			data={[
+				{
+					id: 'eventDetails',
+					name: 'Event Details'
+				}, {
+					id: 'professors',
+					name: 'Professors'
+				}, {
+					id: 'courses',
+					name: 'Courses'
+				}, {
+					id: 'students',
+					name: 'Students'
+				}, {
+					id: 'admins',
+					name: 'Event Admins'
+				}
+			]}
+			onSelect={selectCallback}
+			selected={selected}
+		/>
     )
 }

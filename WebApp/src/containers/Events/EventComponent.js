@@ -3,13 +3,10 @@ import { formatDate } from 'utils/utils'
 import { Button } from 'components/Button'
 import { RowContainer } from 'components/Layout'
 import VerticalSeparator from 'components/Layout/Separator/VerticalSeparator'
-import { useHistory } from 'react-router-dom';
 import { Dialog } from 'components/Dialog'
 import { EventForm } from './EventForm'
 
 export const EventComponent = ({ event, onEventClick, onEventEdit, onEventDelete, isAdmin }) => {
-	const history = useHistory();
-
     const [isWorking, setIsWorking] = useState(false);
     const startDate = new Date(parseInt(event.startDate))
     const formatedStartDate = formatDate(startDate)
@@ -41,10 +38,9 @@ export const EventComponent = ({ event, onEventClick, onEventEdit, onEventDelete
 
 	const onDetails = useCallback(
 		() => {
-			history.push(`/eventDetails`)
 			onEventClick(event)
 		},
-		[history, event, onEventClick]
+		[event, onEventClick]
 	)
 
     return (
