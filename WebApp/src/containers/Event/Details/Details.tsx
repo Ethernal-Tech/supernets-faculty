@@ -4,7 +4,6 @@ import { Input, Textarea } from 'components/Form'
 import { SmartFormGroup } from 'components/SmartContainer/SmartContainer'
 
 export const Details = ({ event }) => {
-
     const startDate = new Date(parseInt(event.startDate))
     const formatedDateStart = formatDate(startDate)
     const endDate = new Date(parseInt(event.endDate))

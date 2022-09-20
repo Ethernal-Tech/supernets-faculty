@@ -1,11 +1,11 @@
 import path from 'path'
-import { Tree } from 'components/Tree/Tree'
 import { useCallback, useState } from 'react'
 import { useHistory, useRouteMatch } from 'react-router-dom'
+import { Tree } from 'components/Tree/Tree'
 
-export const AdminEventNavbar = ({ event }) => {
+export const ProfessorEventNavbar = ({ event }) => {
 	const { url } = useRouteMatch()
-	const history = useHistory();
+	const history = useHistory()
 
 	const [selected, setSelected] = useState('')
 
@@ -25,17 +25,8 @@ export const AdminEventNavbar = ({ event }) => {
 					id: 'eventDetails',
 					name: 'Event Details'
 				}, {
-					id: 'professors',
-					name: 'Professors'
-				}, {
-					id: 'courses',
-					name: 'Courses'
-				}, {
-					id: 'students',
-					name: 'Students'
-				}, {
-					id: 'admins',
-					name: 'Event Admins'
+					id: 'professorCourses',
+					name: 'My Courses'
 				}
 			]}
 			onSelect={selectCallback}
