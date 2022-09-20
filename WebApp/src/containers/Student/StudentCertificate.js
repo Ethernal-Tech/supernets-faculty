@@ -1,5 +1,8 @@
-import React, {useEffect} from 'react'
+import React, {useState, useEffect} from 'react'
 import { connect } from 'react-redux'
+import withRouter from '../../utils/withRouter'
+import { getUserRole } from '../../utils/userUtils'
+import { USER_ROLES } from '../../utils/constants'
 
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
@@ -9,26 +12,40 @@ import { loadStudentCoursesAction } from '../../actions/coursesActions'
 import { loadStudentCertificateAction } from '../../actions/certificateActions'
 import { listStyles } from '../../styles'
 import { formatDate } from '../../utils/utils'
-//import { emptyArray, emptyObject } from 'utils/commonHelper'
+import { emptyArray, emptyObject } from 'utils/commonHelper'
 
 function StudentCertificate(props) {
     const now = new Date()
-    this.dateNow = formatDate(now)
+    //const dateNow = formatDate(now)
+    const [metadata, setMetadata] = useState({})
 
     useEffect(() => {
         if (!props.certificateData) {
             loadData()
+        } else {
+            loadMetadata(props.certificateData.tokenURI)
         }      
-    }, [])
+    }, [props.certificateData])
 
     const loadData = async () => {
-        await props.loadStudentCertificate(props.studentId, props.selectedEvent.id)
+        await props.loadStudentCertificate(props.student.id, props.selectedEvent.id)
+    }
+
+    const loadMetadata = async (uri) => {
+        const response = await fetch(uri)
+        const metadata = await response.json()
+        setMetadata(metadata)
+    }
+
+    if (!props.student) {
+        return null;
     }
 
     return (
         <div style={{ padding: '20px' }}>
             <h4>Official certificated made in blockchain</h4>
-            <p>Token id: {props.certificateData.tokenId} Uri: Token uri: {props.certificateData.tokenURI}</p>
+            <p>Token id: {props.certificateData ? props.certificateData.tokenId : 'tokenId'} Uri: {props.certificateData ? props.certificateData.tokenURI : 'uri'}</p>
+            { metadata &&  <p>Metadata name: { metadata.name }</p> }
             {/* <div style={{position: 'fixed', bottom: '10px', left: '20px', zIndex: '20'}}>
                 <img src={`${process.env.PUBLIC_URL}/logoplan.png`} height={45} alt="logoplan" />
             </div>
@@ -62,23 +79,23 @@ function StudentCertificate(props) {
 
 
 const mapStateToProps = (state, ownProps) => {
-    // const allCourses = state.courses.allCourses || emptyArray
-    // const gradesByCourse = (state.courses.gradesByCourseByStudent || emptyObject)[ownProps.student.id] || emptyObject
-    // const studentCourses = ((state.courses.studentCourses || emptyObject)[ownProps.student.id] || emptyArray).map(x => {
-    //     const course = allCourses.find(y => y.id === x)
-    //     const grade = gradesByCourse[x]
-    //     return {
-    //         ...course,
-    //         grade
-    //     }
-    // }).filter(x => parseInt(x.grade) > 5)
-
-    const studentId = ownProps.student.id
-    const certificateData = state.certificates.studentCertificates[studentId] || undefined
+    const userRole = getUserRole(state)
+    const students = state.users.students || emptyArray
+    
+    let student
+    let certificateData
+    if (ownProps.stud) {
+        student = students.find(stud => stud.id === ownProps.stud)
+        certificateData = state.certificates.studentCertificates[ownProps.stud] || undefined
+    }
+    else if (userRole === USER_ROLES.STUDENT) {
+        student = students.find(x => x.id === state.eth.selectedAccount)
+        certificateData = state.certificates.studentCertificates[state.eth.selectedAccount] || undefined
+    }
 
     return {
         certificateData,
-        studentId,
+        student,
         selectedEvent: state.event.selectedEvent,
     }
 }
@@ -88,4 +105,4 @@ const mapDispatchToProps = dispatch => ({
     loadStudentCertificate: (studentId, eventId) => loadStudentCertificateAction(studentId, eventId, dispatch)
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(StudentCertificate)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(StudentCertificate))

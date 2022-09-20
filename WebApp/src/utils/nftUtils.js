@@ -11,7 +11,7 @@ export const uploadMetadata = async metadata => {
     try {
         const added = await client.add(buffer)
         console.log('Added path: ', added[0].path)
-        return 'ipfs://' + added[0].path
+        return 'https://ipfs.io/ipfs/' + added[0].path
     } catch (error) {
         console.log('Error uploading file: ', error)
     }
