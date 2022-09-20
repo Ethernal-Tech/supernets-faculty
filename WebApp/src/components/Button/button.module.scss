@@ -18,12 +18,12 @@
 	background-color: var(--primary-color);
 	border-color: var(--primary-color);
 
-	&:hover {
-		&:not(:disabled) {
-			background-color: #3274c4;
-			border-color: #3274c4;
-		}
-	}
+	// &:hover {
+	// 	&:not(:disabled) {
+	// 		background-color: #3274c4;
+	// 		border-color: #3274c4;
+	// 	}
+	// }
 }
 
 .btn-secondary {
@@ -31,12 +31,12 @@
 	background-color: var(--secondary-color);
 	border-color: var(--secondary-color);
 
-	&:hover {
-		&:not(:disabled) {
-			background-color: #0c7e5a;
-			border-color: #0c7e5a;
-		}
-	}
+	// &:hover {
+	// 	&:not(:disabled) {
+	// 		background-color: #0c7e5a;
+	// 		border-color: #0c7e5a;
+	// 	}
+	// }
 }
 
 .btn-neutral {
@@ -44,12 +44,12 @@
 	background-color: var(--neutral-color);
 	border-color: var(--neutral-color);
 
-	&:hover {
-		&:not(:disabled) {
-			background-color: #515151;
-			border-color: #515151;
-		}
-	}
+	// &:hover {
+	// 	&:not(:disabled) {
+	// 		background-color: #515151;
+	// 		border-color: #515151;
+	// 	}
+	// }
 }
 
 .btn-destructive {
@@ -57,12 +57,12 @@
 	background-color: var(--destructive-color);
 	border-color: var(--destructive-color);
 
-	&:hover {
-		&:not(:disabled) {
-			background-color: #d7382ccc;
-			border-color: #d7382ccc;
-		}
-	}
+	// &:hover {
+	// 	&:not(:disabled) {
+	// 		background-color: #d7382ccc;
+	// 		border-color: #d7382ccc;
+	// 	}
+	// }
 }
 
 .btn.disabled, .btn:disabled {

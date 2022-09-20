@@ -1,11 +1,10 @@
-import { Container } from 'react-bootstrap'
 import { Button } from 'components/Button'
 import { Link } from "react-router-dom"
 import { noop } from 'utils/commonHelper'
 
 export const LandingPage = () => {
     return (
-        <Container style={styles.container}>
+        <div style={styles.container}>
             <div style={styles.homeHeader}>
                 <img style={{ marginRight: 30 }} src={`${process.env.PUBLIC_URL}/logoplan.png`}  alt="logoplan" />
                 <h1 style={{ marginBottom: 0 }}>Welcome to Faculty of Blockchain</h1>
@@ -21,7 +20,7 @@ export const LandingPage = () => {
 					onClick={noop}
 				/>
             </Link>
-        </Container>
+        </div>
     )
 }
 
