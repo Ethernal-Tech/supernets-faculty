@@ -119,8 +119,9 @@ export const ProfessorCourses = ({ professor, event }) => {
 		async ({ title, description, startTime, venue, points }) => {
             const startTimeMs = new Date(startTime).getTime()
 			await addCourseAction(title, description, startTimeMs, venue, points, professor.id, event.id, selectedAccount, dispatch)
+			closeDialogCallback()
 		},
-		[dispatch, professor, selectedAccount, event.id]
+		[dispatch, professor, selectedAccount, event.id, closeDialogCallback]
 	)
 
 	const onDelete = useCallback(
@@ -147,8 +148,9 @@ export const ProfessorCourses = ({ professor, event }) => {
 		async ({ id, title, startTime, venue, points, description }: any) => {
 			const startTimeMs = new Date(startTime).getTime()
 			await editCourseAction(id, title, description, startTimeMs, venue, points, professorAddr, event.id, selectedAccount, dispatch)
+			closeEditDialogCallback()
 		},
-		[event, selectedAccount, professorAddr, dispatch]
+		[event, selectedAccount, professorAddr, dispatch, closeEditDialogCallback]
 	)
 
     return (

@@ -114,8 +114,9 @@ export const Students = ({ event }) => {
     const onSubmit = useCallback(
 		async ({ addr, firstName, lastName, country }) => {
 			await addStudentAction(addr, firstName, lastName, country, event.id, selectedAccount, dispatch)
+			closeDialogCallback()
 		},
-		[event, selectedAccount, dispatch]
+		[event, selectedAccount, dispatch, closeDialogCallback]
 	)
 
     const onDelete = useCallback(
@@ -126,10 +127,11 @@ export const Students = ({ event }) => {
 	)
 
 	const onEdit = useCallback(
-		async ({ addr, firstName, lastName, country, expertise }: any) => {
+		async ({ addr, firstName, lastName, country }: any) => {
 			await editStudentAction(addr, firstName, lastName, country, event.id, selectedAccount, dispatch)
+			closeEditDialogCallback()
 		},
-		[event, selectedAccount, dispatch]
+		[event, selectedAccount, dispatch, closeEditDialogCallback]
 	)
 
 	const onView = useCallback(
@@ -158,14 +160,14 @@ export const Students = ({ event }) => {
 						/>
 					</div>
 					<Button
-						text='Add'
-						onClick={openDialogCallback}
-						disabled={!isAdmin}
-					/>
-					<Button
 						text={'View'}
 						disabled={!selectedStudent?.id}
 						onClick={onView}
+					/>
+					<Button
+						text='Add'
+						onClick={openDialogCallback}
+						disabled={!isAdmin}
 					/>
 					<Button
 						text='Edit'

@@ -54,9 +54,10 @@ export const Admins = ({ event }) => {
 
     const onSubmit = useCallback(
 		async ({ addr }) => {
-			addAdminAction(event.id, addr, selectedAccount, dispatch)
+			await addAdminAction(event.id, addr, selectedAccount, dispatch)
+			closeDialogCallback()
 		},
-		[selectedAccount, dispatch, event]
+		[selectedAccount, dispatch, event, closeDialogCallback]
 	)
 
     const onDelete = useCallback(

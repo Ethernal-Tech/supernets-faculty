@@ -94,7 +94,7 @@ export function Select(props: SelectProps) {
 				{loading &&
 					<div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}>
 						<Spinner>
-							<ClipSpinner size={20} color='#000'/>
+							<ClipSpinner size={20} />
 						</Spinner>
 					</div>
 				}

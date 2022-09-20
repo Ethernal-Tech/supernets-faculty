@@ -81,9 +81,10 @@ export const Events = () => {
             const timeStartMs = startDate.getTime()
             const timeEndMs = endDate.getTime()
 			await addEventAction(title, location, venue, timeStartMs, timeEndMs, description, selectedAccount, dispatch)
-			fetchEventsCallback()
+			await fetchEventsCallback()
+			closeDialogCallback();
 		},
-		[selectedAccount, dispatch, fetchEventsCallback]
+		[selectedAccount, dispatch, fetchEventsCallback, closeDialogCallback]
 	)
 
 	const eventsContent = useMemo(

@@ -35,7 +35,7 @@ const WithFetch = ({ children, fetchFunction, text, size = 70, refetching }: Pro
 			if (fetching) {
 				return (
 					<Spinner text={text}>
-						<ClipSpinner size={size} color='#000' />
+						<ClipSpinner size={size} />
 					</Spinner>
 				)
 			} else {
@@ -51,7 +51,7 @@ const WithFetch = ({ children, fetchFunction, text, size = 70, refetching }: Pro
 			{(!fetching && refetching) &&
 				<div className={styles.container}>
 					<Spinner>
-						<ClipSpinner size={size} color='#000' />
+						<ClipSpinner size={size} />
 					</Spinner>
 				</div>
 			}

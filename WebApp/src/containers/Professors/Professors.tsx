@@ -115,8 +115,9 @@ export const Professors = ({ event }) => {
 	const onSubmit = useCallback(
 		async ({ addr, firstName, lastName, country, expertise }) => {
 			await addProfessorAction(addr, firstName, lastName, country, expertise, event.id, selectedAccount, dispatch)
+			closeDialogCallback();
 		},
-		[selectedAccount, dispatch, event]
+		[selectedAccount, dispatch, event, closeDialogCallback]
 	)
 
     const onDelete = useCallback(
