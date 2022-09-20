@@ -103,10 +103,6 @@ export const CourseStudents = ({ course, event, selectedAccount }: CoursesTabPro
 		[query, search, studentsToDisenroll, getStudentGrade]
 	)
 
-	// FIXME:  "Student with grade cannot be disenrolled"
-	// disabled={grade !== "---"}
-	// FIXME: multiselect
-
     const disenrollStudents = useCallback(
 		async() => {
 	        if (selectedStudents.length !== 0){
@@ -158,6 +154,7 @@ export const CourseStudents = ({ course, event, selectedAccount }: CoursesTabPro
 					text={`Disenroll ${selectedStudents.length} students`}
 					onClick={disenrollStudents}
 					disabled={selectedStudents.filter(s => s.grade === '---').length === 0}
+					tooltip={(selectedStudents.filter(s => s.grade === '---').length === 0 && selectedStudents.length !== 0) ? 'Students with grade cannot be disenrolled' : ''}
 					isLoading={isWorking}
 				/>
 			</RowContainer>

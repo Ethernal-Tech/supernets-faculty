@@ -34,11 +34,11 @@ export const ProfessorCourses = ({ professor, event }) => {
 	const state = useSelector((state: any) => state)
 	const professors = state.users.professors || emptyArray
 	const selectedAccount = state.eth.selectedAccount
+	const professorFallback = professor || professors.find(x => x.id === selectedAccount)
 
-	professor = professor || professors.find(x => x.id === selectedAccount)
-	const professorAddr = professor?.id
+	const professorId = professorFallback?.id
     const allCourses = state.courses.allCourses || emptyArray
-    const professorCoursesIds = (professorAddr ? state.courses.coursesByProfessorAddr[professorAddr] : undefined) || emptyArray
+    const professorCoursesIds = (professorId ? state.courses.coursesByProfessorAddr[professorId] : undefined) || emptyArray
     const coursesProps = useMemo(
 		() => allCourses.filter(x => professorCoursesIds.some(y => y === x.id)),
 		[allCourses, professorCoursesIds]
@@ -82,9 +82,9 @@ export const ProfessorCourses = ({ professor, event }) => {
 
     useEffect(
 		() => {
-			loadProfessorCoursesAction(professor.id, event.id, dispatch)
+			loadProfessorCoursesAction(professorId, event.id, dispatch)
 		},
-		[professor.id, event.id, dispatch]
+		[professorId, event.id, dispatch]
 	);
 
 	useEffect(
@@ -118,17 +118,17 @@ export const ProfessorCourses = ({ professor, event }) => {
     const onSubmit = useCallback(
 		async ({ title, description, startTime, venue, points }) => {
             const startTimeMs = new Date(startTime).getTime()
-			await addCourseAction(title, description, startTimeMs, venue, points, professor.id, event.id, selectedAccount, dispatch)
+			await addCourseAction(title, description, startTimeMs, venue, points, professorId, event.id, selectedAccount, dispatch)
 			closeDialogCallback()
 		},
-		[dispatch, professor, selectedAccount, event.id, closeDialogCallback]
+		[dispatch, professorId, selectedAccount, event.id, closeDialogCallback]
 	)
 
 	const onDelete = useCallback(
 		async () => {
-			await deleteCourseAction(selectedCourse.id, event.id, professor.id, selectedAccount, dispatch)
+			await deleteCourseAction(selectedCourse.id, event.id, professorId, selectedAccount, dispatch)
 		},
-		[selectedCourse, event, professor, selectedAccount, dispatch]
+		[selectedCourse, event, professorId, selectedAccount, dispatch]
 	)
 
 	const onView = useCallback(
@@ -147,15 +147,14 @@ export const ProfessorCourses = ({ professor, event }) => {
 	const onEdit = useCallback(
 		async ({ id, title, startTime, venue, points, description }: any) => {
 			const startTimeMs = new Date(startTime).getTime()
-			await editCourseAction(id, title, description, startTimeMs, venue, points, professorAddr, event.id, selectedAccount, dispatch)
+			await editCourseAction(id, title, description, startTimeMs, venue, points, professorId, event.id, selectedAccount, dispatch)
 			closeEditDialogCallback()
 		},
-		[event, selectedAccount, professorAddr, dispatch, closeEditDialogCallback]
+		[event, selectedAccount, professorId, dispatch, closeEditDialogCallback]
 	)
 
     return (
 		<ColumnContainer margin='medium'>
-			<h3>Courses</h3>
 			<RowContainer>
 				<div style={{ width: '200px'}}>
 					<Input

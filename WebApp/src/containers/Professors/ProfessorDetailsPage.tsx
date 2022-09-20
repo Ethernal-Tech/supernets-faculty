@@ -13,7 +13,7 @@ export const ProfessorDetailsPage = ({ event }) => {
 	const professorId = params.professorId
 
     const professors = state.users.professors || emptyArray
-    let professor = professors.find(prof => prof.id === professorId)
+    const professor = professors.find(prof => prof.id === professorId)
 
     if (!professor) {
         return <></>
@@ -44,6 +44,7 @@ export const ProfessorDetailsPage = ({ event }) => {
 				</SmartFormGroup>
 			</div>
 			<VerticalSeparator margin='xlarge' />
+			<h3>Courses</h3>
             <ProfessorCourses professor={professor} event={event} />
         </ContentShell>
     )

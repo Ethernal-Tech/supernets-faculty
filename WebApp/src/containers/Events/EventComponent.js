@@ -45,7 +45,7 @@ export const EventComponent = ({ event, onEventClick, onEventEdit, onEventDelete
 
     return (
         <div className='col-md-4'>
-            <div className='card' style={{ margin: '0 0 0.7rem' }}>
+            <div className='card' style={{ margin: '0 0 0.7rem', background: 'rgb(33,37,41)' }}>
                 <div className='card-body'>
                     <h3 className='card-title'>{event.title}</h3>
                     <VerticalSeparator margin='small' />

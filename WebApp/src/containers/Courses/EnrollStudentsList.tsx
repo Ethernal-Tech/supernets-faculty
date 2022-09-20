@@ -1,3 +1,5 @@
+// FIXME: multi select rows for Table
+
 import { useMemo, useEffect, useState, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import EventListenerService from "utils/eventListenerService"

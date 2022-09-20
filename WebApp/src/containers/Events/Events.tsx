@@ -10,12 +10,13 @@ import { isEventAdmin } from 'utils/userUtils';
 import { ContentShell } from 'features/Content';
 import { Button } from 'components/Button';
 import { ColumnContainer, RowContainer } from 'components/Layout'
+import { ClipSpinner, Spinner } from 'components/Spinner';
 
 export const Events = () => {
 	const routematch = useRouteMatch()
 	const history = useHistory()
 	const dispatch = useDispatch();
-	// TODO:mika create RootState instead of any on all places where useSelector is used
+	// FIXME: create RootState instead of any on all places where useSelector is used
 	const state = useSelector((state: any) => state)
 	const isAdmin = isEventAdmin(state);
 	const selectedAccount = state.eth.selectedAccount;
@@ -100,6 +101,14 @@ export const Events = () => {
 		)),
 		[events, onEventClick, onEventEdit, onEventDelete, isAdmin]
 	)
+
+	if (loading) {
+		return (
+			<Spinner>
+				<ClipSpinner size={80} />
+			</Spinner>
+		)
+	}
 
 	return (
 		<ContentShell title='Events'>

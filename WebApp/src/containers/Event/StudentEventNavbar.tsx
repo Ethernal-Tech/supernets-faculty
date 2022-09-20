@@ -27,11 +27,12 @@ export const StudentEventNavbar = ({ event }) => {
 			title={event.title}
 			data={[
 				{
-					id: 'eventDetails',
-					name: 'Event Details'
-				}, {
 					id: 'studentCourses',
 					name: 'My Courses'
+				},
+				{
+					id: 'eventDetails',
+					name: 'Event Details'
 				}
 			]}
 			onSelect={selectCallback}
