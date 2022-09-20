@@ -1,6 +1,6 @@
 import web3 from './web3';
 
-export const address = '0x112232233c25E5161a53C3770c0cD9d3FEf14A88';
+export const address = '0xb2cF5F6C5E6745B6C420BA34FB2c4319945a3e7f';
 const abi = [
     {
         "inputs": [],
@@ -205,30 +205,6 @@ const abi = [
                 "internalType": "struct PlanBCertificate.CertificateData",
                 "name": "certificateData",
                 "type": "tuple"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "owner",
-                "type": "address"
-            },
-            {
-                "internalType": "uint256",
-                "name": "eventId",
-                "type": "uint256"
-            }
-        ],
-        "name": "getTokenForOwner",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
             }
         ],
         "stateMutability": "view",

@@ -72,11 +72,6 @@ contract PlanBCertificate is ERC721, ERC721URIStorage {
         return super.tokenURI(tokenId);
     }
 
-    function getTokenForOwner(address owner, uint eventId) external view returns (uint256 tokenId) {
-        tokenId = events[eventId].ownerToToken[owner];
-        require(tokenId > 0);
-    }
-
     function getCertificateData(address owner, uint eventId) external view returns (CertificateData memory certificateData) {
         uint256 tokenId = events[eventId].ownerToToken[owner];
         require(tokenId > 0);

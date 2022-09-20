@@ -1,6 +1,6 @@
 import web3 from './web3';
 
-export const address = '0x510EE4E368A7D780589B3d4918c815C3A17B9c45';
+export const address = '0xA3f5E3fE7B0001f4beb9Ce2432bDE4BF66A8761C';
 const abi = [
     {
         "inputs": [
@@ -275,6 +275,87 @@ const abi = [
                 "internalType": "struct FacultyStructs.Student[]",
                 "name": "",
                 "type": "tuple[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "eventId",
+                "type": "uint256"
+            }
+        ],
+        "name": "getEvent",
+        "outputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "uint256",
+                        "name": "id",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "title",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "location",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "venue",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "startDate",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "endDate",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "description",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "address[]",
+                        "name": "adminsAddresses",
+                        "type": "address[]"
+                    },
+                    {
+                        "internalType": "address[]",
+                        "name": "professorsAddresses",
+                        "type": "address[]"
+                    },
+                    {
+                        "internalType": "address[]",
+                        "name": "studentsAddresses",
+                        "type": "address[]"
+                    },
+                    {
+                        "internalType": "uint256[]",
+                        "name": "coursesIds",
+                        "type": "uint256[]"
+                    },
+                    {
+                        "internalType": "bool",
+                        "name": "exist",
+                        "type": "bool"
+                    }
+                ],
+                "internalType": "struct FacultyStructs.Event",
+                "name": "ev",
+                "type": "tuple"
             }
         ],
         "stateMutability": "view",
