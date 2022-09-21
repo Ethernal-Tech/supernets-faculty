@@ -29,7 +29,7 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        paddingTop: 60,
+        paddingTop: 24,
     },
     homeHeader: {
         display: 'flex',
@@ -37,14 +37,10 @@ const styles = {
         alignItems: 'center',
     },
     homeText: {
-        paddingTop: 60,
+        paddingTop: 32,
         textAlign: 'center',
     },
     enterButtonContainer: {
-        marginTop: 60,
-    },
-    enterButton: {
-        width: 200,
-        height: 60
+        marginTop: 32,
     }
 }

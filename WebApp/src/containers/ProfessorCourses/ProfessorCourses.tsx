@@ -9,7 +9,7 @@ import { ColumnContainer, RowContainer } from 'components/Layout'
 import { Button } from 'components/Button';
 import { Dialog } from 'components/Dialog'
 import { Input } from 'components/Form'
-import { CourseForm } from './CourseForm'
+import { CourseForm } from '../Event/Courses/CourseForm'
 import { emptyArray } from 'utils/commonHelper';
 
 const keys = ["title"]

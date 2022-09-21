@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux'
 import { emptyArray } from 'utils/commonHelper'
 import { StudentCourses } from 'containers/StudentCourses/StudentCourses'
 
-export const StudentDetailsPage = ({ event }) => {
+export const Student = ({ event }) => {
 	const state = useSelector((state: any) => state)
 	const params: any = useParams();
 	const studentId = params.studentId;

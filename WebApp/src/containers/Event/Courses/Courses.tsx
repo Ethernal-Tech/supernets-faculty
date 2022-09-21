@@ -11,7 +11,7 @@ import { ColumnContainer, RowContainer } from 'components/Layout'
 import { Button } from 'components/Button';
 import { Input } from 'components/Form'
 import { addCourseAction, deleteCourseAction, editCourseAction } from 'actions/coursesActions'
-import { CourseForm } from 'containers/ProfessorCourses/CourseForm'
+import { CourseForm } from './CourseForm'
 
 const keys = ["firstName", "lastName", "id"]
 
@@ -33,7 +33,7 @@ const tableColumns: BaseColumnModel[] = [
 	},
 ]
 
-export const EventCourses = ({ event }) => {
+export const Courses = ({ event }) => {
 	const routematch = useRouteMatch()
 	const history = useHistory();
 	const dispatch = useDispatch();

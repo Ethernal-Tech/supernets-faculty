@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { initializeEthAction } from 'actions/appActions'
 import { loadAdminAccountAction } from 'actions/userActions'
-import Navbar from 'containers/Navbar'
+import Navbar from 'features/Navbar/Navbar'
 import { ContentRouter } from 'features/Content'
 
 export const App = () => {

@@ -7,7 +7,7 @@ import VerticalSeparator from 'components/Layout/Separator/VerticalSeparator'
 import { emptyArray } from 'utils/commonHelper'
 import { useParams } from 'react-router-dom';
 
-export const ProfessorDetailsPage = ({ event }) => {
+export const Professor = ({ event }) => {
 	const state = useSelector((state: any) => state)
 	const params: any = useParams()
 	const professorId = params.professorId

@@ -12,16 +12,4 @@
 
 .input {
 	@include control();
-
-	&:focus ~ .max_length {
-		display: block;
-	}
-}
-
-.max_length {
-	display: none;
-}
-
-.explanation {
-	@include explanation();
 }

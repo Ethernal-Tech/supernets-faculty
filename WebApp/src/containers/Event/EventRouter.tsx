@@ -4,7 +4,7 @@ import { getUserRole } from 'utils/userUtils'
 import { Details } from './Details/Details'
 import { USER_ROLES } from 'utils/constants';
 import { ProfessorsRouter } from '../Professors/ProfessorsRouter';
-import { EventCourses } from './EventCourses/EventCourses';
+import { Courses } from './Courses/Courses';
 import { StudentsRouter } from 'containers/Students/StudentsRouter';
 import { Admins } from './Admins/Admins';
 import { loadUsersAction } from 'actions/userActions';
@@ -88,7 +88,7 @@ export const EventRouter = () => {
 					{userRole === USER_ROLES.ADMIN && <Route path={`${path}/professors`} render={() => <ProfessorsRouter event={event} />}/>}
 					{(userRole === USER_ROLES.ADMIN || userRole === USER_ROLES.PROFESSOR) && <Route path={`${path}/students`} render={() => <StudentsRouter event={event} />}/>}
 					<Route path={`${path}/courses/read/:courseId`} render={() => <Course event={event} />} />
-					{userRole === USER_ROLES.ADMIN && <Route path={`${path}/courses`} render={() => <EventCourses event={event} />}/>}
+					{userRole === USER_ROLES.ADMIN && <Route path={`${path}/courses`} render={() => <Courses event={event} />}/>}
 					{userRole === USER_ROLES.ADMIN && <Route path={`${path}/admins`} render={() => <Admins event={event} />}/>}
 
 					{userRole === USER_ROLES.PROFESSOR &&

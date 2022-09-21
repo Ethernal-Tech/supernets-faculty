@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react'
 import { connect } from 'react-redux'
-import withRouter from 'utils/withRouter'
 import { getUserRole } from 'utils/userUtils'
 import { USER_ROLES } from 'utils/constants'
 import { loadStudentCoursesAction } from 'actions/coursesActions'
@@ -98,4 +97,4 @@ const mapDispatchToProps = dispatch => ({
     loadStudentCertificate: (studentId, eventId) => loadStudentCertificateAction(studentId, eventId, dispatch)
 })
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(StudentCertificate))
+export default connect(mapStateToProps, mapDispatchToProps)(StudentCertificate)

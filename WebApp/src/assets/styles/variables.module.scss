@@ -22,7 +22,6 @@ body {
 	--content-background: #3c3c3d;
 	--content-color: #d8d8d8;
 	--content-title-color: var(--brand-color);
-	--content-subtitle-color: var(--brand-color);
 	--content-separator-background: #545454;
 	--content-selected-color: var(--brand-color);
 
@@ -33,16 +32,8 @@ body {
 	--field-disabled-background: rgba(77, 77, 79, .06);
 	--field-disabled-color: rgba(77, 77, 79, .45);
 	--field-placeholder-color: #21252980;
-	--field-focus-border-color: #80bdff;
-	--field-max-length-background: #fff;
-	--field-max-length-color: #80bdff;
+	--field-focus-border-color: var(--brand-color);
 	--field-error: var(--error-color);
-	--field-warning: #F5C050;
-	--checkbox-checked-background: var(--brand-color);
-	--checkbox-unchecked-background: transparent;
-	--radio-checked-background: var(--brand-color);
-	--radio-unchecked-background: transparent;
-	--field-dropdown-background: #fff;
 
 	// table
 

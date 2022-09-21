@@ -1,5 +1,5 @@
 import { Switch, Route, useRouteMatch } from 'react-router-dom'
-import { StudentDetailsPage } from './StudentDetailsPage'
+import { Student } from './Student'
 import { Students } from './Students'
 
 export const StudentsRouter = ({ event }) => {
@@ -7,7 +7,7 @@ export const StudentsRouter = ({ event }) => {
 
     return (
         <Switch>
-            <Route path={`${path}/read/:studentId`} render={() => <StudentDetailsPage event={event} />}/>
+            <Route path={`${path}/read/:studentId`} render={() => <Student event={event} />}/>
 
             <Route render={() => <Students event={event} />}/>
 		</Switch>

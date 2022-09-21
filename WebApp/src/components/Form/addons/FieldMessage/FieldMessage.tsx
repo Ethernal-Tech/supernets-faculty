@@ -2,7 +2,7 @@ import styles from './fieldMessage.module.scss';
 
 type Props = {
 	message?: string
-	type?: 'error' | 'info' | 'warning'
+	type?: 'error'
 }
 
 export const FieldMessage = ({ message, type = 'error' }: Props) => {

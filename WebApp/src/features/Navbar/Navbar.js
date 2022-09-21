@@ -2,9 +2,8 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Alert from 'react-bootstrap/Alert';
-import EventListenerService from "../utils/eventListenerService"
-import { getUserName } from '../utils/userUtils'
-import withRouter from '../utils/withRouter';
+import EventListenerService from "utils/eventListenerService"
+import { getUserName } from 'utils/userUtils'
 
 class Navbar extends React.Component {
     constructor(props) {
@@ -54,23 +53,20 @@ class Navbar extends React.Component {
                             </li>
                         </ul>
                     </div>
-                    {
-                        !!selectedAccount &&
-                        <div style={{ color: 'white', fontSize: 14 }}>
+                    {!!selectedAccount &&
+                        <div style={{ fontSize: 14 }}>
                             {userName}
                             <br />
                             {selectedAccount}
                         </div>
                     }
                 </nav>
-                {
-                    this.state.errors.map((error, i) => (
-                        <Alert key={error+i} variant="danger" onClose={() => this.removeError(i)} dismissible>
-                            <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
-                            <p>{error}</p>
-                        </Alert>
-                    ))
-                }
+                {this.state.errors.map((error, i) => (
+                    <Alert key={error+i} variant="danger" onClose={() => this.removeError(i)} dismissible>
+                        <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
+                        <p>{error}</p>
+                    </Alert>
+                ))}
             </>
         )
     }
@@ -84,4 +80,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default withRouter(connect(mapStateToProps)(Navbar))
+export default connect(mapStateToProps)(Navbar)
