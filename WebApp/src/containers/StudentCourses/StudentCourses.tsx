@@ -33,14 +33,13 @@ const tableColumns: BaseColumnModel[] = [
 export const StudentCourses = ({ student, event }) => {
 	const dispatch = useDispatch()
 	const state = useSelector((state: any) => state)
-	const selectedAccount = state.eth.selectedAccount;
-    const allStudents = state.users.students || emptyArray
-	const studentFallback = student || allStudents.find(x => x.id === selectedAccount)
-	const allCourses = state.courses.allCourses || emptyArray
-	const gradesByCourse = (state.courses.gradesByCourseByStudent || emptyObject)[studentFallback.id] || emptyArray
 
-    const studentCourses = useMemo(
-		() => ((state.courses.studentCourses || emptyObject)[studentFallback.id] || emptyArray).map(x => {
+	const selectedAccount = state.eth.selectedAccount;
+	const allCourses = state.courses.allCourses || emptyArray
+	const gradesByCourse = (state.courses.gradesByCourseByStudent || emptyObject)[student.id] || emptyArray
+
+    const courses = useMemo(
+		() => ((state.courses.studentCourses || emptyObject)[student.id] || emptyArray).map(x => {
 	        const course = allCourses.find(y => y.id === x)
 	        const grade = gradesByCourse.find(y => y.courseId === x)
 	        return {
@@ -48,26 +47,18 @@ export const StudentCourses = ({ student, event }) => {
 	            grade
 	        }
 		}),
-		[allCourses, gradesByCourse, state.courses.studentCourses, studentFallback]
+		[allCourses, gradesByCourse, state.courses.studentCourses, student]
 	)
 
     const [query, setQuery] = useState('');
-    const [courses, setCourses] = useState([]);
     const [searchedCourses, setSearchedCourses] = useState<any[]>([]);
 	const professors = state.users.professors || emptyArray;
 
     useEffect(
 		() => {
-			loadStudentCoursesAction(studentFallback.id, event.id, dispatch)
+			loadStudentCoursesAction(student.id, event.id, dispatch)
 		},
-		[studentFallback, event, dispatch]
-	);
-
-    useEffect(
-		() => {
-            setCourses(studentCourses)
-		},
-		[studentCourses]
+		[student, event, dispatch]
 	);
 
     const search = useCallback(
@@ -97,14 +88,14 @@ export const StudentCourses = ({ student, event }) => {
 
     const onGenerateCertificate = useCallback(
 		async () => {
-	        const metadata = createMetadata(studentFallback, studentCourses)
+	        const metadata = createMetadata(student, courses)
 	        console.log(metadata)
 	        const ipfsUri = await uploadMetadata(metadata);
 
 			console.log(ipfsUri)
-	        await generateCertificateAction(studentFallback.id, selectedAccount, ipfsUri, event.id)
+	        await generateCertificateAction(student.id, selectedAccount, ipfsUri, event.id)
 		},
-		[event.id, selectedAccount, studentFallback, studentCourses]
+		[event.id, selectedAccount, student, courses]
 	)
 
     return (
