@@ -5,10 +5,10 @@ import { Events } from './Events'
 export const EventsRouter = () => {
 	const { path } = useRouteMatch()
 
-    return (
-        <Switch>
-            <Route path={`${path}/read/:eventId`} render={() => <EventRouter />}/>
-            <Route render={() => <Events />}/>
-        </Switch>
-    )
+	return (
+		<Switch>
+			<Route path={`${path}/read/:eventId`} render={() => <EventRouter />}/>
+			<Route render={() => <Events />}/>
+		</Switch>
+	)
 }

@@ -9,7 +9,7 @@ import { EventForm } from './EventForm'
 import { isEventAdmin } from 'utils/userUtils';
 import { ContentShell } from 'features/Content';
 import { Button } from 'components/Button';
-import { ColumnContainer, RowContainer } from 'components/Layout'
+import { ColumnContainer } from 'components/Layout'
 import { ClipSpinner, Spinner } from 'components/Spinner';
 
 export const Events = () => {
@@ -61,8 +61,8 @@ export const Events = () => {
 
 	const onEventEdit = useCallback(
 		async (eventId, title, location, venue, startDate, endDate, description) => {
-            const timeStartMs = startDate.getTime()
-            const timeEndMs = endDate.getTime()
+			const timeStartMs = startDate.getTime()
+			const timeEndMs = endDate.getTime()
 			await editEventAction(eventId, title, location, venue, timeStartMs, timeEndMs, description, selectedAccount, dispatch)
 			fetchEventsCallback()
 		},
@@ -79,8 +79,8 @@ export const Events = () => {
 
 	const onSubmit = useCallback(
 		async ({ title, location, venue, startDate, endDate, description }) => {
-            const timeStartMs = startDate.getTime()
-            const timeEndMs = endDate.getTime()
+			const timeStartMs = startDate.getTime()
+			const timeEndMs = endDate.getTime()
 			await addEventAction(title, location, venue, timeStartMs, timeEndMs, description, selectedAccount, dispatch)
 			await fetchEventsCallback()
 			closeDialogCallback();
@@ -111,35 +111,33 @@ export const Events = () => {
 	}
 
 	return (
-		<ContentShell title='Events'>
-			<ColumnContainer>
-				{isAdmin &&
-					<RowContainer>
+		<div style={{ marginLeft: '200px', width: '1280px' }}>
+			<ContentShell title='Events'>
+				<ColumnContainer>
+					{isAdmin &&
 						<Button
 							text='Add event'
 							onClick={openDialogCallback}
 						/>
-						{isDialogOpen &&
-							<Dialog
-								title='Add Event'
-								onClose={closeDialogCallback}
-								open={true}
-							>
-								<EventForm
-									onSubmit={onSubmit}
-									onCancel={closeDialogCallback}
-									event={undefined}
-								/>
-							</Dialog>
-						}
-					</RowContainer>
-				}
-				<div className='container col-md-8'>
-					<div className='row hidden-md-up'>
+					}
+					<div className='row'>
 						{eventsContent}
 					</div>
-				</div>
-			</ColumnContainer>
-		</ContentShell>
+				</ColumnContainer>
+				{isDialogOpen &&
+					<Dialog
+						title='Add Event'
+						onClose={closeDialogCallback}
+						open={true}
+					>
+						<EventForm
+							onSubmit={onSubmit}
+							onCancel={closeDialogCallback}
+							event={undefined}
+						/>
+					</Dialog>
+				}
+			</ContentShell>
+		</div>
 	)
 }

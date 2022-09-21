@@ -7,11 +7,11 @@ import { Dialog } from 'components/Dialog'
 import { EventForm } from './EventForm'
 
 export const EventComponent = ({ event, onEventClick, onEventEdit, onEventDelete, isAdmin }) => {
-    const [isWorking, setIsWorking] = useState(false);
-    const startDate = new Date(parseInt(event.startDate))
-    const formatedStartDate = formatDate(startDate)
-    const endDate = new Date(parseInt(event.endDate))
-    const formatedEndDate = formatDate(endDate)
+	const [isWorking, setIsWorking] = useState(false);
+	const startDate = new Date(parseInt(event.startDate))
+	const formatedStartDate = formatDate(startDate)
+	const endDate = new Date(parseInt(event.endDate))
+	const formatedEndDate = formatDate(endDate)
 	const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
 
 	const openEditDialogCallback = useCallback(
@@ -25,16 +25,16 @@ export const EventComponent = ({ event, onEventClick, onEventEdit, onEventDelete
 	)
 
 	const onEditSubmit = async ({title, location, venue, startDate, endDate, description}) => {
-        setIsWorking(true)
-        await onEventEdit(event.id, title, location, venue, startDate, endDate, description)
-        setIsWorking(false)
-    }
+		setIsWorking(true)
+		await onEventEdit(event.id, title, location, venue, startDate, endDate, description)
+		setIsWorking(false)
+	}
 
-    const onDeleteClick = async () => {
-        setIsWorking(true)
-        await onEventDelete(event.id)
-        setIsWorking(false)
-    }
+	const onDeleteClick = async () => {
+		setIsWorking(true)
+		await onEventDelete(event.id)
+		setIsWorking(false)
+	}
 
 	const onDetails = useCallback(
 		() => {
@@ -43,54 +43,54 @@ export const EventComponent = ({ event, onEventClick, onEventEdit, onEventDelete
 		[event, onEventClick]
 	)
 
-    return (
-        <div className='col-md-4'>
-            <div className='card' style={{ margin: '0 0 0.7rem', background: 'rgb(33,37,41)' }}>
-                <div className='card-body'>
-                    <h3 className='card-title'>{event.title}</h3>
-                    <VerticalSeparator margin='small' />
+	return (
+		<div className='col-md-4'>
+			<div className='card' style={{ margin: '0 0 0.7rem', background: 'rgb(33,37,41)' }}>
+				<div className='card-body'>
+					<h3 className='card-title'>{event.title}</h3>
+					<VerticalSeparator margin='small' />
 					<div className='card-text text-truncate' title={event.description}>{event.description}</div>
-                    <VerticalSeparator margin='small' />
+					<VerticalSeparator margin='small' />
 					<div className='card-text'>{formatedStartDate} - {formatedEndDate}</div>
 					<VerticalSeparator margin='medium' />
-					<RowContainer>
+					<RowContainer justifyContent='end'>
 						<Button
 							text='Details'
 							onClick={onDetails}
 							isLoading={isWorking}
 						/>
-	                    {isAdmin &&
+						{isAdmin &&
 							<Button
-							text='Edit'
-							onClick={openEditDialogCallback}
-						/>
+								text='Edit'
+								onClick={openEditDialogCallback}
+							/>
 						}
 						{isAdmin &&
 							<Button
-									text='Delete'
-									color='destructive'
-									tooltip={event.coursesIds.length === 0 ? undefined : 'Event with courses cannot be deleted.'}
-									disabled={event.coursesIds.length !== 0}
-									onClick={onDeleteClick}
-									isLoading={isWorking}
-								/>
+								text='Delete'
+								color='destructive'
+								tooltip={event.coursesIds.length === 0 ? undefined : 'Event with courses cannot be deleted.'}
+								disabled={event.coursesIds.length !== 0}
+								onClick={onDeleteClick}
+								isLoading={isWorking}
+							/>
 						}
 					</RowContainer>
 					{isAdmin &&
-					<Dialog
-						title='Edit Event'
-						onClose={closeEditDialogCallback}
-						open={isEditDialogOpen}
-					>
-	                	<EventForm
-							onSubmit={onEditSubmit}
-							onCancel={closeEditDialogCallback}
-							event={event}
-						/>
-					</Dialog>
-	            }
-                </div>
-            </div>
-        </div>
-    )
+						<Dialog
+							title='Edit Event'
+							onClose={closeEditDialogCallback}
+							open={isEditDialogOpen}
+						>
+							<EventForm
+								onSubmit={onEditSubmit}
+								onCancel={closeEditDialogCallback}
+								event={event}
+							/>
+						</Dialog>
+					}
+				</div>
+			</div>
+		</div>
+	)
 }
