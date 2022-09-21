@@ -164,6 +164,9 @@ export const CourseStudents = ({ course, event, selectedAccount }: CoursesTabPro
 				rowSelectionChanged={selectionChangeCallback}
 				hasPagination
 				limit={5}
+				options={{
+					selectable: true
+				}}
 			/>
 		</ColumnContainer>
     )

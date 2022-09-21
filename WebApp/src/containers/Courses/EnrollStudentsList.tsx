@@ -149,6 +149,9 @@ export const EnrollStudentsList = ({ course, event, selectedAccount }: CoursesTa
 				rowSelectionChanged={selectionChangeCallback}
 				hasPagination
 				limit={5}
+				options={{
+					selectable: true
+				}}
 			/>
 		</ColumnContainer>
     )
