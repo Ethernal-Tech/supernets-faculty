@@ -161,13 +161,13 @@ export const ProfessorCourses = ({ professor, event, viewCourseRoutePrefix }) =>
 				}
 				<Button
 					text={'View'}
-					disabled={!selectedCourse?.id}
+					disabled={!selectedCourse.id}
 					onClick={onView}
 				/>
 				{isAdmin &&
 					<Button
 						text='Edit'
-						disabled={!selectedCourse?.id}
+						disabled={!selectedCourse.id}
 						onClick={openEditDialogCallback}
 					/>
 				}
@@ -176,7 +176,8 @@ export const ProfessorCourses = ({ professor, event, viewCourseRoutePrefix }) =>
 						text='Delete'
 						color='destructive'
 						onClick={onDelete}
-						disabled={!selectedCourse?.id}
+						disabled={!selectedCourse.id || selectedCourse.numberOfStudents > 0}
+						tooltip={selectedCourse.numberOfStudents > 0 ? 'Course with enrolled students cannot be deleted' : ''}
 					/>
 				}
 			</RowContainer>
@@ -187,7 +188,6 @@ export const ProfessorCourses = ({ professor, event, viewCourseRoutePrefix }) =>
 				hasPagination
 				limit={5}
 			/>
-			{/* FIXME: ne secam se odakle je ovo, proveri: Tooltip Delete: Course with enrolled students cannot be deleted */}
 
 			{isAdmin &&
 				<Dialog
@@ -202,7 +202,7 @@ export const ProfessorCourses = ({ professor, event, viewCourseRoutePrefix }) =>
 				</Dialog>
             }
 
-			{isAdmin && selectedCourse?.id &&
+			{isAdmin && selectedCourse.id &&
 				<Dialog
 					title='Edit Course'
 					onClose={closeEditDialogCallback}
