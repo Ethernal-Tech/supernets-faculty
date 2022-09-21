@@ -44,7 +44,7 @@ class Navbar extends React.Component {
 								style={{ margin: '2px 15px', height: '40px' }}
 							/>
                         </Link>
-                        <Link to={'/'} className="navbar-brand" style={{ fontSize: '16px' }}>Faculty of blockchain</Link>
+                        <Link to={'/'} className="navbar-brand" style={{ fontSize: '16px', marginRight: '24px' }}>Faculty of blockchain</Link>
                         <ul className="navbar-nav">
                             <li className="nav-item">
                                 <Link to={'/events'} className="nav-link">Events</Link>
