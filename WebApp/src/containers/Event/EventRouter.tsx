@@ -13,12 +13,12 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Course } from 'containers/Course/Course';
 import { loadEvent } from 'actions/eventActions';
 import { ClipSpinner, Spinner } from 'components/Spinner';
-import { ProfessorCourses } from 'containers/ProfessorCourses/ProfessorCourses';
 import { ContentShell } from 'features/Content';
 import { StudentCourses } from 'containers/StudentCourses/StudentCourses';
 import { Tree } from 'components/Tree/Tree';
 import { adminNavigation, professorNavigation, studentNavigation } from './navigation';
 import { ItemType } from 'components/Tree/Item';
+import { ProfessorCoursesWrapper } from 'containers/ProfessorCourses/ProfessorCoursesWrapper';
 
 export const EventRouter = () => {
 	const dispatch = useDispatch()
@@ -91,18 +91,7 @@ export const EventRouter = () => {
 					{userRole === USER_ROLES.ADMIN && <Route path={`${path}/courses`} render={() => <Courses event={event} />}/>}
 					{userRole === USER_ROLES.ADMIN && <Route path={`${path}/admins`} render={() => <Admins event={event} />}/>}
 
-					{userRole === USER_ROLES.PROFESSOR &&
-						<Route
-							path={`${path}/professorCourses`}
-							render={
-								() => (
-									<ContentShell title='My Courses'>
-										<ProfessorCourses professor={undefined} event={event} />
-									</ContentShell>
-								)
-							}
-						/>
-					}
+					{userRole === USER_ROLES.PROFESSOR && <Route path={`${path}/professorCourses`} render={() => <ProfessorCoursesWrapper event={event} />} />}
 
 					{userRole === USER_ROLES.STUDENT &&
 						<Route

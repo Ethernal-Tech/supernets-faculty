@@ -1,3 +1,4 @@
+import path from 'path'
 import { useSelector } from 'react-redux'
 import { ProfessorCourses } from 'containers/ProfessorCourses/ProfessorCourses'
 import { ContentShell } from 'features/Content'
@@ -45,7 +46,11 @@ export const Professor = ({ event }) => {
 			</div>
 			<VerticalSeparator margin='xlarge' />
 			<h3>Courses</h3>
-            <ProfessorCourses professor={professor} event={event} />
+            <ProfessorCourses
+				professor={professor}
+				event={event}
+				viewCourseRoutePrefix={path.join('../../', 'courses', 'read')}
+			/>
         </ContentShell>
     )
 }

@@ -27,25 +27,23 @@ const tableColumns: BaseColumnModel[] = [
 	}
 ]
 
-export const ProfessorCourses = ({ professor, event }) => {
+export const ProfessorCourses = ({ professor, event, viewCourseRoutePrefix }) => {
 	const history = useHistory();
 	const dispatch = useDispatch()
 	const state = useSelector((state: any) => state)
-	const professors = state.users.professors || emptyArray
-	const selectedAccount = state.eth.selectedAccount
-	const professorFallback = professor || professors.find(x => x.id === selectedAccount)
 
-	const professorId = professorFallback?.id
+	const selectedAccount = state.eth.selectedAccount
+	const professorId = professor?.id
     const allCourses = state.courses.allCourses || emptyArray
     const professorCoursesIds = (professorId ? state.courses.coursesByProfessorAddr[professorId] : undefined) || emptyArray
-    const coursesProps = useMemo(
+	const isAdmin = isEventAdmin(state)
+
+    const courses = useMemo(
 		() => allCourses.filter(x => professorCoursesIds.some(y => y === x.id)),
 		[allCourses, professorCoursesIds]
 	)
-    const isAdmin = isEventAdmin(state)
 
     const [query, setQuery] = useState('');
-    const [courses, setCourses] = useState([]);
     const [searchedCourses, setSearchedCourses] = useState<any[]>([]);
 	const [selectedCourse, setSelectedCourse] = useState<any>({})
 
@@ -86,13 +84,6 @@ export const ProfessorCourses = ({ professor, event }) => {
 		[professorId, event.id, dispatch]
 	);
 
-	useEffect(
-		() => {
-			setCourses(coursesProps)
-		},
-		[coursesProps]
-	)
-
     useEffect(
 		() => {
 			const newCourses = search(courses, query)
@@ -132,9 +123,9 @@ export const ProfessorCourses = ({ professor, event }) => {
 
 	const onView = useCallback(
 		() => {
-			history.push(path.join('./', 'courses', 'read', selectedCourse.id));
+			history.push(path.join(viewCourseRoutePrefix, selectedCourse.id));
 		},
-		[selectedCourse, history]
+		[selectedCourse, history, viewCourseRoutePrefix]
 	)
 
 	const selectionChangeCallback = useCallback(
