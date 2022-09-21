@@ -30,13 +30,17 @@ const tableColumns: BaseColumnModel[] = [
 	}
 ]
 
-export const CourseList = ({ student, userRole, event }) => {
+export const StudentCourses = ({ student, event }) => {
 	const dispatch = useDispatch()
 	const state = useSelector((state: any) => state)
+	const selectedAccount = state.eth.selectedAccount;
+    const allStudents = state.users.students || emptyArray
+	const studentFallback = student || allStudents.find(x => x.id === selectedAccount)
 	const allCourses = state.courses.allCourses || emptyArray
-    const gradesByCourse = (state.courses.gradesByCourseByStudent || emptyObject)[student.id] || emptyArray
+	const gradesByCourse = (state.courses.gradesByCourseByStudent || emptyObject)[studentFallback.id] || emptyArray
+
     const studentCourses = useMemo(
-		() => ((state.courses.studentCourses || emptyObject)[student.id] || emptyArray).map(x => {
+		() => ((state.courses.studentCourses || emptyObject)[studentFallback.id] || emptyArray).map(x => {
 	        const course = allCourses.find(y => y.id === x)
 	        const grade = gradesByCourse.find(y => y.courseId === x)
 	        return {
@@ -44,9 +48,8 @@ export const CourseList = ({ student, userRole, event }) => {
 	            grade
 	        }
 		}),
-		[allCourses, gradesByCourse, state.courses.studentCourses, student]
+		[allCourses, gradesByCourse, state.courses.studentCourses, studentFallback]
 	)
-	const selectedAccount = state.eth.selectedAccount;
 
     const [query, setQuery] = useState('');
     const [courses, setCourses] = useState([]);
@@ -55,9 +58,9 @@ export const CourseList = ({ student, userRole, event }) => {
 
     useEffect(
 		() => {
-			loadStudentCoursesAction(student.id, event.id, dispatch)
+			loadStudentCoursesAction(studentFallback.id, event.id, dispatch)
 		},
-		[student, event, dispatch]
+		[studentFallback, event, dispatch]
 	);
 
     useEffect(
@@ -94,23 +97,18 @@ export const CourseList = ({ student, userRole, event }) => {
 
     const onGenerateCertificate = useCallback(
 		async () => {
-	        const metadata = createMetadata(student, studentCourses)
+	        const metadata = createMetadata(studentFallback, studentCourses)
 	        console.log(metadata)
 	        const ipfsUri = await uploadMetadata(metadata);
 
 			console.log(ipfsUri)
-	        await generateCertificateAction(student.id, selectedAccount, ipfsUri, event.id)
+	        await generateCertificateAction(studentFallback.id, selectedAccount, ipfsUri, event.id)
 		},
-		[event.id, selectedAccount, student, studentCourses]
+		[event.id, selectedAccount, studentFallback, studentCourses]
 	)
 
     return (
 		<ColumnContainer margin='medium'>
-			<Button
-				text='Produce certificate'
-				onClick={onGenerateCertificate}
-			/>
-			<h2>Courses</h2>
 			<div style={{ width: '200px'}}>
 				<Input
 					value={query}
@@ -123,6 +121,10 @@ export const CourseList = ({ student, userRole, event }) => {
 				data={searchedCourses}
 				hasPagination
 				limit={5}
+			/>
+			<Button
+				text='Produce certificate'
+				onClick={onGenerateCertificate}
 			/>
 		</ColumnContainer>
     )

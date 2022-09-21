@@ -1,3 +1,4 @@
+import path from 'path'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button } from 'components/Button'
@@ -10,7 +11,7 @@ import { ColumnContainer, RowContainer } from 'components/Layout'
 import { Input } from 'components/Form'
 import { useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
-import { CoursesTabProps } from './Courses'
+import { CoursesTabProps } from './Course'
 
 const keys = ["firstName", "lastName", "id"]
 
@@ -122,7 +123,7 @@ export const CourseStudents = ({ course, event, selectedAccount }: CoursesTabPro
 	const onView = useCallback(
 		() => {
 			if (selectedStudents.length === 1) {
-				history.push(`/student?stud=${selectedStudents[0].id}`)
+				history.push(path.join('../../../', 'students', 'read', selectedStudents[0].id))
 			}
 		},
 		[selectedStudents, history]

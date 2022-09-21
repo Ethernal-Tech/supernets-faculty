@@ -5,15 +5,13 @@ import { SmartFormGroup } from 'components/SmartContainer/SmartContainer'
 import { ContentShell } from 'features/Content'
 import { useSelector } from 'react-redux'
 import { emptyArray } from 'utils/commonHelper'
-import { CourseList } from 'containers/StudentCourses/StudentCourses'
-import { getUserRole } from 'utils/userUtils'
+import { StudentCourses } from 'containers/StudentCourses/StudentCourses'
 
 export const StudentDetailsPage = ({ event }) => {
 	const state = useSelector((state: any) => state)
 	const params: any = useParams();
 	const studentId = params.studentId;
 
-    const userRole = getUserRole(state)
     const students = state.users.students || emptyArray
     const student = students.find(stud => stud.id === studentId)
 
@@ -43,7 +41,8 @@ export const StudentDetailsPage = ({ event }) => {
 					</SmartFormGroup>
 				</div>
 				<VerticalSeparator margin='xlarge' />
-                <CourseList student={student} userRole={userRole} event={event} />
+				<h3>Courses</h3>
+                <StudentCourses student={student} event={event} />
             </ContentShell>
 		</>
     )

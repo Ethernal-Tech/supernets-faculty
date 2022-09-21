@@ -1,3 +1,4 @@
+import path from 'path'
 import { useEffect, useState, useMemo, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import EventListenerService from "utils/eventListenerService"
@@ -9,7 +10,7 @@ import { Input } from 'components/Form'
 import { useHistory } from 'react-router-dom';
 import { BaseColumnModel, LocalTable } from 'components/Table';
 import { contractToGrade, gradeToContract } from 'utils/userUtils';
-import { CoursesTabProps } from './Courses';
+import { CoursesTabProps } from './Course';
 
 const keys = ["firstName", "lastName", "id"]
 
@@ -145,7 +146,7 @@ export const GradeStudentsList = ({ course, event, selectedAccount }: CoursesTab
 
 	const onView = useCallback(
 		() => {
-			history.push(`/student?stud=${selectedStudent.id}`)
+			history.push(path.join('../../../', 'students', 'read', selectedStudent.id))
 		},
 		[selectedStudent, history]
 	)

@@ -46,7 +46,7 @@ export type CoursesTabProps = {
 	event: any
 }
 
-export const Courses = ({ event }) => {
+export const Course = ({ event }) => {
 	const params: any = useParams()
 	const courseId = params.courseId
 

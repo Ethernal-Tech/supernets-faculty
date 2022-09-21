@@ -1,5 +1,4 @@
-// FIXME: multi select rows for Table
-
+import path from 'path'
 import { useMemo, useEffect, useState, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import EventListenerService from "utils/eventListenerService"
@@ -10,7 +9,7 @@ import { Input } from 'components/Form'
 import { ColumnContainer, RowContainer } from 'components/Layout'
 import { useHistory } from 'react-router-dom';
 import { BaseColumnModel, LocalTable } from 'components/Table'
-import { CoursesTabProps } from './Courses';
+import { CoursesTabProps } from './Course';
 
 const keys = ["firstName", "lastName", "id"]
 
@@ -108,7 +107,7 @@ export const EnrollStudentsList = ({ course, event, selectedAccount }: CoursesTa
 	const onView = useCallback(
 		() => {
 			if (selectedStudents.length === 1) {
-				history.push(`/student?stud=${selectedStudents[0].id}`)
+				history.push(path.join('../../../', 'students', 'read', selectedStudents[0].id))
 			}
 		},
 		[selectedStudents, history]

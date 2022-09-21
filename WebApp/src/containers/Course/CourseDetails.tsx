@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Input, Textarea } from 'components/Form'
 import { SmartFormGroup } from 'components/SmartContainer/SmartContainer'
-import { CoursesTabProps } from './Courses'
+import { CoursesTabProps } from './Course'
 
 export const CourseDetails = ({ course }: CoursesTabProps) => {
 	const { title, description, venue, points, startTime } = course

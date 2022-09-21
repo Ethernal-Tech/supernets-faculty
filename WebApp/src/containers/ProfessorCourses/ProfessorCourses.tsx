@@ -1,5 +1,5 @@
 import path from 'path';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useEffect, useState, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEventAdmin } from 'utils/userUtils'
@@ -28,7 +28,6 @@ const tableColumns: BaseColumnModel[] = [
 ]
 
 export const ProfessorCourses = ({ professor, event }) => {
-	const routematch = useRouteMatch()
 	const history = useHistory();
 	const dispatch = useDispatch()
 	const state = useSelector((state: any) => state)
@@ -133,9 +132,9 @@ export const ProfessorCourses = ({ professor, event }) => {
 
 	const onView = useCallback(
 		() => {
-			history.push(path.join(routematch.url, 'course', 'read', selectedCourse.id));
+			history.push(path.join('./', 'courses', 'read', selectedCourse.id));
 		},
-		[selectedCourse, history, routematch]
+		[selectedCourse, history]
 	)
 
 	const selectionChangeCallback = useCallback(
@@ -163,27 +162,32 @@ export const ProfessorCourses = ({ professor, event }) => {
 						onChange={setQuery}
 					/>
 				</div>
-				<Button
-					text='Create'
-					onClick={openDialogCallback}
-					disabled={!isAdmin}
-				/>
+				{isAdmin &&
+					<Button
+						text='Create'
+						onClick={openDialogCallback}
+					/>
+				}
 				<Button
 					text={'View'}
 					disabled={!selectedCourse?.id}
 					onClick={onView}
 				/>
-				<Button
-					text='Edit'
-					disabled={!selectedCourse?.id || !isAdmin}
-					onClick={openEditDialogCallback}
-				/>
-				<Button
-					text='Delete'
-					color='destructive'
-					onClick={onDelete}
-					disabled={!selectedCourse?.id || !isAdmin}
-				/>
+				{isAdmin &&
+					<Button
+						text='Edit'
+						disabled={!selectedCourse?.id}
+						onClick={openEditDialogCallback}
+					/>
+				}
+				{isAdmin &&
+					<Button
+						text='Delete'
+						color='destructive'
+						onClick={onDelete}
+						disabled={!selectedCourse?.id}
+					/>
+				}
 			</RowContainer>
 			<LocalTable
 				columns={tableColumns}
@@ -192,7 +196,7 @@ export const ProfessorCourses = ({ professor, event }) => {
 				hasPagination
 				limit={5}
 			/>
-			{/* Tooltip Delete: Course with enrolled students cannot be deleted */}
+			{/* FIXME: ne secam se odakle je ovo, proveri: Tooltip Delete: Course with enrolled students cannot be deleted */}
 
 			{isAdmin &&
 				<Dialog

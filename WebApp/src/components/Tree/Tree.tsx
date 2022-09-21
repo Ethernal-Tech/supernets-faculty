@@ -49,11 +49,9 @@ export const Tree = ({ title, data = [] }: Props) => {
 
 	const onSelectCallback = useCallback(
 		(id: string) => {
-			if (id !== activeItemId) {
-				history.push(path.join(routematch.url, id));
-			}
+			history.push(path.join(routematch.url, id));
 		},
-		[history, routematch, activeItemId]
+		[history, routematch]
 	)
 
 	return (
