@@ -20,8 +20,8 @@ export const Item = ({ id, name, onClick, selected }: Props) => {
 	)
 
 	return (
-		<div className={styles.item} >
-			<div className={`${styles.item_content} ${id === selected ? styles.selected : 'clickable'}`} onClick={onClickCallback}>
+		<div className={styles.item}>
+			<div className={id === selected ? styles.selected : undefined} onClick={onClickCallback}>
 				{name}
 			</div>
 		</div>

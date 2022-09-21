@@ -59,7 +59,7 @@ export const EventRouter = () => {
 
 	return (
 		<div style={{ display: 'flex', height: 'calc(100% - 60px)' }}>
-			<div style={{ width: '250px', padding: '24px', background: '#4d4d4d' }}>
+			<div style={{ width: '200px', padding: '24px', background: 'rgb(33,37,41)', borderTop: '2px solid var(--content-background)' }}>
 				{userRole === USER_ROLES.ADMIN && <AdminEventNavbar event={event} />}
 				{userRole === USER_ROLES.PROFESSOR && <ProfessorEventNavbar event={event} />}
 				{userRole === USER_ROLES.STUDENT && <StudentEventNavbar event={event} />}

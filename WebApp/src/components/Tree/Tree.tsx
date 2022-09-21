@@ -1,4 +1,5 @@
 import { Item, ItemType } from "./Item"
+import styles from './tree.module.scss'
 
 type Props = {
 	title: string
@@ -10,7 +11,7 @@ type Props = {
 export const Tree = ({ title, data = [], onSelect, selected }: Props) => {
 	return (
 		<div>
-			<h3>{title}</h3>
+			<h4 className={styles.title}>{title}</h4>
 			{data.map((item) => (
 				<Item
 					key={item.id}
