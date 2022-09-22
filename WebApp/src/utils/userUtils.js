@@ -19,7 +19,6 @@ export const gradeToContract = [
 ];
 
 export const contractToGrade = new Map([
-    // ["0", "Select grade"],
     ["1", "6"],
     ["2", "7"],
     ["3", "8"],

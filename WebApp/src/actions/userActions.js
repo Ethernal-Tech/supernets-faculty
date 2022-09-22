@@ -99,7 +99,7 @@ export const deleteAdminAction = async (eventId, addr, account, dispatch) => {
 
 export const addProfessorAction = async (addr, firstName, lastName, country, expertise, eventId, account, dispatch) => {
     try {
-        await faculty.methods.addEditProfessor(addr, firstName, lastName, country, expertise, eventId).send({ from: account });
+        await faculty.methods.addEditProfessor(addr, firstName, lastName, country, expertise, eventId, true).send({ from: account });
         await loadProfessorsAction(eventId, dispatch)
     } catch (ex) {
         EventListenerService.notify("error", ex)
@@ -108,7 +108,7 @@ export const addProfessorAction = async (addr, firstName, lastName, country, exp
 
 export const editProfessorAction = async (addr, firstName, lastName, country, expertise, eventId, account, dispatch) => {
     try {
-        await faculty.methods.addEditProfessor(addr, firstName, lastName, country, expertise, eventId).send({ from: account });
+        await faculty.methods.addEditProfessor(addr, firstName, lastName, country, expertise, eventId, false).send({ from: account });
         await loadProfessorsAction(eventId, dispatch)
         await loadAllCoursesAction(eventId, dispatch)
     } catch (ex) {
@@ -128,7 +128,7 @@ export const deleteProfessorAction = async (addr, eventId, account, dispatch) =>
 
 export const addStudentAction = async (addr, firstName, lastName, country, eventId, account, dispatch) => {
     try {
-        await faculty.methods.addEditStudent(addr, firstName, lastName, country, eventId).send({ from: account });
+        await faculty.methods.addEditStudent(addr, firstName, lastName, country, eventId, true).send({ from: account });
         await loadStudentsAction(eventId, dispatch)
     } catch (ex) {
         EventListenerService.notify("error", ex)
@@ -137,7 +137,7 @@ export const addStudentAction = async (addr, firstName, lastName, country, event
 
 export const editStudentAction = async (addr, firstName, lastName, country, eventId, account, dispatch) => {
     try {
-        await faculty.methods.addEditStudent(addr, firstName, lastName, country, eventId).send({ from: account });
+        await faculty.methods.addEditStudent(addr, firstName, lastName, country, eventId, false).send({ from: account });
         await loadStudentsAction(eventId, dispatch)
     } catch (ex) {
         EventListenerService.notify("error", ex)

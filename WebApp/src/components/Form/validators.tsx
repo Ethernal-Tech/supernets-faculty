@@ -37,3 +37,20 @@ export const isLinkValidator = (value: string) => {
 
 	return '';
 }
+
+export const isPositiveIntegerValidator = (value: number) => {
+	if (!value) {
+		return '';
+	}
+
+	const num = Number(value);
+	if (num < 1) {
+		return 'Number must be positive.'
+	}
+	
+	if (!Number.isInteger(num)) {
+		return 'Number must be whole.'
+	}
+
+	return '';
+}

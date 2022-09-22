@@ -4,7 +4,7 @@ import { SmartFormGroup } from 'components/SmartContainer/SmartContainer';
 import { FieldMessage } from '../addons/FieldMessage/FieldMessage';
 import { FormContext, IFormContext, ValidatorFunctionType } from '../Form';
 import { InputProps, SelectProps } from '../controls';
-import { isRequiredValidator, isEmailValidator } from '../validators';
+import { isRequiredValidator, isEmailValidator, isPositiveIntegerValidator } from '../validators';
 
 export type ControlsCommonProps<P> = {
 	value?: P
@@ -18,6 +18,7 @@ export type FieldProps = {
 	label?: string
 	isRequired?: boolean
 	isEmail?: boolean
+	isPositiveInteger?: boolean
 	validators?: Array<ValidatorFunctionType>
 	disabled?: boolean
 	inline?: boolean
@@ -28,7 +29,7 @@ type Props = FieldProps & Subtract<(SelectProps | InputProps), ControlsCommonPro
 	Control: any
 }
 
-export const Field = ({ id, label, isRequired, isEmail, validators, disabled, inline, multiline, Control, ...rest }: Props) => {
+export const Field = ({ id, label, isRequired, isEmail, isPositiveInteger, validators, disabled, inline, multiline, Control, ...rest }: Props) => {
 	const context = useContext<IFormContext>(FormContext);
 	const registerValidatorsInContext = context.registerValidators; // eslint is complaining (in useEffect dependencies) when using context.registerValidators
 
@@ -38,6 +39,7 @@ export const Field = ({ id, label, isRequired, isEmail, validators, disabled, in
 			let validatorsToRegister: ValidatorFunctionType[] = []
 			isRequired && validatorsToRegister.push(isRequiredValidator);
 			isEmail && validatorsToRegister.push(isEmailValidator);
+			isPositiveInteger && validatorsToRegister.push(isPositiveIntegerValidator)
 			validators && validatorsToRegister.push(...validators);
 
 			registerValidatorsInContext && registerValidatorsInContext(id, validatorsToRegister)
@@ -45,7 +47,7 @@ export const Field = ({ id, label, isRequired, isEmail, validators, disabled, in
 				registerValidatorsInContext && registerValidatorsInContext(id, [])
 			}
 		},
-		[id, validators, isRequired, isEmail, registerValidatorsInContext]
+		[id, validators, isRequired, isEmail, isPositiveInteger, registerValidatorsInContext]
 	)
 
 	const onChangeCallback = useCallback(

@@ -10,8 +10,6 @@ export const initializeEthAction = async (history, dispatch) => {
         const accounts = await web3.eth.getAccounts();
         dispatch(setSelectedAccount(accounts.length > 0 ? accounts[0] : undefined))
         const pathname = window.location ? window.location.pathname  : ''
-        debugger
-        console.log(pathname)
         if (pathname !== '/' && pathname !== '') {
             history.push('/')
         }

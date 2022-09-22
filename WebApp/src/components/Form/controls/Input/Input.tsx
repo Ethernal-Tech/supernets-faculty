@@ -34,6 +34,7 @@ export const Input = ({
 					placeholder={placeholder}
 					autoFocus={focus}
 					disabled={disabled}
+					min = "1"
 				/>
 			</div>
 		</div>

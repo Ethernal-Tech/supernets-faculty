@@ -83,8 +83,10 @@ export const CourseForm = ({ event, onSubmit, onCancel, course, professorId }: P
 					{/* FIXME: InputNumber for points */}
 					<InputField
 						id={propertyOf<Model>('points')}
+						type='number'
 						label='Points'
 						isRequired
+						isPositiveInteger
 					/>
 					<InputField
 						id={propertyOf<Model>('description')}

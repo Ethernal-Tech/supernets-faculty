@@ -1,6 +1,6 @@
 import web3 from './web3';
 
-export const address = '0x6263D7D720E3cDf5629CA314F2C7a92275cF30e6';
+export const address = '0xaB4a2952a6409704a6a77D659E73B27f261fFDBB';
 const abi = [
 	{
 		"inputs": [
@@ -135,6 +135,11 @@ const abi = [
 				"internalType": "uint256",
 				"name": "eventId",
 				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "isAdd",
+				"type": "bool"
 			}
 		],
 		"name": "addEditProfessor",
@@ -168,6 +173,11 @@ const abi = [
 				"internalType": "uint256",
 				"name": "eventId",
 				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "isAdd",
+				"type": "bool"
 			}
 		],
 		"name": "addEditStudent",

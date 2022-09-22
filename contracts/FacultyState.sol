@@ -122,12 +122,15 @@ contract FacultyState {
 
     //Professors
 
-    function addEditProfessor(address profAddress, string calldata firstName, string calldata lastName, string calldata country, string calldata expertise, uint eventId) external eventAdmin(eventId) eventExists(eventId) {
+    function addEditProfessor(address profAddress, string calldata firstName, string calldata lastName, string calldata country, string calldata expertise, uint eventId, bool isAdd) external eventAdmin(eventId) eventExists(eventId) {
         require(!addressExistsInArray(events[eventId].adminsAddresses, profAddress));
         require(!students[getKey(profAddress, eventId)].exist);
 
-        if (!professors[getKey(profAddress, eventId)].exist)
-        {
+        if (isAdd) {
+            require(!professors[getKey(profAddress, eventId)].exist);
+        }
+
+        if (!professors[getKey(profAddress, eventId)].exist) {
             events[eventId].professorsAddresses.push(profAddress);
         }
         populateProfessor(profAddress, firstName, lastName, country, expertise, eventId);
@@ -149,9 +152,13 @@ contract FacultyState {
 
     //Students
 
-    function addEditStudent(address studentAddress, string calldata firstName, string calldata lastName, string calldata country, uint eventId) external eventAdmin(eventId) eventExists(eventId) {
+    function addEditStudent(address studentAddress, string calldata firstName, string calldata lastName, string calldata country, uint eventId, bool isAdd) external eventAdmin(eventId) eventExists(eventId) {
         require(!addressExistsInArray(events[eventId].adminsAddresses, studentAddress));
         require(!professors[getKey(studentAddress, eventId)].exist);
+
+        if (isAdd) {
+            require(!students[getKey(studentAddress, eventId)].exist);
+        }
      
         if (!students[getKey(studentAddress, eventId)].exist) {
             events[eventId].studentsAddresses.push(studentAddress);
