@@ -9,16 +9,17 @@ export const isEventAdmin = state => {
 }
 
 export const gradeToContract = [
-    { grade: 'Select grade', contractGrade: 0 },
+    { grade: '---', contractGrade: 0 },
     { grade: '10', contractGrade: 5 },
     { grade: '9', contractGrade: 4 }, 
     { grade: '8', contractGrade: 3 },
     { grade: '7', contractGrade: 2 },
     { grade: '6', contractGrade: 1 },
-    { grade: 'FAILED', contractGrade: 6 },
+    { grade: 'Failed', contractGrade: 6 },
 ];
 
 export const contractToGrade = new Map([
+    // ["0", "Select grade"],
     ["1", "6"],
     ["2", "7"],
     ["3", "8"],

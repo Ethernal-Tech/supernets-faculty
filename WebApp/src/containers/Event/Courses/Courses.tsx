@@ -204,6 +204,7 @@ export const Courses = ({ event }) => {
 						open={isEditDialogOpen}
 					>
 	                	<CourseForm
+							event={event}
 							course={selectedCourse}
 							onSubmit={onEdit}
 							onCancel={closeEditDialogCallback}
@@ -217,6 +218,7 @@ export const Courses = ({ event }) => {
 						open={isDialogOpen}
 					>
 	                	<CourseForm
+							event={event}
 							onSubmit={onSubmit}
 							onCancel={closeDialogCallback}
 						/>

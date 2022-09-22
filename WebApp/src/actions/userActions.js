@@ -4,6 +4,7 @@ import { setStudentGrades } from '../state/coursesReducer'
 import { setProfessors, setStudents, setAdmins, setUsers } from '../state/usersReducer'
 import { setAdminAccount } from '../state/ethReducer'
 import EventListenerService from "../utils/eventListenerService"
+import { loadAllCoursesAction } from './coursesActions'
 
 export const loadAdminsAction = async (eventId, dispatch) => {
     try {
@@ -109,6 +110,7 @@ export const editProfessorAction = async (addr, firstName, lastName, country, ex
     try {
         await faculty.methods.addEditProfessor(addr, firstName, lastName, country, expertise, eventId).send({ from: account });
         await loadProfessorsAction(eventId, dispatch)
+        await loadAllCoursesAction(eventId, dispatch)
     } catch (ex) {
         EventListenerService.notify("error", ex)
     }
@@ -118,6 +120,7 @@ export const deleteProfessorAction = async (addr, eventId, account, dispatch) =>
     try {
         await faculty.methods.deleteProfessor(addr, eventId).send({ from: account });
         await loadProfessorsAction(eventId, dispatch)
+        await loadAllCoursesAction(eventId, dispatch)
     } catch (ex) {
         EventListenerService.notify("error", ex)
     }

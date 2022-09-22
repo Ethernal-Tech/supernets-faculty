@@ -76,7 +76,7 @@ export const StudentCourses = ({ student, event }) => {
 				let prof = professors.find(p => p.id === course.professor)
 				localTableCourses.push({
 					title: course.title,
-					professorName: `${prof.firstName} ${prof.lastName}`,
+					professorName: prof ? `${prof.firstName} ${prof.lastName}` : '---',
 					grade: contractToGrade.get(course.grade.grade),
 					id: course.id
 				})

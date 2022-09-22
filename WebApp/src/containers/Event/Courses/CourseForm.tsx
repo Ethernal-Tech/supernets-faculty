@@ -26,12 +26,16 @@ class Model {
 }
 
 type Props = {
+	event?
 	onSubmit(values: Model): void
 	onCancel(): void
 	course?: Model
 }
 
-export const CourseForm = ({ onSubmit, onCancel, course }: Props) => {
+export const CourseForm = ({ event, onSubmit, onCancel, course }: Props) => {
+	const minDate = new Date(parseInt(event.startDate))
+	const maxDate = new Date(parseInt(event.endDate))
+
 	const [values, setValues] = useState(new Model(course));
 
 	const submitCallback = useCallback(
@@ -64,6 +68,8 @@ export const CourseForm = ({ onSubmit, onCancel, course }: Props) => {
 					<DateField
 						id={propertyOf<Model>('startTime')}
 						label='Start date'
+						minDate={minDate}
+						maxDate={maxDate}
 						isRequired
 					/>
 					<InputField

@@ -196,6 +196,7 @@ export const ProfessorCourses = ({ professor, event, viewCourseRoutePrefix }) =>
 					open={isDialogOpen}
 				>
                 	<CourseForm
+						event={event}
 						onSubmit={onSubmit}
 						onCancel={closeDialogCallback}
 					/>
@@ -209,6 +210,7 @@ export const ProfessorCourses = ({ professor, event, viewCourseRoutePrefix }) =>
 					open={isEditDialogOpen}
 				>
 					<CourseForm
+						event={event}
 						course={selectedCourse}
 						onSubmit={onEdit}
 						onCancel={closeEditDialogCallback}

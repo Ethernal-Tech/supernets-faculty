@@ -78,6 +78,7 @@ contract FacultyState {
 
     function addEditCourse(uint courseId, string calldata title, string calldata description, uint256 startTime, string calldata venue, uint points, address professor, uint eventId) external eventAdmin(eventId) eventExists(eventId) {
         require(professors[getKey(professor, eventId)].exist);
+        require(startTime >= events[eventId].startDate && startTime <= events[eventId].endDate);
        
         if (courseId == 0) {
             maxCourseId ++;
