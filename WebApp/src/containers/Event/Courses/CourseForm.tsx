@@ -12,7 +12,7 @@ class Model {
 	description!: string
 	professor!: string
 
-	constructor(model?) {
+	constructor(model?, professorId?) {
 		if (model) {
 			this.id = model.id;
 			this.title = model.title;
@@ -20,7 +20,9 @@ class Model {
 			this.venue = model.venue;
 			this.points = model.points;
 			this.description = model.description;
-			this.professor = model.professor
+			this.professor = model.professor;
+		} else if (professorId) {
+			this.professor = professorId;
 		}
 	}
 }
@@ -30,13 +32,14 @@ type Props = {
 	onSubmit(values: Model): void
 	onCancel(): void
 	course?: Model
+	professorId?: string
 }
 
-export const CourseForm = ({ event, onSubmit, onCancel, course }: Props) => {
+export const CourseForm = ({ event, onSubmit, onCancel, course, professorId }: Props) => {
 	const minDate = new Date(parseInt(event.startDate))
 	const maxDate = new Date(parseInt(event.endDate))
 
-	const [values, setValues] = useState(new Model(course));
+	const [values, setValues] = useState(new Model(course, professorId));
 
 	const submitCallback = useCallback(
 		async () => {

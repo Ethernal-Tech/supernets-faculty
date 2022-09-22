@@ -38,3 +38,10 @@ export const studentNavigation = [
 		name: 'Event Details'
 	}
 ]
+
+export const guestNavigation = [
+	{
+		id: 'guest',
+		name: ''
+	}
+]

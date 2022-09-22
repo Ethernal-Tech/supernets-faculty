@@ -14,10 +14,11 @@ import { Course } from 'containers/Course/Course';
 import { loadEvent } from 'actions/eventActions';
 import { ClipSpinner, Spinner } from 'components/Spinner';
 import { Tree } from 'components/Tree/Tree';
-import { adminNavigation, professorNavigation, studentNavigation } from './navigation';
+import { adminNavigation, professorNavigation, studentNavigation, guestNavigation } from './navigation';
 import { ItemType } from 'components/Tree/Item';
 import { ProfessorCoursesWrapper } from 'containers/ProfessorCourses/ProfessorCoursesWrapper';
 import { StudentCoursesWrapper } from 'containers/StudentCourses/StudentCoursesWrapper';
+import { GuestHome } from 'containers/GuestHome';
 
 export const EventRouter = () => {
 	const dispatch = useDispatch()
@@ -59,7 +60,7 @@ export const EventRouter = () => {
 				case USER_ROLES.STUDENT:
 					return studentNavigation
 				default:
-					return []
+					return guestNavigation
 			}
 		},
 		[userRole]
@@ -92,6 +93,7 @@ export const EventRouter = () => {
 
 					{userRole === USER_ROLES.PROFESSOR && <Route path={`${path}/professorCourses`} render={() => <ProfessorCoursesWrapper event={event} />} />}
 					{userRole === USER_ROLES.STUDENT && <Route path={`${path}/studentCourses`} render={() => <StudentCoursesWrapper event={event} />} />}
+					{userRole === USER_ROLES.GUEST && <Route path={`${path}/guest`} render={() => <GuestHome />} />}
 
 					<Route path={`${path}/eventDetails`} render={() => <Details event={event} />}/>
 					<Route render={() => <Details event={event} />}/>

@@ -41,6 +41,7 @@ export const Students = ({ event }) => {
 	const students = state.users.students || emptyArray
 	const selectedAccount = state.eth.selectedAccount
 
+	const [studentToDelete, setStudentToDelete] = useState({});
     const [query, setQuery] = useState('');
     const [allStudents, setAllStudents] = useState([]);
     const [searchedStudents, setSearchedStudents] = useState<any>([]);
@@ -121,7 +122,9 @@ export const Students = ({ event }) => {
 
     const onDelete = useCallback(
 		async() => {
+			setStudentToDelete(selectedStudent.id)
 			await deleteStudentAction(selectedStudent.id, event.id, selectedAccount, dispatch)
+			setStudentToDelete({})
 		},
 		[selectedStudent, event, selectedAccount, dispatch]
 	)
@@ -161,7 +164,7 @@ export const Students = ({ event }) => {
 					</div>
 					<Button
 						text={'View'}
-						disabled={!selectedStudent?.id}
+						disabled={!selectedStudent?.id || studentToDelete === selectedStudent.id}
 						onClick={onView}
 					/>
 					<Button
@@ -171,14 +174,14 @@ export const Students = ({ event }) => {
 					/>
 					<Button
 						text='Edit'
-						disabled={!selectedStudent?.id || !isAdmin}
+						disabled={!selectedStudent?.id || !isAdmin  || studentToDelete === selectedStudent.id}
 						onClick={openEditDialogCallback}
 					/>
 					<Button
 						text='Delete'
 						color='destructive'
 						onClick={onDelete}
-						disabled={!selectedStudent?.id || !isAdmin}
+						disabled={!selectedStudent?.id || !isAdmin  || studentToDelete === selectedStudent.id}
 					/>
 				</RowContainer>
 				<LocalTable

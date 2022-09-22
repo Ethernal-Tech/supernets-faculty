@@ -13,7 +13,7 @@ import { Input } from 'components/Form'
 import { addCourseAction, deleteCourseAction, editCourseAction } from 'actions/coursesActions'
 import { CourseForm } from './CourseForm'
 
-const keys = ["firstName", "lastName", "id"]
+const keys = ["title" ]
 
 const tableColumns: BaseColumnModel[] = [
 	{
@@ -43,6 +43,7 @@ export const Courses = ({ event }) => {
 	const professors = state.users.professors || emptyArray;
     const selectedAccount = state.eth.selectedAccount;
 
+	const [courseToDelete, setCourseToDelete] = useState({});
     const [query, setQuery] = useState('');
     const [allCourses, setAllCourses] = useState([]);
 	const [searchedCourses, setSearchedCourses] = useState<any[]>([]);
@@ -129,7 +130,9 @@ export const Courses = ({ event }) => {
 
     const onDelete = useCallback(
 		async() => {
+			setCourseToDelete(selectedCourse.id)
 			await deleteCourseAction(selectedCourse.id, event.id, selectedCourse.professor, selectedAccount, dispatch)
+			setCourseToDelete({})
 		},
 		[selectedCourse, event, selectedAccount, dispatch]
 	)
@@ -170,7 +173,7 @@ export const Courses = ({ event }) => {
 					</div>
 					<Button
 						text={'View'}
-						disabled={!selectedCourse?.id}
+						disabled={!selectedCourse?.id || courseToDelete === selectedCourse.id}
 						onClick={onView}
 					/>
 					<Button
@@ -180,14 +183,14 @@ export const Courses = ({ event }) => {
 					/>
 					<Button
 						text='Edit'
-						disabled={!selectedCourse?.id || !isAdmin}
+						disabled={!selectedCourse?.id || !isAdmin || courseToDelete === selectedCourse.id}
 						onClick={openEditDialogCallback}
 					/>
 					<Button
 						text='Delete'
 						color='destructive'
 						onClick={onDelete}
-						disabled={selectedCourse.numberOfStudents !== 0 || !isAdmin}
+						disabled={selectedCourse.numberOfStudents !== 0 || !isAdmin || courseToDelete === selectedCourse.id}
 					/>
 				</RowContainer>
 				<LocalTable

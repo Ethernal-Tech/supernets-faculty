@@ -154,8 +154,8 @@ export const CourseStudents = ({ course, event, selectedAccount }: CoursesTabPro
 				<Button
 					text={`Disenroll ${selectedStudents.length} students`}
 					onClick={disenrollStudents}
-					disabled={selectedStudents.filter(s => s.grade === '---').length === 0}
-					tooltip={(selectedStudents.filter(s => s.grade === '---').length === 0 && selectedStudents.length !== 0) ? 'Students with grade cannot be disenrolled' : ''}
+					disabled={selectedStudents.filter(s => s.grade !== '---').length > 0}
+					tooltip={(selectedStudents.filter(s => s.grade !== '---').length > 0 && selectedStudents.length !== 0) ? 'Students with grade cannot be disenrolled' : ''}
 					isLoading={isWorking}
 				/>
 			</RowContainer>

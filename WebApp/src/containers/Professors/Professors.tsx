@@ -41,6 +41,7 @@ export const Professors = ({ event }) => {
 	const professors = state.users.professors || emptyArray;
     const selectedAccount = state.eth.selectedAccount;
 
+	const [profToDelete, setProfToDelete] = useState({});
     const [query, setQuery] = useState('');
     const [allProfessors, setAllProfessors] = useState([]);
 	const [searchedProfessors, setSearchedProfessors] = useState<any[]>([]);
@@ -122,7 +123,9 @@ export const Professors = ({ event }) => {
 
     const onDelete = useCallback(
 		async() => {
+			setProfToDelete(selectedProfessor.id)
 			await deleteProfessorAction(selectedProfessor.id, event.id, selectedAccount, dispatch)
+			setProfToDelete({})
 		},
 		[selectedProfessor, event, selectedAccount, dispatch]
 	)
@@ -130,8 +133,9 @@ export const Professors = ({ event }) => {
 	const onEdit = useCallback(
 		async ({ addr, firstName, lastName, country, expertise }: any) => {
 			await editProfessorAction(addr, firstName, lastName, country, expertise, event.id, selectedAccount, dispatch)
+			closeEditDialogCallback()
 		},
-		[event, selectedAccount, dispatch]
+		[event, selectedAccount, dispatch, closeEditDialogCallback]
 	)
 
 	const onView = useCallback(
@@ -161,7 +165,7 @@ export const Professors = ({ event }) => {
 					</div>
 					<Button
 						text={'Courses'}
-						disabled={!selectedProfessor?.id}
+						disabled={!selectedProfessor?.id || profToDelete === selectedProfessor.id}
 						onClick={onView}
 					/>
 					<Button
@@ -171,14 +175,14 @@ export const Professors = ({ event }) => {
 					/>
 					<Button
 						text='Edit'
-						disabled={!selectedProfessor?.id || !isAdmin}
+						disabled={!selectedProfessor?.id || !isAdmin || profToDelete === selectedProfessor.id}
 						onClick={openEditDialogCallback}
 					/>
 					<Button
 						text='Delete'
 						color='destructive'
 						onClick={onDelete}
-						disabled={!selectedProfessor?.id || !isAdmin}
+						disabled={!selectedProfessor?.id || !isAdmin || profToDelete === selectedProfessor.id}
 					/>
 				</RowContainer>
 				<LocalTable

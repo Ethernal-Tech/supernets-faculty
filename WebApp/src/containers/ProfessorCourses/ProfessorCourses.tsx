@@ -32,6 +32,7 @@ export const ProfessorCourses = ({ professor, event, viewCourseRoutePrefix }) =>
 	const dispatch = useDispatch()
 	const state = useSelector((state: any) => state)
 
+	const [courseToDelete, setCourseToDelete] = useState({});
 	const selectedAccount = state.eth.selectedAccount
 	const professorId = professor?.id
     const allCourses = state.courses.allCourses || emptyArray
@@ -116,7 +117,9 @@ export const ProfessorCourses = ({ professor, event, viewCourseRoutePrefix }) =>
 
 	const onDelete = useCallback(
 		async () => {
+			setCourseToDelete(selectedCourse.id)
 			await deleteCourseAction(selectedCourse.id, event.id, professorId, selectedAccount, dispatch)
+			setCourseToDelete({})
 		},
 		[selectedCourse, event, professorId, selectedAccount, dispatch]
 	)
@@ -153,21 +156,21 @@ export const ProfessorCourses = ({ professor, event, viewCourseRoutePrefix }) =>
 						onChange={setQuery}
 					/>
 				</div>
-				{isAdmin &&
-					<Button
-						text='Create'
-						onClick={openDialogCallback}
-					/>
-				}
 				<Button
 					text={'View'}
-					disabled={!selectedCourse.id}
+					disabled={!selectedCourse.id || courseToDelete === selectedCourse.id}
 					onClick={onView}
 				/>
 				{isAdmin &&
 					<Button
+						text='Add'
+						onClick={openDialogCallback}
+					/>
+				}
+				{isAdmin &&
+					<Button
 						text='Edit'
-						disabled={!selectedCourse.id}
+						disabled={!selectedCourse.id || courseToDelete === selectedCourse.id}
 						onClick={openEditDialogCallback}
 					/>
 				}
@@ -176,7 +179,7 @@ export const ProfessorCourses = ({ professor, event, viewCourseRoutePrefix }) =>
 						text='Delete'
 						color='destructive'
 						onClick={onDelete}
-						disabled={!selectedCourse.id || selectedCourse.numberOfStudents > 0}
+						disabled={!selectedCourse.id || selectedCourse.numberOfStudents > 0 || courseToDelete === selectedCourse.id}
 						tooltip={selectedCourse.numberOfStudents > 0 ? 'Course with enrolled students cannot be deleted' : ''}
 					/>
 				}
@@ -197,6 +200,7 @@ export const ProfessorCourses = ({ professor, event, viewCourseRoutePrefix }) =>
 				>
                 	<CourseForm
 						event={event}
+						professorId={ professorId }
 						onSubmit={onSubmit}
 						onCancel={closeDialogCallback}
 					/>

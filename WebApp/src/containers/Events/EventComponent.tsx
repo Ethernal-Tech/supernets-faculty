@@ -63,6 +63,7 @@ export const EventComponent = ({ event, onEventClick, onEventEdit, onEventDelete
 							<Button
 								text='Edit'
 								onClick={openEditDialogCallback}
+								isLoading={isWorking}
 							/>
 						}
 						{isAdmin &&
