@@ -70,6 +70,24 @@ div.tabulator div.tabulator-footer div.tabulator-calcs-holder {
 	background: var(--field-background);
 }
 
+.tabulator-edit-select-list {
+	background: var(--field-background) !important;
+	border: 1px solid var(--field-focus-border-color);
+
+	.tabulator-edit-select-list-item {
+
+		&:hover,
+		&.active {
+			color: #fff;
+			background: var(--field-active-background);
+		}
+
+		&.focused  {
+			outline: 1px solid var(--field-focus-border-color);
+		}
+	}
+}
+
 /* this used to be style for editable cells, but issue was when tableColumn.editable returns false and this style remains applied on cell
 .tabulator-cell[tabindex] {
     color: var(--field-color);
