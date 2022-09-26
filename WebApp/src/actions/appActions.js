@@ -1,6 +1,6 @@
 import { setSelectedAccount, setGasPrice } from '../state/ethReducer'
 import web3 from '../web3'
-import EventListenerService from "../utils/eventListenerService"
+import notifications from 'components/Notification/notification'
 
 export const initializeEthAction = async (history, dispatch) => {
     window.ethereum.on('accountsChanged', async _ => {
@@ -18,7 +18,7 @@ export const initializeEthAction = async (history, dispatch) => {
     try {
         await window.ethereum.request({ method: "eth_requestAccounts" });
     } catch (ex) {
-        EventListenerService.notify("error", ex)
+        notifications.error(ex.message)
     }
 
     try {
@@ -27,13 +27,13 @@ export const initializeEthAction = async (history, dispatch) => {
             dispatch(setSelectedAccount(accounts[0]))
         }
     } catch (ex) {
-        EventListenerService.notify("error", ex)
+        notifications.error(ex.message)
     }
 
     try {
         const gasPrice = await web3.eth.getGasPrice();
         dispatch(setGasPrice(gasPrice))
     } catch (ex) {
-        EventListenerService.notify("error", ex)
+        notifications.error(ex.message)
     }
 }

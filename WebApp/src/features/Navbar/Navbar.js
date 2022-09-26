@@ -2,26 +2,12 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Alert from 'react-bootstrap/Alert';
-import EventListenerService from "utils/eventListenerService"
 import { getUserName } from 'utils/userUtils'
 
 class Navbar extends React.Component {
     constructor(props) {
         super(props)
         this.state = { counter: 0, errors: [] }
-    }
-
-    componentDidMount() {
-        this.listener = EventListenerService.subscribe("error", error => {
-            const msg = error.message || error
-            const newErrors = [...this.state.errors, msg]
-            !this.isUnmounted && this.setState({...this.state, errors: newErrors })
-        })
-    }
-
-    componentWillUnmount() {
-        this.isUnmounted = true
-        this.listener.remove()
     }
 
     removeError(idx) {
@@ -61,12 +47,6 @@ class Navbar extends React.Component {
                         </div>
                     }
                 </nav>
-                {this.state.errors.map((error, i) => (
-                    <Alert key={error+i} variant="danger" onClose={() => this.removeError(i)} dismissible>
-                        <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
-                        <p>{error}</p>
-                    </Alert>
-                ))}
             </>
         )
     }

@@ -1,7 +1,7 @@
 import faculty from '../faculty'
 import planBCertificate from 'planBCertificate'
 import { setStudentCertificates } from '../state/certificatesReducer'
-import EventListenerService from "../utils/eventListenerService"
+import notifications from 'components/Notification/notification'
 
 export const generateCertificateAction = async (studentAddr, selectedAccount, ipfsURI, eventId) => {
 
@@ -9,7 +9,7 @@ export const generateCertificateAction = async (studentAddr, selectedAccount, ip
         await faculty.methods.generateCertificate(studentAddr, ipfsURI, eventId).send({ from: selectedAccount });
     }
     catch (ex) {
-        EventListenerService.notify("error", ex)
+        notifications.error("Failed to generate certificate. " + ex.message)
     }
 }
 
@@ -19,6 +19,6 @@ export const loadStudentCertificateAction = async (studentId, eventId, dispatch)
         dispatch(setStudentCertificates({ studentId, certificate }))
     }
     catch (ex) {
-        EventListenerService.notify("error", ex)
+        notifications.error("Failed to load certificate. " + ex.message)
     }
 }
