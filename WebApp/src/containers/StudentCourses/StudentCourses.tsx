@@ -142,6 +142,8 @@ export const StudentCourses = ({ student, event }) => {
 				<Button
 					text='Produce certificate'
 					onClick={onGenerateCertificate}
+					disabled={courses.length === 0 || courses.filter(course => contractToGrade.get(course.grade.grade) === '---').length > 0}
+					tooltip={(courses.length === 0 || courses.filter(course => contractToGrade.get(course.grade.grade) === '---').length > 0) ? "Student didn't pass all courses." : ''}
 				/>
 			}
 			{certificateData &&
