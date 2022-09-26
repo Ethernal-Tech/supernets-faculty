@@ -1,0 +1,10 @@
+.dotted-data-container {
+    display: flex;
+}
+
+.dotted-data-separator {
+    flex: 1;
+    border-bottom: 2px dotted; /* style as necessary */
+    position: relative;
+    top: -2px; /* reposition as necessary */
+}

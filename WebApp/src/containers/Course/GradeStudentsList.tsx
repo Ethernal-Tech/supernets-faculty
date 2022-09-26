@@ -186,7 +186,7 @@ export const GradeStudentsList = ({ course, event, selectedAccount }: CoursesTab
 				rowSelectionChanged={selectionChangeCallback}
 				cellEdited={cellEditedCallback}
 				hasPagination
-				limit={5}
+				limit={15}
 			/>
 		</ColumnContainer>
     )

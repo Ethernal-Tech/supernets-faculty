@@ -19,6 +19,7 @@ import { ItemType } from 'components/Tree/Item';
 import { ProfessorCoursesWrapper } from 'containers/ProfessorCourses/ProfessorCoursesWrapper';
 import { StudentCoursesWrapper } from 'containers/StudentCourses/StudentCoursesWrapper';
 import { GuestHome } from 'containers/GuestHome';
+import { StudentCertificateRouter } from 'containers/StudentCourses/StudentCertificateRouter';
 
 export const EventRouter = () => {
 	const dispatch = useDispatch()
@@ -85,6 +86,7 @@ export const EventRouter = () => {
 			<div style={{ flex: 1, maxWidth: '1280px' }}>
 				{/* INFO: order of Route components is essential */}
 				<Switch>
+
 					{userRole === USER_ROLES.ADMIN && <Route path={`${path}/professors`} render={() => <ProfessorsRouter event={event} />}/>}
 					{(userRole === USER_ROLES.ADMIN || userRole === USER_ROLES.PROFESSOR) && <Route path={`${path}/students`} render={() => <StudentsRouter event={event} />}/>}
 					<Route path={`${path}/courses/read/:courseId`} render={() => <Course event={event} />} />
@@ -94,6 +96,10 @@ export const EventRouter = () => {
 					{userRole === USER_ROLES.PROFESSOR && <Route path={`${path}/professorCourses`} render={() => <ProfessorCoursesWrapper event={event} />} />}
 					{userRole === USER_ROLES.STUDENT && <Route path={`${path}/studentCourses`} render={() => <StudentCoursesWrapper event={event} />} />}
 					{userRole === USER_ROLES.GUEST && <Route path={`${path}/guest`} render={() => <GuestHome />} />}
+
+					{(userRole === USER_ROLES.STUDENT || userRole === USER_ROLES.ADMIN) &&
+						<Route path={`${path}/certificate`} render={() => <StudentCertificateRouter/>} />
+					}
 
 					<Route path={`${path}/eventDetails`} render={() => <Details event={event} />}/>
 					<Route render={() => <Details event={event} />}/>

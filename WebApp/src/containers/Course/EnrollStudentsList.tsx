@@ -147,7 +147,7 @@ export const EnrollStudentsList = ({ course, event, selectedAccount }: CoursesTa
 				data={searchedStudents}
 				rowSelectionChanged={selectionChangeCallback}
 				hasPagination
-				limit={5}
+				limit={15}
 				options={{
 					selectable: true
 				}}

@@ -189,7 +189,7 @@ export const ProfessorCourses = ({ professor, event, viewCourseRoutePrefix }) =>
 				data={searchedCourses}
 				rowSelectionChanged={selectionChangeCallback}
 				hasPagination
-				limit={5}
+				limit={15}
 			/>
 
 			{isAdmin &&

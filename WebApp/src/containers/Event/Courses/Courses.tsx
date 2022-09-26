@@ -198,7 +198,7 @@ export const Courses = ({ event }) => {
 					data={searchedCourses}
 					rowSelectionChanged={selectionChangeCallback}
 					hasPagination
-					limit={5}
+					limit={15}
 				/>
 				{isAdmin && selectedCourse?.id &&
 					<Dialog

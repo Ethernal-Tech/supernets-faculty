@@ -19,6 +19,7 @@ export const loadStudentCertificateAction = async (studentId, eventId, dispatch)
         dispatch(setStudentCertificates({ studentId, certificate }))
     }
     catch (ex) {
-        EventListenerService.notify("error", ex)
+        // It's ok if this throws exception
+        //EventListenerService.notify("error", ex)
     }
 }

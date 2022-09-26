@@ -1,14 +1,16 @@
+import path from 'path';
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { loadStudentCoursesAction } from 'actions/coursesActions'
-import { generateCertificateAction } from 'actions/certificateActions'
-import { contractToGrade }  from 'utils/userUtils'
+import { generateCertificateAction, loadStudentCertificateAction } from 'actions/certificateActions'
+import { contractToGrade, isEventAdmin }  from 'utils/userUtils'
 import { createMetadata, uploadMetadata } from 'utils/nftUtils'
 import { BaseColumnModel, LocalTable } from 'components/Table';
 import { ColumnContainer } from 'components/Layout'
 import { Input } from 'components/Form'
 import { Button } from 'components/Button'
 import { emptyArray, emptyObject } from 'utils/commonHelper'
+import { useHistory } from 'react-router-dom'
 
 const keys = ["title"]
 
@@ -31,8 +33,10 @@ const tableColumns: BaseColumnModel[] = [
 ]
 
 export const StudentCourses = ({ student, event }) => {
+	const history = useHistory()
 	const dispatch = useDispatch()
 	const state = useSelector((state: any) => state)
+    const isAdmin = isEventAdmin(state)
 
 	const selectedAccount = state.eth.selectedAccount;
 	const allCourses = state.courses.allCourses || emptyArray
@@ -54,12 +58,26 @@ export const StudentCourses = ({ student, event }) => {
     const [searchedCourses, setSearchedCourses] = useState<any[]>([]);
 	const professors = state.users.professors || emptyArray;
 
+    const certificateData = useMemo(
+		() => {
+            return (state.certificates || undefined)?.studentCertificates[student.id] || undefined
+		},
+		[state.certificates.studentCertificates, student.id]
+	)
+
     useEffect(
 		() => {
 			loadStudentCoursesAction(student.id, event.id, dispatch)
+			if (!certificateData) {
+				loadData()
+			}
 		},
-		[student, event, dispatch]
+		[student, event, certificateData, dispatch]
 	);
+
+    const loadData = async () => {
+        loadStudentCertificateAction(student.id, event.id, dispatch)
+    }
 
     const search = useCallback(
 		(data, query) => {
@@ -88,7 +106,7 @@ export const StudentCourses = ({ student, event }) => {
 
     const onGenerateCertificate = useCallback(
 		async () => {
-	        const metadata = createMetadata(student, courses)
+	        const metadata = createMetadata(student, event.title, courses)
 	        console.log(metadata)
 	        const ipfsUri = await uploadMetadata(metadata);
 
@@ -96,6 +114,13 @@ export const StudentCourses = ({ student, event }) => {
 	        await generateCertificateAction(student.id, selectedAccount, ipfsUri, event.id)
 		},
 		[event.id, selectedAccount, student, courses]
+	)
+
+	const onViewCertificate = useCallback(
+		async () => {
+			history.push(path.join('../../', 'certificate', student.id))
+		},
+		[history]
 	)
 
     return (
@@ -111,12 +136,20 @@ export const StudentCourses = ({ student, event }) => {
 				columns={tableColumns}
 				data={searchedCourses}
 				hasPagination
-				limit={5}
+				limit={15}
 			/>
-			<Button
-				text='Produce certificate'
-				onClick={onGenerateCertificate}
-			/>
+			{isAdmin && 
+				<Button
+					text='Produce certificate'
+					onClick={onGenerateCertificate}
+				/>
+			}
+			{certificateData &&
+				<Button
+					text='View certificate'
+					onClick={onViewCertificate}
+				/>
+			}
 		</ColumnContainer>
     )
 }

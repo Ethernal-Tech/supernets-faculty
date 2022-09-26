@@ -17,10 +17,10 @@ export const uploadMetadata = async metadata => {
     }
 }
 
-export const createMetadata = (student, studentCourses) => {
+export const createMetadata = (student, eventName, studentCourses) => {
     return {
-        name: student.firstName+ " " + student.lastName + "'s PLanBCertificate",
-        description: 'This is PLanBCertificate NFT',
+        name: student.firstName+ " " + student.lastName,
+        description: `This certificate represents NFT for students who have successfully completed all courses on ${eventName} event`,
         attributes: studentCourses.map(course => {         
             return { 
                 value: contractToGrade.get(course.grade.grade),

@@ -98,7 +98,7 @@ export const Admins = ({ event }) => {
 					data={convertedAdmins}
 					rowSelectionChanged={selectionChangeCallback}
 					hasPagination
-					limit={5}
+					limit={15}
 				/>
 				{isAdmin &&
 					<Dialog

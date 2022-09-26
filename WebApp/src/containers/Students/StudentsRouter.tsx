@@ -1,3 +1,4 @@
+import StudentCertificate from 'containers/StudentCourses/StudentCertificate'
 import { Switch, Route, useRouteMatch } from 'react-router-dom'
 import { Student } from './Student'
 import { Students } from './Students'
