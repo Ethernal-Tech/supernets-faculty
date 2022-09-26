@@ -9,12 +9,14 @@ import { App } from './App'
 import { Provider } from 'react-redux'
 import store from './state/store'
 import { BrowserRouter } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify';
 
 ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>
             <BrowserRouter>
                 <App />
+                <ToastContainer />
             </BrowserRouter>
         </Provider>
     </React.StrictMode>,

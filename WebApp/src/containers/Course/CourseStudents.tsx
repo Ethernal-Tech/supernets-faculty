@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Button } from 'components/Button'
 import { contractToGrade }  from '../../utils/userUtils'
 import { disenrollStudentsToCourseAction } from 'actions/coursesActions'
-import EventListenerService from "../../utils/eventListenerService"
+import notifications from 'components/Notification/notification'
 import { emptyArray, emptyObject } from 'utils/commonHelper'
 import { BaseColumnModel, LocalTable } from 'components/Table'
 import { ColumnContainer, RowContainer } from 'components/Layout'
@@ -114,7 +114,7 @@ export const CourseStudents = ({ course, event, selectedAccount }: CoursesTabPro
 	            setSelectedStudents([])
 	        }
 	        else {
-	            EventListenerService.notify("error", 'fields not populated!')
+				notifications.error("Fields are not populated")
 	        }
 		},
 		[course.id, dispatch, event.id, selectedAccount, selectedStudents]

@@ -1,7 +1,7 @@
 import path from 'path'
 import { useEffect, useState, useMemo, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import EventListenerService from "utils/eventListenerService"
+import notifications from 'components/Notification/notification'
 import { gradeStudentsAction } from 'actions/coursesActions'
 import { emptyArray } from 'utils/commonHelper';
 import { Button } from 'components/Button';
@@ -140,7 +140,7 @@ export const GradeStudentsList = ({ course, event, selectedAccount }: CoursesTab
             setIsWorking(false)
             setStudentGrades({} as any)
         } else {
-            EventListenerService.notify("error", 'fields not populated!')
+            notifications.error("Fields are not populated")
         }
     }
 

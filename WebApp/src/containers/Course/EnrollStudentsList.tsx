@@ -1,7 +1,7 @@
 import path from 'path'
 import { useMemo, useEffect, useState, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import EventListenerService from "utils/eventListenerService"
+import notifications from 'components/Notification/notification'
 import { enrollStudentsToCourseAction } from 'actions/coursesActions'
 import { emptyArray } from 'utils/commonHelper'
 import { Button } from 'components/Button';
@@ -98,7 +98,7 @@ export const EnrollStudentsList = ({ course, event, selectedAccount }: CoursesTa
 	            setSelectedStudents([])
 	        }
 	        else {
-	            EventListenerService.notify("error", 'fields not populated!')
+				notifications.error("Fields are not populated")
 	        }
 		},
 		[course.id, dispatch, event.id, selectedAccount, selectedStudents]

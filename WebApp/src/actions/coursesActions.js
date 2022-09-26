@@ -1,7 +1,7 @@
 import faculty from '../faculty'
 import reader from '../facultyReader'
 import { setAllCourses, setStudentCourses, setCoursesForProfessorAddr } from '../state/coursesReducer'
-import EventListenerService from "../utils/eventListenerService"
+import notifications from 'components/Notification/notification';
 import { loadProfessorsAction, loadStudentsAction } from './userActions';
 
 export const loadAllCoursesAction = async (eventId, dispatch) => {
@@ -10,7 +10,7 @@ export const loadAllCoursesAction = async (eventId, dispatch) => {
         dispatch(setAllCourses(courses))
     }
     catch (ex) {
-        EventListenerService.notify("error", ex)
+        notifications.error("Failed to load courses. " + ex.message)
     }
 }
 
@@ -20,7 +20,7 @@ export const loadProfessorCoursesAction = async (professorAddr, eventId, dispatc
         dispatch(setCoursesForProfessorAddr({ professorAddr, courses }))
     }
     catch (ex) {
-        EventListenerService.notify("error", ex)
+        notifications.error("Failed to load professor's courses. " + ex.message)
     }
 }
 
@@ -29,7 +29,7 @@ export const addCourseAction = async (title, description, startTime, venue, poin
         await faculty.methods.addEditCourse(0, title, description, startTime, venue, points, professorAddr, eventId).send({ from: selectedAccount });
     }
     catch (ex) {
-        EventListenerService.notify("error", ex)
+        notifications.error("Failed to add course. " + ex.message)
     }
 
     await loadProfessorsAction(eventId, dispatch)
@@ -42,7 +42,7 @@ export const editCourseAction = async (courseId, title, description, startTime, 
         await faculty.methods.addEditCourse(courseId, title, description, startTime, venue, points, professorAddr, eventId).send({ from: selectedAccount });
     }
     catch (ex) {
-        EventListenerService.notify("error", ex)
+        notifications.error("Failed to edit course. " + ex.message)
     }
 
     await loadProfessorsAction(eventId, dispatch)
@@ -55,7 +55,7 @@ export const deleteCourseAction = async (courseId, eventId, professorAddr, selec
         await faculty.methods.deleteCourse(courseId, eventId).send({ from: selectedAccount });
     }
     catch (ex) {
-        EventListenerService.notify("error", ex)
+        notifications.error("Failed to delete course. " + ex.message)
     }
 
     await loadProfessorsAction(eventId, dispatch)
@@ -71,7 +71,7 @@ export const loadStudentCoursesAction = async (accountAddress, eventId, dispatch
         dispatch(setStudentCourses({ studentId: accountAddress, courses }))
     }
     catch (ex) {
-        EventListenerService.notify("error", ex)
+        notifications.error("Failed to load student's courses. " + ex.message)
     }
 }
 
@@ -80,7 +80,7 @@ export const enrollStudentsToCourseAction = async (courseId, studentAddrs, selec
         await faculty.methods.enrollCourseMultiple(courseId, studentAddrs, eventId).send({ from: selectedAccount });
     }
     catch (ex) {
-        EventListenerService.notify("error", ex)
+        notifications.error("Failed to enroll students in course. " + ex.message)
     }
 
     await loadStudentsAction(eventId, dispatch)
@@ -92,7 +92,7 @@ export const disenrollStudentsToCourseAction = async (courseId, studentAddrs, se
         await faculty.methods.disenrollCourseMultiple(courseId, studentAddrs, eventId).send({ from: selectedAccount });
     }
     catch (ex) {
-        EventListenerService.notify("error", ex)
+        notifications.error("Failed to disenroll students from course. " + ex.message)
     }
 
     await loadStudentsAction(eventId, dispatch)
@@ -104,7 +104,7 @@ export const gradeStudentsAction = async (courseId, studentGrades, selectedAccou
         await faculty.methods.gradeStudents(courseId, studentGrades, eventId).send({ from: selectedAccount });
     }
     catch (ex) {
-        EventListenerService.notify("error", ex)
+        notifications.error("Failed to grade students. " + ex.message)
     }
 
     await loadStudentsAction(eventId, dispatch)

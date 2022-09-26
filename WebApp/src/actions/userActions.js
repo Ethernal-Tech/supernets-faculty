@@ -3,15 +3,15 @@ import reader from '../facultyReader'
 import { setStudentGrades } from '../state/coursesReducer'
 import { setProfessors, setStudents, setAdmins, setUsers } from '../state/usersReducer'
 import { setAdminAccount } from '../state/ethReducer'
-import EventListenerService from "../utils/eventListenerService"
 import { loadAllCoursesAction } from './coursesActions'
+import notifications from 'components/Notification/notification'
 
 export const loadAdminsAction = async (eventId, dispatch) => {
     try {
         const admins = await reader.methods.getAllAdmins(eventId).call();
         dispatch(setAdmins(admins))
     } catch (ex) {
-        EventListenerService.notify("error", ex)
+        notifications.error("Failed to load admins. " + ex.message)
     }
 }
 
@@ -20,7 +20,7 @@ export const loadProfessorsAction = async(eventId, dispatch) => {
         const professors = await reader.methods.getAllProfessors(eventId).call();
         dispatch(setProfessors(professors))
     } catch (ex) {
-        EventListenerService.notify("error", ex)
+        notifications.error("Failed to load professors. " + ex.message)
     }
 }
 
@@ -63,7 +63,7 @@ export const loadStudentsAction = async (eventId, dispatch) => {
         dispatch(setStudents(students))
         await loadStudentGrades(students, eventId, dispatch)
     } catch (ex) {
-        EventListenerService.notify("error", ex)
+        notifications.error("Failed to load students. " + ex.message)
     }
 }
 
@@ -75,7 +75,7 @@ export const loadUsersAction = async (eventId, dispatch) => {
         dispatch(setUsers({ professors, students, admins }))
         await loadStudentGrades(students, eventId, dispatch)
     } catch (ex) {
-        EventListenerService.notify("error", ex)
+        notifications.error("Failed to load users. " + ex.message)
     }
 }
 
@@ -84,7 +84,7 @@ export const addAdminAction = async (eventId, addr, account, dispatch) => {
         await faculty.methods.addEventAdmin(eventId, addr,).send({ from: account });
         await loadAdminsAction(eventId, dispatch)
     } catch (ex) {
-        EventListenerService.notify("error", ex)
+        notifications.error("Failed to add admin. " + ex.message)
     }
 }
 
@@ -93,16 +93,17 @@ export const deleteAdminAction = async (eventId, addr, account, dispatch) => {
         await faculty.methods.deleteEventAdmin(eventId, addr,).send({ from: account });
         await loadAdminsAction(eventId, dispatch)
     } catch (ex) {
-        EventListenerService.notify("error", ex)
+        notifications.error("Failed to delete admin. " + ex.message)
     }
 }
 
 export const addProfessorAction = async (addr, firstName, lastName, country, expertise, eventId, account, dispatch) => {
     try {
+        debugger
         await faculty.methods.addEditProfessor(addr, firstName, lastName, country, expertise, eventId, true).send({ from: account });
         await loadProfessorsAction(eventId, dispatch)
     } catch (ex) {
-        EventListenerService.notify("error", ex)
+        notifications.error("Failed to add professor. " + ex.message)
     }
 }
 
@@ -112,7 +113,7 @@ export const editProfessorAction = async (addr, firstName, lastName, country, ex
         await loadProfessorsAction(eventId, dispatch)
         await loadAllCoursesAction(eventId, dispatch)
     } catch (ex) {
-        EventListenerService.notify("error", ex)
+        notifications.error("Failed to edit professor. " + ex.message)
     }
 }
 
@@ -122,7 +123,7 @@ export const deleteProfessorAction = async (addr, eventId, account, dispatch) =>
         await loadProfessorsAction(eventId, dispatch)
         await loadAllCoursesAction(eventId, dispatch)
     } catch (ex) {
-        EventListenerService.notify("error", ex)
+        notifications.error("Failed to delete professor. " + ex.message)
     }
 }
 
@@ -131,7 +132,7 @@ export const addStudentAction = async (addr, firstName, lastName, country, event
         await faculty.methods.addEditStudent(addr, firstName, lastName, country, eventId, true).send({ from: account });
         await loadStudentsAction(eventId, dispatch)
     } catch (ex) {
-        EventListenerService.notify("error", ex)
+        notifications.error("Failed to add student. " + ex.message)
     }
 }
 
@@ -140,7 +141,7 @@ export const editStudentAction = async (addr, firstName, lastName, country, even
         await faculty.methods.addEditStudent(addr, firstName, lastName, country, eventId, false).send({ from: account });
         await loadStudentsAction(eventId, dispatch)
     } catch (ex) {
-        EventListenerService.notify("error", ex)
+        notifications.error("Failed to edit student. " + ex.message)
     }
 }
 
@@ -149,7 +150,7 @@ export const deleteStudentAction = async (addr, eventId, account, dispatch) => {
         await faculty.methods.deleteStudent(addr, eventId).send({ from: account });
         await loadStudentsAction(eventId, dispatch)
     } catch (ex) {
-        EventListenerService.notify("error", ex)
+        notifications.error("Failed to delete student. " + ex.message)
     }
 }
 
@@ -158,6 +159,6 @@ export const loadAdminAccountAction = async (dispatch) => {
         const adminAccount = await faculty.methods.admin().call();
         dispatch(setAdminAccount(adminAccount))
     } catch (ex) {
-        EventListenerService.notify("error", ex)
+        notifications.error("Failed to load admin. " + ex.message)
     }
 }
