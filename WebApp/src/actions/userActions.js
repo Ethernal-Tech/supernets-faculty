@@ -99,7 +99,6 @@ export const deleteAdminAction = async (eventId, addr, account, dispatch) => {
 
 export const addProfessorAction = async (addr, firstName, lastName, country, expertise, eventId, account, dispatch) => {
     try {
-        debugger
         await faculty.methods.addEditProfessor(addr, firstName, lastName, country, expertise, eventId, true).send({ from: account });
         await loadProfessorsAction(eventId, dispatch)
     } catch (ex) {

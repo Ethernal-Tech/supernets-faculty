@@ -6,7 +6,7 @@ import { generateCertificateAction, loadStudentCertificateAction } from 'actions
 import { contractToGrade, isEventAdmin }  from 'utils/userUtils'
 import { createMetadata, uploadMetadata } from 'utils/nftUtils'
 import { BaseColumnModel, LocalTable } from 'components/Table';
-import { ColumnContainer } from 'components/Layout'
+import { ColumnContainer, RowContainer } from 'components/Layout'
 import { Input } from 'components/Form'
 import { Button } from 'components/Button'
 import { emptyArray, emptyObject } from 'utils/commonHelper'
@@ -41,19 +41,24 @@ export const StudentCourses = ({ student, event }) => {
 	const selectedAccount = state.eth.selectedAccount;
 	const allCourses = state.courses.allCourses || emptyArray
 	const gradesByCourse = (state.courses.gradesByCourseByStudent || emptyObject)[student.id] || emptyArray
-
+	
     const courses = useMemo(
 		() => ((state.courses.studentCourses || emptyObject)[student.id] || emptyArray).map(x => {
 	        const course = allCourses.find(y => y.id === x)
 	        const grade = gradesByCourse.find(y => y.courseId === x)
-	        return {
-	            ...course,
-	            grade
-	        }
+
+			if (course && grade) {
+				return {
+					...course,
+					grade
+				}
+			}
+
+	        return undefined
 		}),
 		[allCourses, gradesByCourse, state.courses.studentCourses, student]
 	)
-
+	
     const [query, setQuery] = useState('');
     const [searchedCourses, setSearchedCourses] = useState<any[]>([]);
 	const professors = state.users.professors || emptyArray;
@@ -81,7 +86,7 @@ export const StudentCourses = ({ student, event }) => {
 
     const search = useCallback(
 		(data, query) => {
-	        return data.filter(item => keys.some(key => item[key].toLowerCase().includes(query.toLowerCase())))
+	        return data.filter(item => item && keys.some(key => item[key].toLowerCase().includes(query.toLowerCase())))
 		},
 		[]
 	)
@@ -138,20 +143,22 @@ export const StudentCourses = ({ student, event }) => {
 				hasPagination
 				limit={15}
 			/>
-			{isAdmin && 
-				<Button
-					text='Produce certificate'
-					onClick={onGenerateCertificate}
-					disabled={courses.length === 0 || courses.filter(course => contractToGrade.get(course.grade.grade) === '---').length > 0}
-					tooltip={(courses.length === 0 || courses.filter(course => contractToGrade.get(course.grade.grade) === '---').length > 0) ? "Student didn't pass all courses." : ''}
-				/>
-			}
-			{certificateData &&
-				<Button
-					text='View certificate'
-					onClick={onViewCertificate}
-				/>
-			}
+			<RowContainer>
+				{isAdmin && 
+					<Button
+						text='Produce certificate'
+						onClick={onGenerateCertificate}
+						disabled={courses.length === 0 || courses.filter(course => course && contractToGrade.get(course.grade.grade) === '---').length > 0}
+						tooltip={(courses.length === 0 || courses.filter(course => course && contractToGrade.get(course.grade.grade) === '---').length > 0) ? "Student didn't pass all courses." : ''}
+					/>
+				}
+				{certificateData &&
+					<Button
+						text='View certificate'
+						onClick={onViewCertificate}
+					/>
+				}
+			</RowContainer>
 		</ColumnContainer>
     )
 }
