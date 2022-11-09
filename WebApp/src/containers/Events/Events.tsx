@@ -11,6 +11,7 @@ import { ContentShell } from 'features/Content';
 import { Button } from 'components/Button';
 import { ColumnContainer } from 'components/Layout'
 import { ClipSpinner, Spinner } from 'components/Spinner';
+import notifications from 'components/Notification/notification';
 
 export const Events = () => {
 	const routematch = useRouteMatch()
@@ -39,7 +40,12 @@ export const Events = () => {
 		async () => {
 			setLoading(true)
 			const response = await loadAllEventsAction()
-			setEvents(response)
+			if (response) {
+				setEvents(response)
+			} else {
+				notifications.error('DAP Smart Contract not found: Please check your Metamask for proper network configuration')
+				setEvents([])
+			}
 			setLoading(false)
 		},
 		[]
